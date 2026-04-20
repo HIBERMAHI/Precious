@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../public/css/precious.css" />
+    <style>
+      ul {
+        text-decoration: none;
+      }
+      ul li {
+        border: 1px solid rgb(44, 41, 41);
+        border-radius: 5px;
+        padding: 15px;
+        margin: 30px 0;
+      }
+      li a {
+        list-style-type: none;
+        font-size: 1.5rem;
+        color: white;
+        text-decoration: none;
+        margin: 0 40px;
+      }
+      li:hover {
+        background-color: rgb(8, 72, 8);
+      }
+      input {
+        width: 40%;
+        height: 2rem;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 1rem;
+        margin: 0 300px 0 30px;
+        border: none;
+      }
+      button {
+        width: 9rem;
+        height: 2.5rem;
+        font-size: 1.5rem;
+        margin: 15px 10px;
+        border-radius: 5px;
+        background-color: rgb(5, 5, 51);
+        color: white;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cont-inve">
+      <div class="cont-side">
+        <img class="nlogo" src="../public/images/logo.png" alt="logo" />
+        <ul>
+          <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Sales</a></li>
+          <li><a href="#">Inventory</a></li>
+          <li><a href="#">Orders</a></li>
+          <li><a href="#">Reports</a></li>
+          <li><a href="#">Staff</a></li>
+        </ul>
+      </div>
+      <!-- end of side bar -->
+      <!-- start of main bar -->
+      <div class="cont-main">
+        <div class="sear-im">
+          <input type="search" placeholder="Search inventory" />
+          <div class="store">
+            <img class="lady" src="../public/images/lady.jpg" alt="admin" />
+            <p clas="nager">Magezi hiber , Store Manager</p>
+          </div>
+        </div>
+        <div class="title1">
+          <h1>Inventory</h1>
+          <div>
+            <button type="submit">Add Items</button>
+            <button type="download">Export</button>
+          </div>
+        </div>
+      </div>
+      <!-- end of main content -->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "name": "precious",
+  "version": "1.0.0",
+  "description": "nyondo project",
+  "homepage": "https://github.com/HIBERMAHI/Precious#readme",
+  "bugs": {
+    "url": "https://github.com/HIBERMAHI/Precious/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HIBERMAHI/Precious.git"
+  },
+  "license": "ISC",
+  "author": "MAGEZI SUMAYYAH HIBER",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon  index.js"
+  
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-session": "^1.19.0"
+  }
+}
