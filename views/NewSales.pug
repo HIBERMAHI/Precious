@@ -1,0 +1,129 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Sales Page
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+  link(rel='stylesheet' href='/css/styles.css')
+// SIDEBAR
+.sidebar
+  h2
+    i.fa-solid.fa-store
+    |  NYONDO POS
+  ul
+    li
+      a(href='dashboard.html')
+        i.fa-solid.fa-gauge
+        |  Dashboard
+    li.active
+      a(href='sales-page.html')
+        i.fa-solid.fa-cart-shopping
+        |  Sales
+    li
+      a(href='products.html')
+        i.fa-solid.fa-box
+        |  Products
+    li
+      a(href='credit-debit-sales.html')
+        i.fa-solid.fa-credit-card
+        |  Credit &amp; Debit
+// MAIN
+.main
+  .topbar
+    h1 Sales Management
+  // ROW 1: SALES TABLE
+  .row.table-row
+    h2
+      i.fa-solid.fa-clock-rotate-left
+      |  Recent Sales
+    table
+      tr
+        th Date
+        th Item
+        th Qty
+        th Unit Price
+        th Total
+      tr
+        td 2026-04-21
+        td Cement 50kg
+        td 2
+        td 45,000
+        td 90,000
+      tr
+        td 2026-04-21
+        td Iron Sheets
+        td 3
+        td 32,000
+        td 96,000
+      tr
+        td 2026-04-20
+        td Nails Pack
+        td 5
+        td 5,000
+        td 25,000
+      tr
+        td 2026-04-20
+        td Paint Bucket
+        td 1
+        td 75,000
+        td 75,000
+      tr
+        td 2026-04-19
+        td Plumbing Pipes
+        td 4
+        td 12,000
+        td 48,000
+      tr
+        td 2026-04-19
+        td Door Locks
+        td 6
+        td 8,000
+        td 48,000
+  // ROW 2: FORM + RECEIPT
+  .row.bottom-row
+    // SALES FORM
+    .box.form-box
+      h2
+        i.fa-solid.fa-cart-shopping
+        |  Sales Form
+      form(action='/NewSales' method='post')
+        label(for='cname') Customer Name
+        input#cname(type='text' name='customername')
+        label(for='item') Item
+        input#item(type='text' name='item')
+        label(for='quantity') Quantity
+        input#quantity(type='number' name='quantity')
+        label(for='unitprice') Unit Price
+        input#unitprice(type='number' name='unitprice')
+        label(for='discount') Discount
+        input#discount(type='number' name='discount')
+        label(for='totalprice') Total Price
+        input#totalprice(type='number' name='totalprice')
+        label Payment Type
+        select(name='paymentmethod')
+          option Cash
+          option Credit
+          option Debit
+        button(type='submit')
+          i.fa-solid.fa-check
+          |  Complete Sale
+    // RECEIPT
+    .box.receipt-box
+      h2
+        i.fa-solid.fa-receipt
+        |  Receipt
+      .receipt
+        p
+          b NYONDO HARDWARE
+        p Receipt No: NYD-0001
+        hr
+        p Customer: --------
+        p Item: --------
+        p Qty: --------
+        p Unit Price: --------
+        p Total: --------
+        hr
+        p
+          b Thank you for shopping!
+      button.print
+        i.fa-solid.fa-print
+        |  Print Receipt

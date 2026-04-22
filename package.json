@@ -13,17 +13,17 @@
   "license": "ISC",
   "author": "MAGEZI SUMAYYAH HIBER",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon  index.js"
-  
+    "start": "nodemon  server.js"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
   },
   "dependencies": {
     "express": "^5.2.1",
-    "express-session": "^1.19.0"
+    "express-session": "^1.19.0",
+    "pug": "^3.0.4"
   }
 }

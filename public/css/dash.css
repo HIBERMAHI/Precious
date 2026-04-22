@@ -1,0 +1,83 @@
+.cont-dash{
+    display: flex;
+    width: 100%;
+    height: auto;
+}
+*{
+    padding: 0;
+    margin: 0;
+}
+.dash-side{
+    flex: 1;
+    background-color: rgb(5, 5, 58);
+}
+.dash-main{
+    flex: 3;
+    background-color: rgb(247, 241, 241);
+}
+ul{
+    text-decoration: none;
+}
+li{
+    border-radius: 5px;
+    padding: 20px;
+    margin: 30px 0 ;
+}
+li a{
+    font-size: 1.3rem;
+    list-style-type: none;
+    color: white;
+    text-decoration: none;
+    margin: 0 40px;
+}
+.image{
+    width: 100px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 20px  50px;
+}
+li:hover{
+    background-color: rgb(12, 112, 12);
+}
+.above{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 30px;
+}
+.lady{
+    width: 40px ;
+    height: 25px;
+    border-radius: 50%;
+}
+.laed{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 40px;
+}
+.main-cards{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card{
+    box-shadow: 0 5px  20px  rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    border-radius: 5px;
+    margin: 10px  30px;
+    border-left: 3px solid rgb(4, 4, 43);
+}
+.cont-sales{
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+.sales-side{
+    flex: 1;
+    background-color: rgb(14, 14, 69);
+}
+.sales-main{
+    flex: 3;
+    background-color: rgb(234, 227, 227);
+}

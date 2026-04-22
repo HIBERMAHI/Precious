@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Credit & Debit Sales</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <h2><i class="fa-solid fa-store"></i> NYONDO POS</h2>
+      <ul>
+        <li>
+          <a href="dashboard.html"
+            ><i class="fa-solid fa-gauge"></i> Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="new-sale.html"
+            ><i class="fa-solid fa-cart-shopping"></i> New Sale</a
+          >
+        </li>
+        <li>
+          <a href="products.html"><i class="fa-solid fa-box"></i> Products</a>
+        </li>
+        <li>
+          <a href="sales.html"><i class="fa-solid fa-receipt"></i> Sales</a>
+        </li>
+        <li class="active">
+          <a href="credit-debit-sales.html"
+            ><i class="fa-solid fa-credit-card"></i> Credit & Debit</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <!-- TOP BAR -->
+      <div class="topbar">
+        <h1>Credit & Debit Sales Management</h1>
+        <div class="user">
+          <i class="fa-solid fa-user"></i>
+          <span>Sales Attendant</span>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="grid">
+        <!-- CREDIT SECTION -->
+        <div class="card credit">
+          <h2><i class="fa-solid fa-hand-holding-dollar"></i> Credit Sales</h2>
+
+          <form action="/credit" method="post">
+            <label>Customer Name</label>
+            <input type="text" placeholder="Enter customer name"  name="customername" />
+
+            <label>Item</label>
+            <input type="text" placeholder="Item sold" name="item"/>
+
+            <label>Amount Owed</label>
+            <input type="number" placeholder="Amount owed"  name="amountowed" />
+
+            <label>Due Date</label>
+            <input type="date" name="duedate"/>
+
+            <button type="submit">
+              <i class="fa-solid fa-plus"></i> Save Credit Sale
+            </button>
+          </form>
+        </div>
+
+        <!-- DEBIT SECTION -->
+        <div class="card debit">
+          <h2><i class="fa-solid fa-money-bill"></i> Debit Sales</h2>
+
+          <form action="/credit" method="post">
+            <label>Customer Name</label>
+            <input type="text" placeholder="Enter customer name" name="customername" />
+
+            <label>Item</label>
+            <input type="text" placeholder="Item sold" name="item"/>
+
+            <label>Amount Paid</label>
+            <input type="number" placeholder="Amount paid" name="amountpaid" />
+
+            <label>Payment Method</label>
+            <select name="paymentmethods" >
+              <option>Cash</option>
+              <option>Mobile Money</option>
+              <option>Bank</option>
+            </select>
+
+            <button type="submit">
+              <i class="fa-solid fa-check"></i> Save Debit Sale
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

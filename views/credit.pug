@@ -1,0 +1,79 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Credit &amp; Debit Sales
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+  link(rel='stylesheet' href='/css/styles.css')
+// SIDEBAR
+.sidebar
+  h2
+    i.fa-solid.fa-store
+    |  NYONDO POS
+  ul
+    li
+      a(href='dashboard.html')
+        i.fa-solid.fa-gauge
+        |  Dashboard
+    li
+      a(href='new-sale.html')
+        i.fa-solid.fa-cart-shopping
+        |  New Sale
+    li
+      a(href='products.html')
+        i.fa-solid.fa-box
+        |  Products
+    li
+      a(href='sales.html')
+        i.fa-solid.fa-receipt
+        |  Sales
+    li.active
+      a(href='credit-debit-sales.html')
+        i.fa-solid.fa-credit-card
+        |  Credit &amp; Debit
+// MAIN
+.main
+  // TOP BAR
+  .topbar
+    h1 Credit &amp; Debit Sales Management
+    .user
+      i.fa-solid.fa-user
+      span Sales Attendant
+  // CONTENT
+  .grid
+    // CREDIT SECTION
+    .card.credit
+      h2
+        i.fa-solid.fa-hand-holding-dollar
+        |  Credit Sales
+      form(action='/credit' method='post')
+        label Customer Name
+        input(type='text' placeholder='Enter customer name' name='customername')
+        label Item
+        input(type='text' placeholder='Item sold' name='item')
+        label Amount Owed
+        input(type='number' placeholder='Amount owed' name='amountowed')
+        label Due Date
+        input(type='date' name='duedate')
+        button(type='submit')
+          i.fa-solid.fa-plus
+          |  Save Credit Sale
+    // DEBIT SECTION
+    .card.debit
+      h2
+        i.fa-solid.fa-money-bill
+        |  Debit Sales
+      form(action='/credit' method='post')
+        label Customer Name
+        input(type='text' placeholder='Enter customer name' name='customername')
+        label Item
+        input(type='text' placeholder='Item sold' name='item')
+        label Amount Paid
+        input(type='number' placeholder='Amount paid' name='amountpaid')
+        label Payment Method
+        select(name='paymentmethods')
+          option Cash
+          option Mobile Money
+          option Bank
+        button(type='submit')
+          i.fa-solid.fa-check
+          |  Save Debit Sale
