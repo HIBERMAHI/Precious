@@ -1,14 +1,15 @@
 doctype html
 head
   meta(charset='UTF-8')
-  title Sales Page
+  title Nyondo Hardware POS - Sales
   link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
   link(rel='stylesheet' href='/css/styles.css')
 // SIDEBAR
 .sidebar
-  h2
-    i.fa-solid.fa-store
-    |  NYONDO POS
+  // LOGO
+  .logo
+    h2 &#x2692; NYONDO HARDWARE
+    p Point of Sale System
   ul
     li
       a(href='dashboard.html')
@@ -17,104 +18,127 @@ head
     li.active
       a(href='sales-page.html')
         i.fa-solid.fa-cart-shopping
-        |  Sales
+        |  New Sales
     li
       a(href='products.html')
         i.fa-solid.fa-box
-        |  Products
+        |  Stock View
     li
       a(href='credit-debit-sales.html')
         i.fa-solid.fa-credit-card
-        |  Credit &amp; Debit
-// MAIN
+        |  Credit Sales
+    li
+      a(href='sales-history.html')
+        i.fa-solid.fa-clock-rotate-left
+        |  Sales History
+    li
+      a(href='#')
+        i.fa-solid.fa-right-from-bracket
+        |  Logout
+// MAIN CONTENT
 .main
+  // TOPBAR
   .topbar
     h1 Sales Management
-  // ROW 1: SALES TABLE
+  // TODAY SALES TABLE
   .row.table-row
     h2
-      i.fa-solid.fa-clock-rotate-left
-      |  Recent Sales
+      i.fa-solid.fa-calendar-day
+      |  Today&apos;s Sales
     table
       tr
-        th Date
+        th Time
         th Item
         th Qty
         th Unit Price
         th Total
       tr
-        td 2026-04-21
-        td Cement 50kg
-        td 2
-        td 45,000
-        td 90,000
-      tr
-        td 2026-04-21
-        td Iron Sheets
+        td 08:10 AM
+        td Cement (50kg)
         td 3
-        td 32,000
-        td 96,000
+        td 45,000
+        td 135,000
       tr
-        td 2026-04-20
-        td Nails Pack
+        td 09:05 AM
+        td Iron Sheets
         td 5
+        td 32,000
+        td 160,000
+      tr
+        td 10:20 AM
+        td Nails (Box)
+        td 10
         td 5,000
-        td 25,000
+        td 50,000
       tr
-        td 2026-04-20
-        td Paint Bucket
-        td 1
+        td 11:15 AM
+        td Paint (20L)
+        td 2
         td 75,000
-        td 75,000
+        td 150,000
       tr
-        td 2026-04-19
+        td 01:00 PM
         td Plumbing Pipes
-        td 4
-        td 12,000
-        td 48,000
-      tr
-        td 2026-04-19
-        td Door Locks
         td 6
+        td 12,000
+        td 72,000
+      tr
+        td 02:30 PM
+        td Door Locks
+        td 8
         td 8,000
-        td 48,000
-  // ROW 2: FORM + RECEIPT
-  .row.bottom-row
-    // SALES FORM
+        td 64,000
+  // SALES FORM
+  .row.full-form
     .box.form-box
       h2
-        i.fa-solid.fa-cart-shopping
-        |  Sales Form
+        i.fa-solid.fa-cart-plus
+        |  New Sale Entry
       form(action='/NewSales' method='post')
-        label(for='cname') Customer Name
-        input#cname(type='text' name='customername')
-        label(for='item') Item
-        input#item(type='text' name='item')
-        label(for='quantity') Quantity
-        input#quantity(type='number' name='quantity')
-        label(for='unitprice') Unit Price
-        input#unitprice(type='number' name='unitprice')
-        label(for='discount') Discount
-        input#discount(type='number' name='discount')
-        label(for='totalprice') Total Price
-        input#totalprice(type='number' name='totalprice')
-        label Payment Type
-        select(name='paymentmethod')
-          option Cash
-          option Credit
-          option Debit
-        button(type='submit')
-          i.fa-solid.fa-check
-          |  Complete Sale
-    // RECEIPT
+        .form-grid
+          div
+            label Customer Name
+            input(type='text' name='customername' required='')
+          div
+            label Item
+            input(type='text' name='item' required='')
+          div
+            label Quantity
+            input(type='number' name='quantity' required='')
+          div
+            label Unit Price
+            input(type='number' name='unitprice' required='')
+          div
+            label Discount
+            input(type='number' name='discount')
+          div
+            label Total Price
+            input(type='number' name='totalprice' readonly='')
+          div
+            label Payment Type
+            select(name='paymentmethod')
+              option Cash
+              option Credit
+              option Debit
+        // BUTTONS
+        .form-actions
+          button.btn-primary(type='submit')
+            i.fa-solid.fa-check
+            |  Complete Sale
+          button.btn-secondary(type='button')
+            i.fa-solid.fa-receipt
+            |  Issue Receipt
+  // RECEIPT
+  .row.receipt-row
     .box.receipt-box
       h2
         i.fa-solid.fa-receipt
-        |  Receipt
+        |  Receipt Preview
       .receipt
         p
           b NYONDO HARDWARE
         p Receipt No: NYD-0001
+        p Date: 23 Apr 2026
         hr
         p Customer: --------
         p Item: --------
@@ -123,7 +147,9 @@ head
         p Total: --------
         hr
         p
-          b Thank you for shopping!
+          b Served By: Sales Attendant
+        p
+          b Thank you for shopping with us!
       button.print
         i.fa-solid.fa-print
         |  Print Receipt

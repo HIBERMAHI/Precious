@@ -1,107 +1,100 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Credit & Debit Sales</title>
+<head>
+  <meta charset="UTF-8" />
+  <title>Credit & Debit Sales</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <link rel="stylesheet" href="/css/styles.css" />
-  </head>
-  <body>
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <h2><i class="fa-solid fa-store"></i> NYONDO POS</h2>
-      <ul>
-        <li>
-          <a href="dashboard.html"
-            ><i class="fa-solid fa-gauge"></i> Dashboard</a
-          >
-        </li>
-        <li>
-          <a href="new-sale.html"
-            ><i class="fa-solid fa-cart-shopping"></i> New Sale</a
-          >
-        </li>
-        <li>
-          <a href="products.html"><i class="fa-solid fa-box"></i> Products</a>
-        </li>
-        <li>
-          <a href="sales.html"><i class="fa-solid fa-receipt"></i> Sales</a>
-        </li>
-        <li class="active">
-          <a href="credit-debit-sales.html"
-            ><i class="fa-solid fa-credit-card"></i> Credit & Debit</a
-          >
-        </li>
-      </ul>
+  <link rel="stylesheet" href="/css/credit.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+
+  <div class="logo">
+    <h2>⚒ NYONDO HARDWARE</h2>
+    <p>Point of Sale System</p>
+  </div>
+
+  <ul>
+    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+    <li><a href="NewSales.html"><i class="fas fa-cart-shopping"></i> New Sales</a></li>
+    <li><a href="stockview.html"><i class="fas fa-boxes"></i> Stock View</a></li>
+    <li class="active"><a href="credit.html"><i class="fas fa-credit-card"></i> Credit Sales</a></li>
+    <li><a href="saleshistory.html"><i class="fas fa-clock-rotate-left"></i> Sales History</a></li>
+    <li><a href="#"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+  </ul>
+
+</div>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <h2><i class="fas fa-credit-card"></i> Credit & Debit Sales</h2>
+    <p>Manage customer credit and record payments</p>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="grid">
+
+    <!-- CREDIT -->
+    <div class="card">
+      <h3><i class="fas fa-hand-holding-dollar"></i> Credit Sale</h3>
+
+      <form action="/credit" method="post">
+        <label>Customer Name</label>
+        <input type="text" name="customername">
+
+        <label>Item</label>
+        <input type="text" name="item">
+
+        <label>Amount Owed</label>
+        <input type="number" name="amountowed">
+
+        <label>Due Date</label>
+        <input type="date" name="duedate">
+
+        <button class="btn-primary">
+          <i class="fas fa-plus"></i> Save Credit
+        </button>
+      </form>
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
-      <!-- TOP BAR -->
-      <div class="topbar">
-        <h1>Credit & Debit Sales Management</h1>
-        <div class="user">
-          <i class="fa-solid fa-user"></i>
-          <span>Sales Attendant</span>
-        </div>
-      </div>
+    <!-- DEBIT -->
+    <div class="card">
+      <h3><i class="fas fa-money-bill"></i> Debit Payment</h3>
 
-      <!-- CONTENT -->
-      <div class="grid">
-        <!-- CREDIT SECTION -->
-        <div class="card credit">
-          <h2><i class="fa-solid fa-hand-holding-dollar"></i> Credit Sales</h2>
+      <form action="/debit" method="post">
+        <label>Customer Name</label>
+        <input type="text" name="customername">
 
-          <form action="/credit" method="post">
-            <label>Customer Name</label>
-            <input type="text" placeholder="Enter customer name"  name="customername" />
+        <label>Item</label>
+        <input type="text" name="item">
 
-            <label>Item</label>
-            <input type="text" placeholder="Item sold" name="item"/>
+        <label>Amount Paid</label>
+        <input type="number" name="amountpaid">
 
-            <label>Amount Owed</label>
-            <input type="number" placeholder="Amount owed"  name="amountowed" />
+        <label>Payment Method</label>
+        <select name="paymentmethod">
+          <option>Cash</option>
+          <option>Mobile Money</option>
+          <option>Bank</option>
+        </select>
 
-            <label>Due Date</label>
-            <input type="date" name="duedate"/>
-
-            <button type="submit">
-              <i class="fa-solid fa-plus"></i> Save Credit Sale
-            </button>
-          </form>
-        </div>
-
-        <!-- DEBIT SECTION -->
-        <div class="card debit">
-          <h2><i class="fa-solid fa-money-bill"></i> Debit Sales</h2>
-
-          <form action="/credit" method="post">
-            <label>Customer Name</label>
-            <input type="text" placeholder="Enter customer name" name="customername" />
-
-            <label>Item</label>
-            <input type="text" placeholder="Item sold" name="item"/>
-
-            <label>Amount Paid</label>
-            <input type="number" placeholder="Amount paid" name="amountpaid" />
-
-            <label>Payment Method</label>
-            <select name="paymentmethods" >
-              <option>Cash</option>
-              <option>Mobile Money</option>
-              <option>Bank</option>
-            </select>
-
-            <button type="submit">
-              <i class="fa-solid fa-check"></i> Save Debit Sale
-            </button>
-          </form>
-        </div>
-      </div>
+        <button class="btn-secondary">
+          <i class="fas fa-check"></i> Save Payment
+        </button>
+      </form>
     </div>
-  </body>
+
+  </div>
+
+</div>
+
+</body>
 </html>

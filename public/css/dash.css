@@ -81,3 +81,36 @@ li:hover{
     flex: 3;
     background-color: rgb(234, 227, 227);
 }
+
+
+/* saleshistory */
+/* ================= STATUS ================= */
+.paid {
+  color: green;
+  font-weight: bold;
+}
+
+.pending {
+  color: red;
+  font-weight: bold;
+}
+
+/* ================= VIEW BUTTON ================= */
+.view-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.view-btn:hover {
+  background: #1d4ed8;
+}
+
+/* ================= ITEMS LIST STYLE ================= */
+table td {
+  vertical-align: top;
+  line-height: 1.4;
+}

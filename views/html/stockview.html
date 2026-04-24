@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nyondo Hardware - Stock View</title>
+
+  <link rel="stylesheet" href="/css/stockview.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+
+  <div class="logo">
+    <h2>⚒ NYONDO HARDWARE</h2>
+    <p>Sales Attendant System</p>
+  </div>
+
+  <ul>
+    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+    <li><a href="NewSales.html"><i class="fas fa-cart-shopping"></i> New Sales</a></li>
+    <li class="active"><a href="stockview.html"><i class="fas fa-boxes"></i> Stock View</a></li>
+    <li><a href="credit.html"><i class="fas fa-credit-card"></i> Credit Sales</a></li>
+    <li><a href="saleshistory.html"><i class="fas fa-clock-rotate-left"></i> Sales History</a></li>
+    <li><a href="logout.html"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+  </ul>
+
+</div>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <h2><i class="fas fa-boxes"></i> Stock Availability Check</h2>
+    <p>Check stock before making sales</p>
+
+    <!-- SEARCH SECTION (NEW) -->
+    <div class="search-box">
+      <input type="text" placeholder="Search item (cement, nails, paint...)">
+      <button><i class="fas fa-search"></i></button>
+    </div>
+  </div>
+
+  <!-- ================= STOCK CARDS ================= -->
+  <div class="cards">
+
+    <div class="card ok">
+      <h3>Cement</h3>
+      <p>50 Bags</p>
+      <span>Available</span>
+    </div>
+
+    <div class="card low">
+      <h3>Nails</h3>
+      <p>10 Boxes</p>
+      <span>Low Stock</span>
+    </div>
+
+    <div class="card out">
+      <h3>Paint</h3>
+      <p>0 Tins</p>
+      <span>Out of Stock</span>
+    </div>
+
+  </div>
+
+  <!-- ================= TABLE ================= -->
+  <table>
+
+    <tr>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+
+    <tr>
+      <td>Cement</td>
+      <td>Building</td>
+      <td>20,000</td>
+      <td>50 bags</td>
+      <td><span class="ok">OK</span></td>
+      <td><button class="request-btn">Request</button></td>
+    </tr>
+
+    <tr>
+      <td>Nails</td>
+      <td>Tools</td>
+      <td>5,000</td>
+      <td>10 boxes</td>
+      <td><span class="low">LOW</span></td>
+      <td><button class="request-btn">Request</button></td>
+    </tr>
+
+    <tr>
+      <td>Paint</td>
+      <td>Finishing</td>
+      <td>30,000</td>
+      <td>0 tins</td>
+      <td><span class="out">OUT</span></td>
+      <td><button class="request-btn">Request</button></td>
+    </tr>
+
+    <tr>
+      <td>Iron Sheets</td>
+      <td>Roofing</td>
+      <td>45,000</td>
+      <td>25 sheets</td>
+      <td><span class="ok">OK</span></td>
+      <td><button class="request-btn">Request</button></td>
+    </tr>
+
+    <tr>
+      <td>Wood Planks</td>
+      <td>Carpentry</td>
+      <td>12,000</td>
+      <td>8 pcs</td>
+      <td><span class="low">LOW</span></td>
+      <td><button class="request-btn">Request</button></td>
+    </tr>
+
+    <tr>
+      <td>Bolts & Nuts</td>
+      <td>Tools</td>
+      <td>3,000</td>
+      <td>100 packs</td>
+      <td><span class="ok">OK</span></td>
+      <td><button class="request-btn">Request</button></td>
+    </tr>
+
+    <tr>
+      <td>Plumbing Pipes</td>
+      <td>Plumbing</td>
+      <td>12,000</td>
+      <td>15 pcs</td>
+      <td><span class="ok">OK</span></td>
+      <td><button class="request-btn">Request</button></td>
+    </tr>
+
+  </table>
+
+</div>
+
+</body>
+</html>

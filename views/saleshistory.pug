@@ -1,0 +1,121 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Sales History - Nyondo Hardware
+  link(rel='stylesheet' href='/css/saleshistory.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// ================= SIDEBAR =================
+.sidebar
+  .logo
+    h2 &#x2692; NYONDO HARDWARE
+    p Point of Sale System
+  ul
+    li
+      a(href='#')
+        i.fas.fa-home
+        |  Dashboard
+    li
+      a(href='#')
+        i.fas.fa-cart-shopping
+        |  New Sales
+    li
+      a(href='#')
+        i.fas.fa-boxes
+        |  Stock View
+    li
+      a(href='#')
+        i.fas.fa-credit-card
+        |  Credit Sales
+    li.active
+      a(href='#')
+        i.fas.fa-clock-rotate-left
+        |  Sales History
+    li
+      a(href='#')
+        i.fas.fa-right-from-bracket
+        |  Logout
+// ================= MAIN =================
+.main
+  // TOPBAR
+  .topbar
+    h2
+      i.fas.fa-clock-rotate-left
+      |  Sales History
+    p Track and review all past transactions  and stock
+    .filters
+      input(type='text' placeholder='Search receipt / customer')
+      input(type='date')
+      select
+        option Payment Type
+        option Cash
+        option Credit
+      button
+        i.fas.fa-search
+  // SPACING
+  .space
+  // TABLE
+  table
+    tr
+      th Receipt No
+      th Date
+      th Customer
+      th Items
+      th Total (UGX)
+      th Payment
+      th Status
+      th Action
+    tr
+      td NYD001
+      td 23/04/2026
+      td John Doe
+      td Cement x2, Nails x1
+      td 45,000
+      td Cash
+      td
+        span.paid Paid
+      td
+        button.view-btn View
+    tr
+      td NYD002
+      td 23/04/2026
+      td Mary Jane
+      td Paint x1, Brush x2
+      td 30,000
+      td Credit
+      td
+        span.pending Pending
+      td
+        button.view-btn View
+    tr
+      td NYD003
+      td 22/04/2026
+      td Ali Hassan
+      td Iron Sheets x5
+      td 75,000
+      td Cash
+      td
+        span.paid Paid
+      td
+        button.view-btn View
+    tr
+      td NYD004
+      td 22/04/2026
+      td Sarah K
+      td Wood x3, Nails x2
+      td 60,000
+      td Credit
+      td
+        span.pending Pending
+      td
+        button.view-btn View
+    tr
+      td NYD005
+      td 21/04/2026
+      td David K
+      td Cement x1, Bolts x1
+      td 25,000
+      td Cash
+      td
+        span.paid Paid
+      td
+        button.view-btn View

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sales History - Nyondo Hardware</title>
+
+  <link rel="stylesheet" href="/css/saleshistory.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+
+  <div class="logo">
+    <h2>⚒ NYONDO HARDWARE</h2>
+    <p>Point of Sale System</p>
+  </div>
+
+  <ul>
+    <li><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+    <li><a href="#"><i class="fas fa-cart-shopping"></i> New Sales</a></li>
+    <li><a href="#"><i class="fas fa-boxes"></i> Stock View</a></li>
+    <li><a href="#"><i class="fas fa-credit-card"></i> Credit Sales</a></li>
+    <li class="active"><a href="#"><i class="fas fa-clock-rotate-left"></i> Sales History</a></li>
+    <li><a href="#"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+  </ul>
+
+</div>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <h2><i class="fas fa-clock-rotate-left"></i> Sales History</h2>
+    <p>Track and review all past transactions  and stock</p>
+
+    <div class="filters">
+      <input type="text" placeholder="Search receipt / customer">
+      <input type="date">
+
+      <select>
+        <option>Payment Type</option>
+        <option>Cash</option>
+        <option>Credit</option>
+      </select>
+
+      <button><i class="fas fa-search"></i></button>
+    </div>
+  </div>
+
+  <!-- SPACING -->
+  <div class="space"></div>
+
+  <!-- TABLE -->
+  <table>
+
+    <tr>
+      <th>Receipt No</th>
+      <th>Date</th>
+      <th>Customer</th>
+      <th>Items</th>
+      <th>Total (UGX)</th>
+      <th>Payment</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+
+    <tr>
+      <td>NYD001</td>
+      <td>23/04/2026</td>
+      <td>John Doe</td>
+      <td>Cement x2, Nails x1</td>
+      <td>45,000</td>
+      <td>Cash</td>
+      <td><span class="paid">Paid</span></td>
+      <td><button class="view-btn">View</button></td>
+    </tr>
+
+    <tr>
+      <td>NYD002</td>
+      <td>23/04/2026</td>
+      <td>Mary Jane</td>
+      <td>Paint x1, Brush x2</td>
+      <td>30,000</td>
+      <td>Credit</td>
+      <td><span class="pending">Pending</span></td>
+      <td><button class="view-btn">View</button></td>
+    </tr>
+
+    <tr>
+      <td>NYD003</td>
+      <td>22/04/2026</td>
+      <td>Ali Hassan</td>
+      <td>Iron Sheets x5</td>
+      <td>75,000</td>
+      <td>Cash</td>
+      <td><span class="paid">Paid</span></td>
+      <td><button class="view-btn">View</button></td>
+    </tr>
+
+    <tr>
+      <td>NYD004</td>
+      <td>22/04/2026</td>
+      <td>Sarah K</td>
+      <td>Wood x3, Nails x2</td>
+      <td>60,000</td>
+      <td>Credit</td>
+      <td><span class="pending">Pending</span></td>
+      <td><button class="view-btn">View</button></td>
+    </tr>
+
+    <tr>
+      <td>NYD005</td>
+      <td>21/04/2026</td>
+      <td>David K</td>
+      <td>Cement x1, Bolts x1</td>
+      <td>25,000</td>
+      <td>Cash</td>
+      <td><span class="paid">Paid</span></td>
+      <td><button class="view-btn">View</button></td>
+    </tr>
+
+  </table>
+
+</div>
+
+</body>
+</html>

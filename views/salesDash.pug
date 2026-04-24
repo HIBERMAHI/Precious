@@ -1,0 +1,77 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Sales Attendant Dashboard
+  // Font Awesome
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+  // External CSS
+  link(rel='stylesheet' href='/css/styles.css')
+// SIDEBAR
+.sidebar
+  h2
+    i.fa-solid.fa-store
+    |  NYONDO SALES
+  ul
+    li
+      i.fa-solid.fa-gauge
+      |  Dashboard
+    li
+      i.fa-solid.fa-cart-shopping
+      |  New Sale
+    li
+      i.fa-solid.fa-box
+      |  StockView
+    li
+      i.fa-solid.fa-receipt
+      |  Sales History
+    li
+      i.fa-solid.fa-credit-card
+      |  Credit Sales
+    li
+      i.fa-solid.fa-money-bill Sales History
+// MAIN CONTENT
+.main
+  // TOP BAR
+  .topbar
+    h1 Sales Attendant Dashboard
+    .user
+      i.fa-solid.fa-user-circle
+      span Attendant
+  // CARDS
+  .cards
+    .card
+      i.fa-solid.fa-sack-dollar
+      h3 Total Sales
+      p UGX 5,200,000
+    .card
+      i.fa-solid.fa-cart-plus
+      h3 Today Sales
+      p UGX 620,000
+    .card
+      i.fa-solid.fa-clock
+      h3 Pending Payments
+      p UGX 1,100,000
+  // TABLE
+  .table-section
+    h2 Recent Sales
+    table
+      tr
+        th Invoice
+        th Customer
+        th Item
+        th Amount
+        th Status
+      tr
+        td #001
+        td John Doe
+        td Cement 50kg
+        td UGX 120,000
+        td
+          span.status.paid Paid
+      tr
+        td #002
+        td Mary Jane
+        td Iron Sheets
+        td UGX 340,000
+        td
+          span.status.pending Pending

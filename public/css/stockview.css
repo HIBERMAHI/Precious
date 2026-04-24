@@ -1,0 +1,241 @@
+
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* ================= BODY ================= */
+body {
+  display: flex;
+  background: #f4f6f9;
+  color: #1f2937;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: #051029;
+  color: white;
+  position: fixed;
+  padding: 20px;
+}
+
+/* LOGO */
+.logo {
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #334155;
+}
+
+.logo h2 {
+  font-size: 1.5rem;
+  color: #facc15;
+  letter-spacing: 1px;
+}
+
+.logo p {
+  font-size: 1rem;
+  color: #e4e8ec;
+  margin-top: 5px;
+}
+
+/* NAVIGATION */
+.sidebar ul {
+  list-style: none;
+  margin-top: 15px;
+}
+
+.sidebar ul li {
+  margin: 8px 0;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #cbd5e1;
+  display: block;
+  padding: 15px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.sidebar ul li a:hover {
+  background-color: rgb(29, 143, 29);
+  color: white;
+}
+
+
+/* ================= MAIN ================= */
+.main {
+  margin-left: 260px;
+  padding: 20px;
+  width: 100%;
+}
+
+/* ================= TOPBAR ================= */
+.topbar {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.topbar h2 {
+  font-size: 18px;
+}
+
+.topbar p {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 5px;
+}
+
+/* ================= SEARCH BOX ================= */
+.search-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.search-box input {
+  padding: 9px;
+  width: 320px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+}
+
+.search-box button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 9px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.search-box button:hover {
+  background: #1d4ed8;
+}
+
+/* ================= STOCK CARDS (ATTENDANT STYLE) ================= */
+.cards {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+/* INDIVIDUAL CARD */
+.card {
+  flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: 0.3s;
+  border-bottom: 2px solid rgb(7, 7, 44);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card h3 {
+  font-size: 14px;
+  color: #374151;
+}
+
+.card p {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.card span {
+  font-size: 12px;
+  display: block;
+  margin-top: 5px;
+}
+
+/* CARD COLORS */
+.ok p { color: green; }
+.low p { color: orange; }
+.out p { color: red; }
+
+/* ================= TABLE ================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+th {
+  background: #0c2355;
+  color: white;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+tr:hover {
+  background: #f1f5f9;
+}
+
+/* ================= STATUS LABELS ================= */
+.ok {
+  color: green;
+  font-weight: bold;
+}
+
+.low {
+  color: orange;
+  font-weight: bold;
+}
+
+.out {
+  color: red;
+  font-weight: bold;
+}
+
+/* ================= ACTION BUTTON ================= */
+.request-btn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 12px;
+}
+
+.request-btn:hover {
+  background: #15803d;
+}
+
+/* ================= RESPONSIVE (LIGHT SUPPORT) ================= */
+@media (max-width: 900px) {
+  .cards {
+    flex-direction: column;
+  }
+
+  .search-box input {
+    width: 200px;
+  }
+}

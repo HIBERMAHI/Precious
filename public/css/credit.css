@@ -1,0 +1,154 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* BODY */
+body {
+  display: flex;
+  background: #f4f6f9;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: #05112c;
+  color: white;
+  position: fixed;
+  padding: 20px;
+}
+
+/* LOGO */
+.logo {
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #334155;
+}
+
+.logo h2 {
+  font-size: 1.5remx;
+  color: #facc15;
+}
+
+.logo p {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* NAV */
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  margin: 5px 0;
+  border-radius: 6px;
+}
+
+.sidebar ul li a {
+  display: block;
+  text-decoration: none;
+  color: #cbd5e1;
+  padding: 18px;
+}
+
+.sidebar ul li:hover {
+  background-color: rgb(30, 165, 30);
+}
+
+
+/* ================= MAIN ================= */
+.main {
+  margin-left: 260px;
+  padding: 20px;
+  width: 100%;
+}
+
+/* TOPBAR */
+.topbar {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.topbar h2 {
+  font-size: 18px;
+}
+
+.topbar p {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* GRID */
+.grid {
+  display: flex;
+  gap: 20px;
+}
+
+/* CARD */
+.card {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+  margin-bottom: 15px;
+}
+
+/* FORM */
+form label {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+form input,
+form select {
+  width: 100%;
+  padding: 9px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* BUTTONS */
+.btn-primary {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  background: #2f0808;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #b91c1c;
+}
+
+.btn-secondary:hover {
+  background: #15803d;
+}

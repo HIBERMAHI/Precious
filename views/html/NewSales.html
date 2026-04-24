@@ -1,173 +1,204 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Sales Page</title>
+<head>
+  <meta charset="UTF-8" />
+  <title>Nyondo Hardware POS - Sales</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <link rel="stylesheet" href="/css/styles.css" />
-  </head>
-  <body>
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <h2><i class="fa-solid fa-store"></i> NYONDO POS</h2>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
-      <ul>
-        <li>
-          <a href="dashboard.html"
-            ><i class="fa-solid fa-gauge"></i> Dashboard</a
-          >
-        </li>
-        <li class="active">
-          <a href="sales-page.html"
-            ><i class="fa-solid fa-cart-shopping"></i> Sales</a
-          >
-        </li>
-        <li>
-          <a href="products.html"><i class="fa-solid fa-box"></i> Products</a>
-        </li>
-        <li>
-          <a href="credit-debit-sales.html"
-            ><i class="fa-solid fa-credit-card"></i> Credit & Debit</a
-          >
-        </li>
-      </ul>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- LOGO -->
+    <div class="logo">
+      <h2>⚒ NYONDO HARDWARE</h2>
+      <p>Point of Sale System</p>
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
-      <div class="topbar">
-        <h1>Sales Management</h1>
-      </div>
+    <ul>
+      <li><a href="dashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+      <li class="active"><a href="sales-page.html"><i class="fa-solid fa-cart-shopping"></i> New Sales</a></li>
+      <li><a href="products.html"><i class="fa-solid fa-box"></i> Stock View</a></li>
+      <li><a href="credit-debit-sales.html"><i class="fa-solid fa-credit-card"></i> Credit Sales</a></li>
+      <li><a href="sales-history.html"><i class="fa-solid fa-clock-rotate-left"></i> Sales History</a></li>
+      <li><a href="#"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+    </ul>
+  </div>
 
-      <!-- ROW 1: SALES TABLE -->
-      <div class="row table-row">
-        <h2><i class="fa-solid fa-clock-rotate-left"></i> Recent Sales</h2>
+  <!-- MAIN CONTENT -->
+  <div class="main">
 
-        <table>
-          <tr>
-            <th>Date</th>
-            <th>Item</th>
-            <th>Qty</th>
-            <th>Unit Price</th>
-            <th>Total</th>
-          </tr>
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <h1>Sales Management</h1>
+    </div>
 
-          <tr>
-            <td>2026-04-21</td>
-            <td>Cement 50kg</td>
-            <td>2</td>
-            <td>45,000</td>
-            <td>90,000</td>
-          </tr>
+    <!-- TODAY SALES TABLE -->
+    <div class="row table-row">
+      <h2><i class="fa-solid fa-calendar-day"></i> Today's Sales</h2>
 
-          <tr>
-            <td>2026-04-21</td>
-            <td>Iron Sheets</td>
-            <td>3</td>
-            <td>32,000</td>
-            <td>96,000</td>
-          </tr>
+      <table>
+        <tr>
+          <th>Time</th>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+        </tr>
 
-          <tr>
-            <td>2026-04-20</td>
-            <td>Nails Pack</td>
-            <td>5</td>
-            <td>5,000</td>
-            <td>25,000</td>
-          </tr>
+        <tr>
+          <td>08:10 AM</td>
+          <td>Cement (50kg)</td>
+          <td>3</td>
+          <td>45,000</td>
+          <td>135,000</td>
+        </tr>
 
-          <tr>
-            <td>2026-04-20</td>
-            <td>Paint Bucket</td>
-            <td>1</td>
-            <td>75,000</td>
-            <td>75,000</td>
-          </tr>
+        <tr>
+          <td>09:05 AM</td>
+          <td>Iron Sheets</td>
+          <td>5</td>
+          <td>32,000</td>
+          <td>160,000</td>
+        </tr>
 
-          <tr>
-            <td>2026-04-19</td>
-            <td>Plumbing Pipes</td>
-            <td>4</td>
-            <td>12,000</td>
-            <td>48,000</td>
-          </tr>
+        <tr>
+          <td>10:20 AM</td>
+          <td>Nails (Box)</td>
+          <td>10</td>
+          <td>5,000</td>
+          <td>50,000</td>
+        </tr>
 
-          <tr>
-            <td>2026-04-19</td>
-            <td>Door Locks</td>
-            <td>6</td>
-            <td>8,000</td>
-            <td>48,000</td>
-          </tr>
-        </table>
-      </div>
+        <tr>
+          <td>11:15 AM</td>
+          <td>Paint (20L)</td>
+          <td>2</td>
+          <td>75,000</td>
+          <td>150,000</td>
+        </tr>
 
-      <!-- ROW 2: FORM + RECEIPT -->
-      <div class="row bottom-row">
-        <!-- SALES FORM -->
-        <div class="box form-box">
-          <h2><i class="fa-solid fa-cart-shopping"></i> Sales Form</h2>
+        <tr>
+          <td>01:00 PM</td>
+          <td>Plumbing Pipes</td>
+          <td>6</td>
+          <td>12,000</td>
+          <td>72,000</td>
+        </tr>
 
-          <form  action="/NewSales"  method="post">
-            <label  for="cname">Customer Name</label>
-            <input type="text" id="cname"  name="customername"/>
+        <tr>
+          <td>02:30 PM</td>
+          <td>Door Locks</td>
+          <td>8</td>
+          <td>8,000</td>
+          <td>64,000</td>
+        </tr>
+      </table>
+    </div>
 
-            <label  for="item">Item</label>
-            <input type="text" name="item"  id="item"/>
+    <!-- SALES FORM -->
+    <div class="row full-form">
 
-            <label  for="quantity">Quantity</label>
-            <input type="number" name="quantity"  id="quantity"/>
+      <div class="box form-box">
+        <h2><i class="fa-solid fa-cart-plus"></i> New Sale Entry</h2>
 
-            <label  for="unitprice">Unit Price</label>
-            <input type="number" name="unitprice"  id="unitprice"/>
+        <form action="/NewSales" method="post">
 
-            <label for="discount" >Discount</label>
-            <input type="number" name="discount"   id="discount"/>
+          <div class="form-grid">
 
-            <label for="totalprice"  >Total Price</label>
-            <input type="number" name="totalprice"   id="totalprice"/>
+            <div>
+              <label>Customer Name</label>
+              <input type="text" name="customername" required>
+            </div>
 
-            <label >Payment Type</label>
-            <select name="paymentmethod" >
-              <option>Cash</option>
-              <option>Credit</option>
-              <option>Debit</option>
-            </select>
+            <div>
+              <label>Item</label>
+              <input type="text" name="item" required>
+            </div>
 
-            <button type="submit">
-              <i class="fa-solid fa-check"></i> Complete Sale
-            </button>
-          </form>
-        </div>
+            <div>
+              <label>Quantity</label>
+              <input type="number" name="quantity" required>
+            </div>
 
-        <!-- RECEIPT -->
-        <div class="box receipt-box">
-          <h2><i class="fa-solid fa-receipt"></i> Receipt</h2>
+            <div>
+              <label>Unit Price</label>
+              <input type="number" name="unitprice" required>
+            </div>
 
-          <div class="receipt">
-            <p><b>NYONDO HARDWARE</b></p>
-            <p>Receipt No: NYD-0001</p>
-            <hr />
+            <div>
+              <label>Discount</label>
+              <input type="number" name="discount">
+            </div>
 
-            <p>Customer: --------</p>
-            <p>Item: --------</p>
-            <p>Qty: --------</p>
-            <p>Unit Price: --------</p>
-            <p>Total: --------</p>
+            <div>
+              <label>Total Price</label>
+              <input type="number" name="totalprice" readonly>
+            </div>
 
-            <hr />
-            <p><b>Thank you for shopping!</b></p>
+            <div>
+              <label>Payment Type</label>
+              <select name="paymentmethod">
+                <option>Cash</option>
+                <option>Credit</option>
+                <option>Debit</option>
+              </select>
+            </div>
+
           </div>
 
-          <button class="print">
-            <i class="fa-solid fa-print"></i> Print Receipt
-          </button>
-        </div>
+          <!-- BUTTONS -->
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">
+              <i class="fa-solid fa-check"></i> Complete Sale
+            </button>
+
+            <button type="button" class="btn-secondary">
+              <i class="fa-solid fa-receipt"></i> Issue Receipt
+            </button>
+          </div>
+
+        </form>
       </div>
     </div>
-  </body>
+
+    <!-- RECEIPT -->
+    <div class="row receipt-row">
+      <div class="box receipt-box">
+
+        <h2><i class="fa-solid fa-receipt"></i> Receipt Preview</h2>
+
+        <div class="receipt">
+          <p><b>NYONDO HARDWARE</b></p>
+          <p>Receipt No: NYD-0001</p>
+          <p>Date: 23 Apr 2026</p>
+          <hr>
+
+          <p>Customer: --------</p>
+          <p>Item: --------</p>
+          <p>Qty: --------</p>
+          <p>Unit Price: --------</p>
+          <p>Total: --------</p>
+
+          <hr>
+          <p><b>Served By: Sales Attendant</b></p>
+          <p><b>Thank you for shopping with us!</b></p>
+        </div>
+
+        <button class="print">
+          <i class="fa-solid fa-print"></i> Print Receipt
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+
+</body>
 </html>

@@ -1,0 +1,135 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Nyondo Hardware - Stock View
+  link(rel='stylesheet' href='/css/stockview.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// ================= SIDEBAR =================
+.sidebar
+  .logo
+    h2 &#x2692; NYONDO HARDWARE
+    p Sales Attendant System
+  ul
+    li
+      a(href='dashboard.html')
+        i.fas.fa-home
+        |  Dashboard
+    li
+      a(href='NewSales.html')
+        i.fas.fa-cart-shopping
+        |  New Sales
+    li.active
+      a(href='stockview.html')
+        i.fas.fa-boxes
+        |  Stock View
+    li
+      a(href='credit.html')
+        i.fas.fa-credit-card
+        |  Credit Sales
+    li
+      a(href='saleshistory.html')
+        i.fas.fa-clock-rotate-left
+        |  Sales History
+    li
+      a(href='logout.html')
+        i.fas.fa-right-from-bracket
+        |  Logout
+// ================= MAIN =================
+.main
+  // TOPBAR
+  .topbar
+    h2
+      i.fas.fa-boxes
+      |  Stock Availability Check
+    p Check stock before making sales
+    // SEARCH SECTION (NEW)
+    .search-box
+      input(type='text' placeholder='Search item (cement, nails, paint...)')
+      button
+        i.fas.fa-search
+  // ================= STOCK CARDS =================
+  .cards
+    .card.ok
+      h3 Cement
+      p 50 Bags
+      span Available
+    .card.low
+      h3 Nails
+      p 10 Boxes
+      span Low Stock
+    .card.out
+      h3 Paint
+      p 0 Tins
+      span Out of Stock
+  // ================= TABLE =================
+  table
+    tr
+      th Item
+      th Category
+      th Price
+      th Quantity
+      th Status
+      th Action
+    tr
+      td Cement
+      td Building
+      td 20,000
+      td 50 bags
+      td
+        span.ok OK
+      td
+        button.request-btn Request
+    tr
+      td Nails
+      td Tools
+      td 5,000
+      td 10 boxes
+      td
+        span.low LOW
+      td
+        button.request-btn Request
+    tr
+      td Paint
+      td Finishing
+      td 30,000
+      td 0 tins
+      td
+        span.out OUT
+      td
+        button.request-btn Request
+    tr
+      td Iron Sheets
+      td Roofing
+      td 45,000
+      td 25 sheets
+      td
+        span.ok OK
+      td
+        button.request-btn Request
+    tr
+      td Wood Planks
+      td Carpentry
+      td 12,000
+      td 8 pcs
+      td
+        span.low LOW
+      td
+        button.request-btn Request
+    tr
+      td Bolts &amp; Nuts
+      td Tools
+      td 3,000
+      td 100 packs
+      td
+        span.ok OK
+      td
+        button.request-btn Request
+    tr
+      td Plumbing Pipes
+      td Plumbing
+      td 12,000
+      td 15 pcs
+      td
+        span.ok OK
+      td
+        button.request-btn Request

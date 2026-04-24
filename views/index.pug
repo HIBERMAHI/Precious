@@ -2,5 +2,42 @@ doctype html
 head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title Document
-h1 Welcome to my praradie , I love you
+  title Nyondo Stock System
+  // FONT AWESOME
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+  // CSS
+  link(rel='stylesheet' href='/css/precious.css')
+// NAVBAR
+header.navbar
+  .logo
+    span.logo-icon N
+    div
+      h2 Nyondo
+      small Stock System
+  nav
+    a.active(href='index.html') Home
+    a(href='features.html') Features
+    a(href='about.html') About
+    a(href='contact.html') Contact
+  a.login-btn(href='login.html')
+    i.fas.fa-user
+    |  Login
+// HERO SECTION
+section.hero
+  .overlay
+  .hero-content
+    span.tag Smart. Simple. Reliable.
+    h1
+      | Nyondo Stock 
+      br
+      span Management System
+    p
+      | Track inventory, manage sales, handle credits and debits,
+      | and grow your hardware business with ease.
+    .buttons
+      a.btn.primary(href='login.html')
+        i.fas.fa-sign-in-alt
+        |  Login to System
+      a.btn.outline(href='register.html')
+        i.fas.fa-user-plus
+        |  Get Started
