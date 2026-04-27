@@ -1,0 +1,111 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}
+
+.receipt-container {
+  width: 900px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #0b5d2a;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.logo h1 {
+  margin: 0;
+  color: #0b5d2a;
+}
+
+.logo p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.company-info,
+.receipt-meta {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* SECTIONS */
+.section {
+  margin-bottom: 20px;
+}
+
+h3 {
+  color: #0b5d2a;
+  margin-bottom: 10px;
+}
+
+/* CUSTOMER */
+.customer-box {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+table th {
+  background: #0b5d2a;
+  color: white;
+  padding: 10px;
+}
+
+table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+/* SUMMARY */
+.summary-grid {
+  display: flex;
+  gap: 20px;
+}
+
+.box {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.box span {
+  float: right;
+}
+
+hr {
+  margin: 10px 0;
+}
+
+/* THANK YOU */
+.thank-you {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px dashed #ccc;
+}
+
+.thank-you h2 {
+  color: #0b5d2a;
+}

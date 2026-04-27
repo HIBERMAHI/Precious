@@ -1,0 +1,31 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Register - Nyondo
+  link(rel='stylesheet' href='/css/login.css')
+.card
+  img.logo(src='/images/logo.png' width='50' height='50' alt='logo')
+  h4 Create an Account
+  p.sub Create your account to get started
+  form(action='/register' method='post')
+    // FULL NAME
+    .field
+      label(for='fname') Full Name
+      input#fname(type='text' name='fullname' placeholder='Enter Full Name' required='')
+    // EMAIL
+    .field
+      label(for='email') Email
+      input#email(type='email' name='email' placeholder='Enter Your Email' required='')
+    // PASSWORD
+    .field
+      label(for='password') Password
+      input#password(type='password' name='password' placeholder='Enter Your Password' required='')
+    // CONFIRM PASSWORD
+    .field
+      label(for='cpassword') Confirm Password
+      input#cpassword(type='password' name='confirmpassword' placeholder='Re-Enter Password' required='')
+    button(type='submit') Register Account
+    .login
+      | Already have an account? 
+      a(href='#') Sign In

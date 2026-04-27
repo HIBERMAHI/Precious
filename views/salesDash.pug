@@ -4,39 +4,54 @@ head
   title Sales Attendant Dashboard
   // Font Awesome
   link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
-  // External CSS
-  link(rel='stylesheet' href='/css/styles.css')
+  // CSS
+  link(rel='stylesheet' href='/css/salesDash.css')
 // SIDEBAR
 .sidebar
-  h2
-    i.fa-solid.fa-store
-    |  NYONDO SALES
+  // LOGO
+  .logo
+    h2
+      span.icon &#x2692;
+      |  NYONDO HARDWARE
+    p Point of Sale System
+  // NAVIGATION
   ul
     li
-      i.fa-solid.fa-gauge
-      |  Dashboard
+      a(href='dashboard.html')
+        i.fa-solid.fa-gauge
+        |  Dashboard
     li
-      i.fa-solid.fa-cart-shopping
-      |  New Sale
+      a(href='new-sale.html')
+        i.fa-solid.fa-cart-shopping
+        |  New Sale
     li
-      i.fa-solid.fa-box
-      |  StockView
+      a(href='stock.html')
+        i.fa-solid.fa-box
+        |  Stock View
     li
-      i.fa-solid.fa-receipt
-      |  Sales History
+      a(href='sales-history.html')
+        i.fa-solid.fa-receipt
+        |  Sales History
     li
-      i.fa-solid.fa-credit-card
-      |  Credit Sales
+      a(href='credit-sales.html')
+        i.fa-solid.fa-credit-card
+        |  Credit Sales
     li
-      i.fa-solid.fa-money-bill Sales History
-// MAIN CONTENT
+      a(href='login.html')
+        i.fa-solid.fa-right-from-bracket
+        |  Logout
+// MAIN
 .main
-  // TOP BAR
+  // TOPBAR
   .topbar
     h1 Sales Attendant Dashboard
-    .user
-      i.fa-solid.fa-user-circle
-      span Attendant
+    .top-actions
+      a.btn.register-btn(href='register-customer.html')
+        i.fa-solid.fa-user-plus
+        |  Register Customer
+      .user
+        i.fa-solid.fa-user-circle
+        span Attendant
   // CARDS
   .cards
     .card
@@ -73,5 +88,33 @@ head
         td Mary Jane
         td Iron Sheets
         td UGX 340,000
+        td
+          span.status.pending Pending
+      tr
+        td #003
+        td Peter Mugisha
+        td Paint 20L
+        td UGX 180,000
+        td
+          span.status.paid Paid
+      tr
+        td #004
+        td Sarah Namusoke
+        td Nails (Box)
+        td UGX 75,000
+        td
+          span.status.pending Pending
+      tr
+        td #005
+        td David Okello
+        td Wheelbarrow
+        td UGX 250,000
+        td
+          span.status.paid Paid
+      tr
+        td #006
+        td Grace Achieng
+        td Water Pipes
+        td UGX 210,000
         td
           span.status.pending Pending

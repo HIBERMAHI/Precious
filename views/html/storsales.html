@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sales Page - Nyondo Hardware</title>
+  <link rel="stylesheet" href="/css/storedash.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="logo">
+    <h2>Nyondo</h2>
+  </div>
+
+  <ul>
+    <li><a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+    <li><a href="/inventory"><i class="fas fa-boxes"></i> Inventory</a></li>
+    <li class="active"><a href="/sales"><i class="fas fa-cash-register"></i> Sales</a></li>
+    <li><a href="/stock"><i class="fas fa-plus-circle"></i> Add Stock</a></li>
+    <li><a href="/reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+  </ul>
+</div>
+
+<div class="main">
+
+  <div class="header">
+    <h1><i class="fas fa-chart-bar"></i> Sales Overview</h1>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-content">
+        <i class="fas fa-coins"></i>
+        <div>
+          <h3>Total Sales Today</h3>
+          <p>UGX 1,250,000</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <i class="fas fa-shopping-cart"></i>
+        <div>
+          <h3>Items Sold</h3>
+          <p>120</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <i class="fas fa-chart-line"></i>
+        <div>
+          <h3>Profit</h3>
+          <p>UGX 350,000</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-section">
+    <div class="table-header">
+      <h2><i class="fas fa-receipt"></i> Recent Sales</h2>
+      <input type="text" placeholder="Search sales...">
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Product</th>
+          <th>Qty</th>
+          <th>Price (UGX)</th>
+          <th>Total (UGX)</th>
+          <th>Attendant</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>27 Apr 2026</td>
+          <td>Hammer</td>
+          <td>5</td>
+          <td>10,000</td>
+          <td>50,000</td>
+          <td>John</td>
+        </tr>
+
+        <tr>
+          <td>27 Apr 2026</td>
+          <td>Nails</td>
+          <td>10</td>
+          <td>5,000</td>
+          <td>50,000</td>
+          <td>Sarah</td>
+        </tr>
+
+        <tr>
+          <td>26 Apr 2026</td>
+          <td>Cement</td>
+          <td>20</td>
+          <td>30,000</td>
+          <td>600,000</td>
+          <td>Mike</td>
+        </tr>
+
+        <tr>
+          <td>25 Apr 2026</td>
+          <td>Paint</td>
+          <td>3</td>
+          <td>80,000</td>
+          <td>240,000</td>
+          <td>David</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BEST SELLING -->
+  <div class="best-selling">
+    <h2><i class="fas fa-star"></i> Best Selling Products</h2>
+    <ul>
+      <li><i class="fas fa-box"></i> Hammer - 50 sold</li>
+      <li><i class="fas fa-box"></i> Cement - 40 sold</li>
+      <li><i class="fas fa-box"></i> Nails - 30 sold</li>
+    </ul>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -27,7 +27,7 @@ body {
 /* LOGO */
 .logo {
   text-align: center;
-  margin-bottom: 25px;
+  margin: 0  40px  25px  0;
   padding-bottom: 15px;
   border-bottom: 1px solid #334155;
 }
@@ -41,7 +41,7 @@ body {
 .logo p {
   font-size: 1rem;
   color: #e4e8ec;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 /* NAVIGATION */
@@ -78,6 +78,9 @@ body {
 
 /* ================= TOPBAR ================= */
 .topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: white;
   padding: 15px;
   border-radius: 10px;
@@ -90,7 +93,7 @@ body {
 }
 
 .topbar p {
-  font-size: 13px;
+  font-size: 1rem;
   color: #6b7280;
   margin-top: 5px;
 }

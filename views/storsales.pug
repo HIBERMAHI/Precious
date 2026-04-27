@@ -1,0 +1,115 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Sales Page - Nyondo Hardware
+  link(rel='stylesheet' href='/css/storedash.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+.sidebar
+  .logo
+    h2 Nyondo
+  ul
+    li
+      a(href='/dashboard')
+        i.fas.fa-home
+        |  Dashboard
+    li
+      a(href='/inventory')
+        i.fas.fa-boxes
+        |  Inventory
+    li.active
+      a(href='/sales')
+        i.fas.fa-cash-register
+        |  Sales
+    li
+      a(href='/stock')
+        i.fas.fa-plus-circle
+        |  Add Stock
+    li
+      a(href='/reports')
+        i.fas.fa-chart-line
+        |  Reports
+.main
+  .header
+    h1
+      i.fas.fa-chart-bar
+      |  Sales Overview
+  // CARDS
+  .cards
+    .card
+      .card-content
+        i.fas.fa-coins
+        div
+          h3 Total Sales Today
+          p UGX 1,250,000
+    .card
+      .card-content
+        i.fas.fa-shopping-cart
+        div
+          h3 Items Sold
+          p 120
+    .card
+      .card-content
+        i.fas.fa-chart-line
+        div
+          h3 Profit
+          p UGX 350,000
+  // TABLE
+  .table-section
+    .table-header
+      h2
+        i.fas.fa-receipt
+        |  Recent Sales
+      input(type='text' placeholder='Search sales...')
+    table
+      thead
+        tr
+          th Date
+          th Product
+          th Qty
+          th Price (UGX)
+          th Total (UGX)
+          th Attendant
+      tbody
+        tr
+          td 27 Apr 2026
+          td Hammer
+          td 5
+          td 10,000
+          td 50,000
+          td John
+        tr
+          td 27 Apr 2026
+          td Nails
+          td 10
+          td 5,000
+          td 50,000
+          td Sarah
+        tr
+          td 26 Apr 2026
+          td Cement
+          td 20
+          td 30,000
+          td 600,000
+          td Mike
+        tr
+          td 25 Apr 2026
+          td Paint
+          td 3
+          td 80,000
+          td 240,000
+          td David
+  // BEST SELLING
+  .best-selling
+    h2
+      i.fas.fa-star
+      |  Best Selling Products
+    ul
+      li
+        i.fas.fa-box
+        |  Hammer - 50 sold
+      li
+        i.fas.fa-box
+        |  Cement - 40 sold
+      li
+        i.fas.fa-box
+        |  Nails - 30 sold

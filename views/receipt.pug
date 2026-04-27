@@ -1,0 +1,112 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Nyondo Receipt
+  link(rel='stylesheet' href='/css/receipt.css')
+.receipt-container
+  // HEADER
+  .header
+    .logo
+      h1 NYONDO
+      p GENERAL HARDWARE
+    .company-info
+      p P.O Box 123, Mubende - Uganda
+      p +256 700 123 456
+      p info@nyondohardware.ug
+    .receipt-meta
+      p
+        strong Date:
+        |  25 May 2025
+      p
+        strong Time:
+        |  10:45 AM
+      p
+        strong Cashier:
+        |  John Semanda
+      p
+        strong Branch:
+        |  Nyondo Main Branch
+  // CUSTOMER INFO
+  .section
+    h3 Customer Information
+    .customer-box
+      p
+        strong Customer Name:
+        |  Walk-in Customer
+      p
+        strong Phone Number:
+        |  -
+      p
+        strong Customer Type:
+        |  Cash Sale
+  // ITEMS TABLE
+  .section
+    table
+      thead
+        tr
+          th #
+          th Item Name
+          th Quantity
+          th Unit Price (UGX)
+          th Total (UGX)
+      tbody
+        tr
+          td 1
+          td Nails 2&quot; (Box)
+          td 5
+          td 10,000
+          td 50,000
+        tr
+          td 2
+          td Cement (Hima)
+          td 2
+          td 35,000
+          td 70,000
+        tr
+          td 3
+          td Iron Bars 12mm
+          td 4
+          td 18,000
+          td 72,000
+        tr
+          td 4
+          td Paint (Crown 4L)
+          td 1
+          td 55,000
+          td 55,000
+        tr
+          td 5
+          td Wire Roll
+          td 2
+          td 8,000
+          td 16,000
+  // SUMMARY
+  .summary-grid
+    .box
+      h3 Payment Summary
+      p
+        | Subtotal: 
+        span UGX 263,000
+      p
+        | Discount: 
+        span UGX 8,000
+      p
+        | VAT (18%): 
+        span UGX 45,900
+      hr
+      h2 Grand Total: UGX 300,900
+    .box
+      h3 Payment Method
+      p
+        | Method: 
+        span Cash
+      p
+        | Amount Paid: 
+        span UGX 300,900
+      p
+        | Balance: 
+        span UGX 0
+  // THANK YOU MESSAGE
+  .thank-you
+    h2 Thank you for shopping with us!
+    p Nyondo General Hardware appreciates your business.

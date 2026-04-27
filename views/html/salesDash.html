@@ -1,93 +1,147 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Sales Attendant Dashboard</title>
+<head>
+  <meta charset="UTF-8" />
+  <title>Sales Attendant Dashboard</title>
 
-    <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
 
-    <!-- External CSS -->
-    <link rel="stylesheet" href="/css/styles.css" />
-  </head>
-  <body>
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <h2><i class="fa-solid fa-store"></i> NYONDO SALES</h2>
-      <ul>
-        <li><i class="fa-solid fa-gauge"></i> Dashboard</li>
-        <li><i class="fa-solid fa-cart-shopping"></i> New Sale</li>
-        <li><i class="fa-solid fa-box"></i> StockView</li>
-        <li><i class="fa-solid fa-receipt"></i> Sales History</li>
-        <li><i class="fa-solid fa-credit-card"></i> Credit Sales</li>
-        <li><i class="fa-solid fa-money-bill">logOut</i></li>
-      </ul>
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/salsDash.css" />
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- LOGO -->
+    <div class="logo">
+      <h2><span class="icon">⚒</span> NYONDO HARDWARE</h2>
+      <p>Point of Sale System</p>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main">
-      <!-- TOP BAR -->
-      <div class="topbar">
-        <h1>Sales Attendant Dashboard</h1>
+    <!-- NAVIGATION -->
+    <ul>
+      <li><a href="dashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+      <li><a href="new-sale.html"><i class="fa-solid fa-cart-shopping"></i> New Sale</a></li>
+      <li><a href="stock.html"><i class="fa-solid fa-box"></i> Stock View</a></li>
+      <li><a href="sales-history.html"><i class="fa-solid fa-receipt"></i> Sales History</a></li>
+      <li><a href="credit-sales.html"><i class="fa-solid fa-credit-card"></i> Credit Sales</a></li>
+      <li><a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+    </ul>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <h1>Sales Attendant Dashboard</h1>
+
+      <div class="top-actions">
+        <a href="register-customer.html" class="btn register-btn">
+          <i class="fa-solid fa-user-plus"></i> Register Customer
+        </a>
+
         <div class="user">
           <i class="fa-solid fa-user-circle"></i>
           <span>Attendant</span>
         </div>
       </div>
+    </div>
 
-      <!-- CARDS -->
-      <div class="cards">
-        <div class="card">
-          <i class="fa-solid fa-sack-dollar"></i>
-          <h3>Total Sales</h3>
-          <p>UGX 5,200,000</p>
-        </div>
-
-        <div class="card">
-          <i class="fa-solid fa-cart-plus"></i>
-          <h3>Today Sales</h3>
-          <p>UGX 620,000</p>
-        </div>
-
-        <div class="card">
-          <i class="fa-solid fa-clock"></i>
-          <h3>Pending Payments</h3>
-          <p>UGX 1,100,000</p>
-        </div>
+    <!-- CARDS -->
+    <div class="cards">
+      <div class="card">
+        <i class="fa-solid fa-sack-dollar"></i>
+        <h3>Total Sales</h3>
+        <p>UGX 5,200,000</p>
       </div>
 
-      <!-- TABLE -->
-      <div class="table-section">
-        <h2>Recent Sales</h2>
-        <table>
-          <tr>
-            <th>Invoice</th>
-            <th>Customer</th>
-            <th>Item</th>
-            <th>Amount</th>
-            <th>Status</th>
-          </tr>
+      <div class="card">
+        <i class="fa-solid fa-cart-plus"></i>
+        <h3>Today Sales</h3>
+        <p>UGX 620,000</p>
+      </div>
 
-          <tr>
-            <td>#001</td>
-            <td>John Doe</td>
-            <td>Cement 50kg</td>
-            <td>UGX 120,000</td>
-            <td><span class="status paid">Paid</span></td>
-          </tr>
-
-          <tr>
-            <td>#002</td>
-            <td>Mary Jane</td>
-            <td>Iron Sheets</td>
-            <td>UGX 340,000</td>
-            <td><span class="status pending">Pending</span></td>
-          </tr>
-        </table>
+      <div class="card">
+        <i class="fa-solid fa-clock"></i>
+        <h3>Pending Payments</h3>
+        <p>UGX 1,100,000</p>
       </div>
     </div>
-  </body>
+
+    <!-- TABLE -->
+    <div class="table-section">
+      <h2>Recent Sales</h2>
+
+      <table>
+        <tr>
+          <th>Invoice</th>
+          <th>Customer</th>
+          <th>Item</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+
+        <tr>
+          <td>#001</td>
+          <td>John Doe</td>
+          <td>Cement 50kg</td>
+          <td>UGX 120,000</td>
+          <td><span class="status paid">Paid</span></td>
+        </tr>
+
+        <tr>
+          <td>#002</td>
+          <td>Mary Jane</td>
+          <td>Iron Sheets</td>
+          <td>UGX 340,000</td>
+          <td><span class="status pending">Pending</span></td>
+        </tr>
+
+        <tr>
+          <td>#003</td>
+          <td>Peter Mugisha</td>
+          <td>Paint 20L</td>
+          <td>UGX 180,000</td>
+          <td><span class="status paid">Paid</span></td>
+        </tr>
+
+        <tr>
+          <td>#004</td>
+          <td>Sarah Namusoke</td>
+          <td>Nails (Box)</td>
+          <td>UGX 75,000</td>
+          <td><span class="status pending">Pending</span></td>
+        </tr>
+
+        <tr>
+          <td>#005</td>
+          <td>David Okello</td>
+          <td>Wheelbarrow</td>
+          <td>UGX 250,000</td>
+          <td><span class="status paid">Paid</span></td>
+        </tr>
+
+        <tr>
+          <td>#006</td>
+          <td>Grace Achieng</td>
+          <td>Water Pipes</td>
+          <td>UGX 210,000</td>
+          <td><span class="status pending">Pending</span></td>
+        </tr>
+
+      </table>
+    </div>
+
+  </div>
+
+</body>
 </html>

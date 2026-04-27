@@ -1,0 +1,174 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Nyondo Stock Dashboard
+  link(rel='stylesheet' href='/css/storedash.css')
+  // Font Awesome
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// SIDEBAR
+.sidebar
+  .logo
+    h3  &#x2692; NYONDO HARDWARE
+
+  ul
+    li.active
+      a(href='/dashboard')
+        i.fas.fa-home
+        |  Dashboard
+    li
+      a(href='/inventory')
+        i.fas.fa-boxes
+        |  Inventory
+    li
+      a(href='/addstock')
+        i.fas.fa-plus-circle
+        |  Add Stock
+    li
+      a(href='/sales')
+        i.fas.fa-cash-register
+        |  Sales
+    li
+      a(href='/history')
+        i.fas.fa-history
+        |  Stock History
+    li
+      a(href='/lowstock')
+        i.fas.fa-exclamation-triangle
+        |  Low Stock
+// MAIN
+.main
+  // TOPBAR
+  .topbar
+    .search
+      i.fas.fa-search
+      input(type='text' placeholder='Search products...')
+    .icons
+      i.fas.fa-bell
+      i.fas.fa-user-circle
+  h2 Store Manager Dashboard
+  // CARDS
+  .cards
+    .card
+      i.fas.fa-box.icon.blue
+      div
+        h4 Total Products
+        p 120
+    .card
+      i.fas.fa-exclamation-triangle.icon.orange
+      div
+        h4 Low Stock
+        p 6 Items
+    .card
+      i.fas.fa-money-bill-wave.icon.green
+      div
+        h4 Today Sales
+        p UGX 450,000
+    .card
+      i.fas.fa-chart-line.icon.purple
+      div
+        h4 Inventory Value
+        p UGX 5.2M
+  // GRID
+  .grid
+    // LOW STOCK
+    .box
+      h3
+        i.fas.fa-exclamation-circle
+        |  Low Stock Alerts
+      table.styled-table
+        thead
+          tr
+            th Product
+            th Qty
+            th Status
+        tbody
+          tr
+            td Cement
+            td.center 5
+            td.danger.center Critical
+          tr
+            td Nails
+            td.center 10
+            td.warning.center Low
+          tr
+            td Paint
+            td.center 8
+            td.warning.center Low
+    // BEST SELLING
+    .box
+      h3
+        i.fas.fa-fire
+        |  Best Selling
+      .best-selling
+        .product
+          .product-left
+            i.fas.fa-box
+            span Cement
+          span.qty 150 pcs
+        .product
+          .product-left
+            i.fas.fa-box
+            span Iron Sheets
+          span.qty 120 pcs
+        .product
+          .product-left
+            i.fas.fa-box
+            span Paint
+          span.qty 95 pcs
+  // INVENTORY TABLE
+  .table-section
+    h3
+      i.fas.fa-clipboard-list
+      |  Inventory Overview
+    table.styled-table
+      thead
+        tr
+          th Product
+          th Qty
+          th Buying
+          th Selling
+          th Date
+          th Status
+      tbody
+        tr
+          td Cement
+          td.center 50
+          td.right 25,000
+          td.right 30,000
+          td.right 01/04/2026
+          td.good.center Available
+        tr
+          td Nails
+          td.center 10
+          td.right 5,000
+          td.right 7,000
+          td.right 2/03/2026
+          td.warning.center Low
+        tr
+          td Paint
+          td.center 20
+          td.right 15,000
+          td.right 20,000
+          td.right 01/03/2026
+          td.good.center Available
+        tr
+          td Iron Sheets
+          td.center 15
+          td.right 50,000
+          td.right 65,000
+          td.right 02/04/2026
+          td.good.center Available
+        tr
+          td Bricks
+          td.center 200
+          td.right 500
+          td.right 800
+          td.right 04/04/2026
+          td.good.center Available
+        tr
+          td Sand
+          td.center 30
+          td.right 20,000
+          td.right 30,000
+          td.right 02/03/2026
+          td.warning.center Low

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nyondo Stock Dashboard</title>
+
+    <link rel="stylesheet" href="/css/storedash.css" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo">
+        <h3>⚒ NYONDO HARDWARE</h3>
+      </div>
+
+      <ul>
+        <li class="active">
+          <a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+        </li>
+        <li>
+          <a href="/inventory"><i class="fas fa-boxes"></i> Inventory</a>
+        </li>
+        <li>
+          <a href="/addstock"><i class="fas fa-plus-circle"></i> Add Stock</a>
+        </li>
+        <li>
+          <a href="/sales"><i class="fas fa-cash-register"></i> Sales</a>
+        </li>
+        <li>
+          <a href="/history"><i class="fas fa-history"></i> Stock History</a>
+        </li>
+        <li>
+          <a href="/lowstock"
+            ><i class="fas fa-exclamation-triangle"></i> Low Stock</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search products..." />
+        </div>
+
+        <div class="icons">
+          <i class="fas fa-bell"></i>
+          <i class="fas fa-user-circle"></i>
+        </div>
+      </div>
+
+      <h2>Store Manager Dashboard</h2>
+
+      <!-- CARDS -->
+      <div class="cards">
+        <div class="card">
+          <i class="fas fa-box icon blue"></i>
+          <div>
+            <h4>Total Products</h4>
+            <p>120</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <i class="fas fa-exclamation-triangle icon orange"></i>
+          <div>
+            <h4>Low Stock</h4>
+            <p>6 Items</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <i class="fas fa-money-bill-wave icon green"></i>
+          <div>
+            <h4>Today Sales</h4>
+            <p>UGX 450,000</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <i class="fas fa-chart-line icon purple"></i>
+          <div>
+            <h4>Inventory Value</h4>
+            <p>UGX 5.2M</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID -->
+      <div class="grid">
+        <!-- LOW STOCK -->
+        <div class="box">
+          <h3><i class="fas fa-exclamation-circle"></i> Low Stock Alerts</h3>
+
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Cement</td>
+                <td class="center">5</td>
+                <td class="danger center">Critical</td>
+              </tr>
+              <tr>
+                <td>Nails</td>
+                <td class="center">10</td>
+                <td class="warning center">Low</td>
+              </tr>
+              <tr>
+                <td>Paint</td>
+                <td class="center">8</td>
+                <td class="warning center">Low</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- BEST SELLING -->
+        <div class="box">
+          <h3><i class="fas fa-fire"></i> Best Selling</h3>
+
+          <div class="best-selling">
+            <div class="product">
+              <div class="product-left">
+                <i class="fas fa-box"></i>
+                <span>Cement</span>
+              </div>
+              <span class="qty">150 pcs</span>
+            </div>
+
+            <div class="product">
+              <div class="product-left">
+                <i class="fas fa-box"></i>
+                <span>Iron Sheets</span>
+              </div>
+              <span class="qty">120 pcs</span>
+            </div>
+
+            <div class="product">
+              <div class="product-left">
+                <i class="fas fa-box"></i>
+                <span>Paint</span>
+              </div>
+              <span class="qty">95 pcs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INVENTORY TABLE -->
+      <div class="table-section">
+        <h3><i class="fas fa-clipboard-list"></i> Inventory Overview</h3>
+
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Buying</th>
+              <th>Selling</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Cement</td>
+              <td class="center">50</td>
+              <td class="right">25,000</td>
+              <td class="right">30,000</td>
+              <td class="right">01/04/2026</td>
+              <td class="good center">Available</td>
+            </tr>
+            <tr>
+              <td>Nails</td>
+              <td class="center">10</td>
+              <td class="right">5,000</td>
+              <td class="right">7,000</td>
+              <td class="right">2/03/2026</td>
+              <td class="warning center">Low</td>
+            </tr>
+            <tr>
+              <td>Paint</td>
+              <td class="center">20</td>
+              <td class="right">15,000</td>
+              <td class="right">20,000</td>
+              <td class="right">01/03/2026</td>
+              <td class="good center">Available</td>
+            </tr>
+            <tr>
+              <td>Iron Sheets</td>
+              <td class="center">15</td>
+              <td class="right">50,000</td>
+              <td class="right">65,000</td>
+              <td class="right">02/04/2026</td>
+              <td class="good center">Available</td>
+            </tr>
+            <tr>
+              <td>Bricks</td>
+              <td class="center">200</td>
+              <td class="right">500</td>
+              <td class="right">800</td>
+              <td class="right">04/04/2026</td>
+              <td class="good center">Available</td>
+            </tr>
+            <tr>
+              <td>Sand</td>
+              <td class="center">30</td>
+              <td class="right">20,000</td>
+              <td class="right">30,000</td>
+              <td class="right">02/03/2026</td>
+              <td class="warning center">Low</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

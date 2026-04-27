@@ -1,4 +1,3 @@
-/* ================= RESET ================= */
 * {
   margin: 0;
   padding: 0;
@@ -6,37 +5,36 @@
   font-family: Arial, sans-serif;
 }
 
-/* ================= BODY ================= */
-body {
-  display: flex;
-  background: #f4f6f9;
-}
-
 /* ================= SIDEBAR ================= */
 .sidebar {
-  width: 260px;
+  width: 240px;
   height: 100vh;
-  background: #0f172a;
-  color: white;
+  background: #071738;
   position: fixed;
+  left: 0;
+  top: 0;
   padding: 20px;
+  color: white;
 }
 
-.logo {
+.sidebar .logo {
   text-align: center;
-  margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #334155;
+  margin-bottom: 30px;
+  border-bottom: 1px solid white;
 }
 
-.logo h2 {
-  font-size: 1.5rem;
-  color: #facc15;
+.sidebar .logo h2 {
+  font-size: 1.4rempx;
+  margin-bottom: 15px;
+  color: rgb(218, 165, 32);
+  margin-right: 30px;
 }
 
-.logo p {
-  font-size: 12px;
-  color: #94a3b8;
+.sidebar .logo p {
+  font-size: 0.8rem;
+  color: rgb(239, 236, 229);
+  margin-right: 20px;
+  margin-bottom: 10px;
 }
 
 .sidebar ul {
@@ -44,77 +42,104 @@ body {
 }
 
 .sidebar ul li {
-  margin: 8px 0;
+  margin: 10px 0;
+  border-radius: 8px;
 }
 
 .sidebar ul li a {
   text-decoration: none;
   color: #cbd5e1;
   display: block;
-  padding: 10px;
+  padding: 15px;
   border-radius: 6px;
+  transition: 0.3s;
 }
 
-.sidebar ul li a:hover {
+.sidebar ul li:hover {
+  background-color: rgb(34, 190, 34);
   color: white;
-  background-color: rgb(21, 160, 21);
-}
-
-.sidebar ul li.active a {
-  background-color: rgb(20, 148, 20);
 }
 
 /* ================= MAIN ================= */
 .main {
   margin-left: 260px;
   padding: 20px;
-  width: 100%;
+  background: #f4f6f8;
+  min-height: 100vh;
 }
 
 /* ================= TOPBAR ================= */
 .topbar {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 10px;
 }
 
 .topbar h2 {
-  font-size: 18px;
+  font-size: 24px;
+  margin-bottom: 5px;
 }
 
 .topbar p {
-  font-size: 13px;
   color: #6b7280;
+  font-size: 14px;
 }
 
-/* FILTERS */
+/* ================= FILTERS ================= */
 .filters {
+  margin-top: 15px;
   display: flex;
   gap: 10px;
-  margin-top: 10px;
   flex-wrap: wrap;
 }
 
 .filters input,
 .filters select {
-  padding: 8px;
-  border: 1px solid #ccc;
+  padding: 10px;
+  border: 1px solid #d1d5db;
   border-radius: 6px;
+  outline: none;
+}
+
+.filters input {
+  width: 220px;
 }
 
 .filters button {
-  background: #2563eb;
-  color: white;
+  padding: 10px 15px;
   border: none;
-  padding: 8px 12px;
+  background: #2ecc71;
+  color: white;
   border-radius: 6px;
   cursor: pointer;
+  transition: 0.3s;
 }
 
-/* ================= SPACE ================= */
+.filters button:hover {
+  background: #27ae60;
+}
+
+/* ================= SPACING ================= */
 .space {
-  height: 25px;
+  height: 20px;
+}
+
+/* ================= CARD (CHART AREA) ================= */
+.card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+/* chart size */
+canvas {
+  width: 100% !important;
+  height: 260px !important;
 }
 
 /* ================= TABLE ================= */
@@ -124,46 +149,45 @@ table {
   background: white;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-th {
-  background: #061536;
-  color: white;
-  padding: 12px;
-  text-align: left;
-}
-
-td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-}
-
-tr:hover {
+table th {
   background: #f1f5f9;
+  text-align: left;
+  padding: 12px;
+  font-size: 14px;
+  color: #374151;
 }
 
-/* STATUS */
+table td {
+  padding: 12px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+/* ================= STATUS ================= */
 .paid {
-  color: green;
+  color: #16a34a;
   font-weight: bold;
 }
 
 .pending {
-  color: orange;
+  color: #dc2626;
   font-weight: bold;
 }
 
-/* BUTTON */
+/* ================= VIEW BUTTON ================= */
 .view-btn {
-  background: #2563eb;
-  color: white;
-  border: none;
   padding: 6px 10px;
-  border-radius: 6px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  border-radius: 5px;
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .view-btn:hover {
-  background: #1d4ed8;
+  background: #2563eb;
 }

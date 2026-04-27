@@ -7,37 +7,45 @@ head
   link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
   // CSS
   link(rel='stylesheet' href='/css/precious.css')
-// NAVBAR
+// NAVBAR (SIMPLIFIED)
 header.navbar
   .logo
     span.logo-icon N
     div
       h2 Nyondo
       small Stock System
-  nav
-    a.active(href='index.html') Home
-    a(href='features.html') Features
-    a(href='about.html') About
-    a(href='contact.html') Contact
+  // ONLY ONE ACTION
   a.login-btn(href='login.html')
-    i.fas.fa-user
+    i.fas.fa-sign-in-alt
     |  Login
 // HERO SECTION
 section.hero
   .overlay
   .hero-content
-    span.tag Smart. Simple. Reliable.
+    span.tag Smart Stock Control for Hardware Stores
     h1
-      | Nyondo Stock 
+      | Stop Guessing Your Stock.
       br
-      span Management System
+      span Start Managing It Right.
     p
-      | Track inventory, manage sales, handle credits and debits,
-      | and grow your hardware business with ease.
+      | Nyondo helps you track inventory, monitor sales, manage debts,
+      | and stay in control of your hardware business &mdash; all in one system.
+    // BENEFITS
+    .features
+      div
+        i.fas.fa-check-circle
+        |  Real-time stock tracking
+      div
+        i.fas.fa-check-circle
+        |  Credit &amp; debit management
+      div
+        i.fas.fa-check-circle
+        |  Sales history &amp; reports
+    // CTA
     .buttons
       a.btn.primary(href='login.html')
         i.fas.fa-sign-in-alt
-        |  Login to System
-      a.btn.outline(href='register.html')
-        i.fas.fa-user-plus
-        |  Get Started
+        |  Access Your Dashboard
+    // TRUST LINE
+    small.trust
+      | Trusted by hardware businesses to simplify stock management.

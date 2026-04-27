@@ -1,88 +1,81 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/precious.css" />
-    <style>
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        height: auto;
-        background: linear-gradient(to right, #010b1b, #011126);
-      }
-      label {
-        text-align: left;
-        margin: 10px 0px;
-        font-size: 1.2rem;
-        color: rgb(9, 9, 53);
-      }
-      input {
-        height: 3rem;
-        border-radius: 8px;
-      }
-      a {
-        text-decoration: none;
-        margin-left: 10px;
-        font-size: 1.2rem;
-        color: rgb(9, 9, 52);
-      }
-      button {
-        width: 100%;
-        height: 3rem;
-        color: rgb(214, 208, 208);
-        background-color: rgb(15, 15, 83);
-        font-size: 1.5rem;
-        border: none;
-        border-radius: 12px;
-      }
-    </style>
-  </head>
-  <body class="login-page">
-    <div class="card">
-      <img
-        class="logo"
-        src="/images/logo.png"
-        width="50"
-        height="50"
-        alt="logo"
-      />
-      <h4>Singn In to get started</h4>
-      <p class="para">Sign up to get started</p>
-      <form>
-        <div class="part1">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Enter Your Email"
-            required
-          />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Nyondo</title>
+
+  <link rel="stylesheet" href="/css/login.css"/>
+</head>
+
+<body class="login-page">
+
+  <div class="card">
+
+    <img class="logo" src="/images/logo.png" width="50" height="50" alt="logo"/>
+
+    <h4>Sign In to get started</h4>
+    <p class="para">Login to access your dashboard</p>
+
+    <!-- 🔥 FORM (READY FOR BACKEND) -->
+    <form action="/login" method="POST">
+
+      <!-- FULL NAME (optional but useful for tracking session user) -->
+      <div class="part1">
+        <label for="fullname">Full Name</label>
+        <input 
+          type="text" 
+          name="fullname" 
+          id="fullname" 
+          placeholder="Enter Your Full Name"
+          required
+        />
+      </div>
+
+      <!-- EMAIL -->
+      <div class="part1">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          name="email" 
+          id="email" 
+          placeholder="Enter Your Email"
+          required
+        />
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="part1">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          name="password" 
+          id="password" 
+          placeholder="Enter Password"
+          required
+        />
+      </div>
+
+      <!-- REMEMBER + FORGOT -->
+      <div class="check">
+        <div class="remember">
+          <input id="checkbox" type="checkbox" name="remember"/>
+          <label for="checkbox">Remember me</label>
         </div>
-        <div class="part1">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Enter Password"
-            required
-          />
-        </div>
-        <div class="check">
-          <div class="remember">
-            <input id="checkbox" type="checkbox" />
-            <label for="checkbox">Remember me</label>
-          </div>
-          <a href="#">Forgot Password</a>
-        </div>
-        <button type="submit">Login</button>
-        <div class="login">Don't have an account? <a href="#">Sign Up</a></div>
-      </form>
-    </div>
-  </body>
+
+        <a href="#">Forgot Password</a>
+      </div>
+
+      <!-- SUBMIT -->
+      <button type="submit">Login</button>
+
+      <div class="login">
+        Don't have an account? <a href="#">Sign Up</a>
+      </div>
+
+    </form>
+
+  </div>
+
+</body>
 </html>

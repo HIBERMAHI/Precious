@@ -2,6 +2,11 @@
 const express = require('express')
 const expressSession = require('express-session')
 const path = require('path')
+
+require('dotenv').config();
+const mongoose = require('mongoose');
+const { connect } = require('http2');
+const connectDb = require('./config/db');
 // installations
 
 
@@ -13,6 +18,7 @@ const port = 5000;
 // static files
 app.set('view engine', 'pug');
 app.set('views',path.join(__dirname,'views'));
+connectDb();
 
 
 // 4middleware
@@ -31,6 +37,7 @@ app.use(
 // 5routes
 app.use('/', require('./routes/indexRoutes'))
 app.use('/', require('./routes/salesRoutes'))
+app.use('/',require('./routes/storeRoutes') )
 // app.use('/', require('./routes/l'))
 
 

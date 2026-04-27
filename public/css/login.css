@@ -1,0 +1,291 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* BACKGROUND */
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg, #010b1b, #011a33);
+}
+
+/* LOGIN CARD */
+.card {
+  width: 360px;
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 16px;
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* LOGO */
+.logo {
+  margin-bottom: 10px;
+}
+
+/* HEADINGS */
+h4 {
+  font-size: 1.4rem;
+  color: #0b1b4a;
+  margin-bottom: 5px;
+}
+
+.para {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* FORM LAYOUT */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* INPUT GROUP */
+.part1 {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+/* LABEL */
+label {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: #0b1b4a;
+}
+
+/* INPUT */
+input {
+  height: 42px;
+  padding: 10px 12px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+
+  outline: none;
+  transition: 0.2s;
+  font-size: 0.95rem;
+}
+
+input:focus {
+  border-color: #1e3a8a;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
+}
+
+/* CHECK SECTION */
+.check {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* LINKS */
+a {
+  text-decoration: none;
+  color: #1e3a8a;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* BUTTON */
+button {
+  height: 44px;
+  border: none;
+  border-radius: 10px;
+
+  background: #1e3a8a;
+  color: white;
+
+  font-size: 1rem;
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #14285f;
+  transform: translateY(-2px);
+}
+
+/* BOTTOM TEXT */
+.login {
+  font-size: 0.9rem;
+  color: #333;
+  margin-top: 10px;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* start of register page */
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* BACKGROUND */
+body.register-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg, #020e20, #020b15);
+}
+
+/* CARD */
+.card {
+  width: 380px;
+  background: #fff;
+  padding: 35px;
+  border-radius: 16px;
+
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  text-align: center;
+
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* LOGO */
+.logo {
+  margin-bottom: 10px;
+}
+
+/* HEADINGS */
+h4 {
+  font-size: 1.5rem;
+  color: #0b1b4a;
+  margin-bottom: 6px;
+}
+
+.sub {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* FORM */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* FIELD GROUP */
+.field {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+/* LABEL */
+label {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: #0b1b4a;
+}
+
+/* INPUT */
+input {
+  height: 42px;
+  padding: 10px 12px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+
+  outline: none;
+  font-size: 0.95rem;
+
+  transition: 0.2s ease;
+}
+
+/* INPUT FOCUS */
+input:focus {
+  border-color: #1e3a8a;
+  box-shadow: 0 0 0 3px rgba(30,58,138,0.15);
+}
+
+/* BUTTON */
+button {
+  height: 44px;
+  border: none;
+  border-radius: 10px;
+
+  background: #1e3a8a;
+  color: white;
+
+  font-size: 1rem;
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #14285f;
+  transform: translateY(-2px);
+}
+
+/* LOGIN TEXT */
+.login {
+  font-size: 0.9rem;
+  color: #333;
+  margin-top: 10px;
+}
+
+.login a {
+  text-decoration: none;
+  color: #1e3a8a;
+  font-weight: 600;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

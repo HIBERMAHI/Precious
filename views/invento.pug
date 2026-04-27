@@ -1,0 +1,165 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Inventory - Nyondo Hardware
+  link(rel='stylesheet' href='/css/storedash.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// SIDEBAR
+.sidebar
+  .logo
+    h2 &#x2692; NYONDO HARDWARE
+  ul
+    li
+      a(href='/dashboard')
+        i.fas.fa-home
+        |  Dashboard
+    li.active
+      a(href='/inventory')
+        i.fas.fa-boxes
+        |  Inventory
+    li
+      a(href='/sales')
+        i.fas.fa-cash-register
+        |  Sales
+    li
+      a(href='/stock')
+        i.fas.fa-plus-circle
+        |  Add Stock
+    li
+      a(href='/reports')
+        i.fas.fa-chart-line
+        |  Reports
+// MAIN
+.main
+  .header
+    h1
+      i.fas.fa-boxes
+      |  Inventory Overview
+    .actions
+      button.btn
+        i.fas.fa-plus
+        |  Add Stock
+      button.btn.secondary
+        i.fas.fa-file-export
+        |  Export
+  // SUMMARY CARDS
+  .cards
+    .card
+      i.fas.fa-cubes
+      div
+        h3 Total Products
+        p 120
+    .card.warn
+      i.fas.fa-exclamation-triangle
+      div
+        h3 Low Stock
+        p 8
+    .card.danger
+      i.fas.fa-times-circle
+      div
+        h3 Out of Stock
+        p 3
+    .card.success
+      i.fas.fa-coins
+      div
+        h3 Total Value
+        p UGX 45M
+  // SEARCH
+  .search-bar
+    input(type='text' placeholder='Search product...')
+    select
+      option All
+      option Low Stock
+      option Out of Stock
+      option In Stock
+  // TABLE
+  .table-section
+    table
+      thead
+        tr
+          th Product
+          th Code
+          th Qty
+          th Buying
+          th Selling
+          th Status
+          th Actions
+      tbody
+        tr
+          td Cement
+          td CM-001
+          td 45
+          td 25,000
+          td 30,000
+          td
+            span.status.good In Stock
+          td
+            button.icon.edit
+              i.fas.fa-pen
+            button.icon.delete
+              i.fas.fa-trash
+        tr
+          td Hammer
+          td HM-002
+          td 12
+          td 8,000
+          td 12,000
+          td
+            span.status.low Low
+          td
+            button.icon.edit
+              i.fas.fa-pen
+            button.icon.delete
+              i.fas.fa-trash
+        tr
+          td Nails
+          td NL-003
+          td 0
+          td 3,000
+          td 5,000
+          td
+            span.status.out Out
+          td
+            button.icon.edit
+              i.fas.fa-pen
+            button.icon.delete
+              i.fas.fa-trash
+        tr
+          td Paint
+          td PT-004
+          td 25
+          td 70,000
+          td 85,000
+          td
+            span.status.good In Stock
+          td
+            button.icon.edit
+              i.fas.fa-pen
+            button.icon.delete
+              i.fas.fa-trash
+        tr
+          td Iron Sheets
+          td IS-005
+          td 6
+          td 40,000
+          td 55,000
+          td
+            span.status.low Low
+          td
+            button.icon.edit
+              i.fas.fa-pen
+            button.icon.delete
+              i.fas.fa-trash
+        tr
+          td Wires
+          td WR-006
+          td 18
+          td 10,000
+          td 15,000
+          td
+            span.status.good In Stock
+          td
+            button.icon.edit
+              i.fas.fa-pen
+            button.icon.delete
+              i.fas.fa-trash

@@ -41,7 +41,7 @@ head
     h2
       i.fas.fa-clock-rotate-left
       |  Sales History
-    p Track and review all past transactions  and stock
+    p Track and review all past transactions and stock
     .filters
       input(type='text' placeholder='Search receipt / customer')
       input(type='date')
@@ -51,9 +51,12 @@ head
         option Credit
       button
         i.fas.fa-search
-  // SPACING
   .space
-  // TABLE
+  // ================= ADDED: SALES ANALYTICS (NEW) =================
+  .card
+    h3 Sales Trend Overview
+    canvas#salesChart
+  // ================= TABLE =================
   table
     tr
       th Receipt No
@@ -119,3 +122,24 @@ head
         span.paid Paid
       td
         button.view-btn View
+// ================= ADDED: CHART JS =================
+script(src='https://cdn.jsdelivr.net/npm/chart.js')
+script.
+  const ctx = document.getElementById('salesChart');
+  new Chart(ctx, {
+  type: 'line',
+  data: {
+  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  datasets: [{
+  label: 'Daily Sales (UGX)',
+  data: [20000, 45000, 30000, 60000, 50000, 75000, 70000],
+  borderColor: '#2ecc71',
+  backgroundColor: 'rgba(46, 204, 113, 0.2)',
+  fill: true,
+  tension: 0.4
+  }]
+  },
+  options: {
+  responsive: true
+  }
+  });

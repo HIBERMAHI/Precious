@@ -36,7 +36,7 @@
   <!-- TOPBAR -->
   <div class="topbar">
     <h2><i class="fas fa-clock-rotate-left"></i> Sales History</h2>
-    <p>Track and review all past transactions  and stock</p>
+    <p>Track and review all past transactions and stock</p>
 
     <div class="filters">
       <input type="text" placeholder="Search receipt / customer">
@@ -52,10 +52,15 @@
     </div>
   </div>
 
-  <!-- SPACING -->
   <div class="space"></div>
 
-  <!-- TABLE -->
+  <!-- ================= ADDED: SALES ANALYTICS (NEW) ================= -->
+  <div class="card">
+    <h3>Sales Trend Overview</h3>
+    <canvas id="salesChart"></canvas>
+  </div>
+
+  <!-- ================= TABLE ================= -->
   <table>
 
     <tr>
@@ -127,6 +132,31 @@
   </table>
 
 </div>
+
+<!-- ================= ADDED: CHART JS ================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById('salesChart');
+
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    datasets: [{
+      label: 'Daily Sales (UGX)',
+      data: [20000, 45000, 30000, 60000, 50000, 75000, 70000],
+      borderColor: '#2ecc71',
+      backgroundColor: 'rgba(46, 204, 113, 0.2)',
+      fill: true,
+      tension: 0.4
+    }]
+  },
+  options: {
+    responsive: true
+  }
+});
+</script>
 
 </body>
 </html>
