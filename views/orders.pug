@@ -1,0 +1,221 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Orders &amp; Deliveries - Nyondo Hardware
+  link(rel='stylesheet' href='/css/orders.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// SIDEBAR
+.sidebar
+  .logo
+    h2 &#x2692; NYONDO HARDWARE
+  ul
+    li
+      a(href='/dashboard')
+        i.fas.fa-home
+        |  Dashboard
+    li
+      a(href='/inventory')
+        i.fas.fa-boxes
+        |  Inventory
+    li.active
+      a(href='/orders')
+        i.fas.fa-truck
+        |  Orders
+    li
+      a(href='/sales')
+        i.fas.fa-cash-register
+        |  Sales
+    li
+      a(href='/reports')
+        i.fas.fa-chart-line
+        |  Reports
+// MAIN
+.main
+  // HEADER
+  .header
+    h1
+      i.fas.fa-truck
+      |  Orders &amp; Deliveries
+    p Manage supplier orders and incoming deliveries
+  // SUMMARY CARDS
+  .cards
+    .card
+      h3 Pending Orders
+      p 6
+    .card
+      h3 Approved Orders
+      p 14
+    .card.warn
+      h3 Pending Deliveries
+      p 5
+    .card.success
+      h3 Received Today
+      p 9
+  // ACTION BAR
+  .actions
+    button.btn
+      i.fas.fa-plus
+      |  New Order
+    button.btn.secondary
+      i.fas.fa-search
+      |  Search
+  // ORDERS TABLE
+  .section
+    h2 Supplier Orders
+    table
+      thead
+        tr
+          th Order ID
+          th Supplier
+          th Date
+          th Items
+          th Total
+          th Status
+          th Actions
+      tbody
+        tr
+          td ORD-001
+          td Steel Supplies Ltd
+          td 2026-04-20
+          td Cement, Iron Sheets
+          td UGX 2,500,000
+          td
+            span.status.pending Pending
+          td
+            button.icon.approve
+              i.fas.fa-check
+        tr
+          td ORD-002
+          td Hardware Hub
+          td 2026-04-18
+          td Nails, Hammers
+          td UGX 800,000
+          td
+            span.status.approved Approved
+          td
+            button.icon.view
+              i.fas.fa-eye
+        tr
+          td ORD-003
+          td BuildMart
+          td 2026-04-17
+          td Paint, Brushes
+          td UGX 1,200,000
+          td
+            span.status.pending Pending
+          td
+            button.icon.approve
+              i.fas.fa-check
+        tr
+          td ORD-004
+          td Roofing Co
+          td 2026-04-16
+          td Iron Sheets
+          td UGX 3,800,000
+          td
+            span.status.approved Approved
+          td
+            button.icon.view
+              i.fas.fa-eye
+        tr
+          td ORD-005
+          td Timber World
+          td 2026-04-15
+          td Wood Planks
+          td UGX 2,000,000
+          td
+            span.status.pending Pending
+          td
+            button.icon.approve
+              i.fas.fa-check
+        tr
+          td ORD-006
+          td Electro Supplies
+          td 2026-04-14
+          td Wires, Switches
+          td UGX 950,000
+          td
+            span.status.approved Approved
+          td
+            button.icon.view
+              i.fas.fa-eye
+  // DELIVERIES TABLE
+  .section
+    h2 Incoming Deliveries
+    table
+      thead
+        tr
+          th Delivery ID
+          th Order ID
+          th Supplier
+          th Date
+          th Condition
+          th Status
+          th Actions
+      tbody
+        tr
+          td DEL-001
+          td ORD-002
+          td Hardware Hub
+          td 2026-04-25
+          td Good
+          td
+            span.status.received Received
+          td
+            button.icon.view
+              i.fas.fa-eye
+        tr
+          td DEL-002
+          td ORD-001
+          td Steel Supplies Ltd
+          td 2026-04-29
+          td Pending Check
+          td
+            span.status.pending Pending
+          td
+            button.icon.approve
+              i.fas.fa-check
+        tr
+          td DEL-003
+          td ORD-003
+          td BuildMart
+          td 2026-04-26
+          td Good
+          td
+            span.status.received Received
+          td
+            button.icon.view
+              i.fas.fa-eye
+        tr
+          td DEL-004
+          td ORD-004
+          td Roofing Co
+          td 2026-04-27
+          td Good
+          td
+            span.status.received Received
+          td
+            button.icon.view
+              i.fas.fa-eye
+        tr
+          td DEL-005
+          td ORD-005
+          td Timber World
+          td 2026-04-28
+          td Pending Check
+          td
+            span.status.pending Pending
+          td
+            button.icon.approve
+              i.fas.fa-check
+        tr
+          td DEL-006
+          td ORD-006
+          td Electro Supplies
+          td 2026-04-29
+          td Good
+          td
+            span.status.received Received
+          td
+            button.icon.view
+              i.fas.fa-eye

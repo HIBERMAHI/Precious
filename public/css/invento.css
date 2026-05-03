@@ -1,0 +1,198 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  display: flex;
+  background: #f1f5f9;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 230px;
+  /* height: 100vh; */
+  background-color: rgb(5, 5, 37);
+  color: white;
+  padding: 20px;
+}
+
+.logo h2{
+  /* text-align: center; */
+  /* margin-bottom: 30px; */
+  color: rgb(212, 212, 16);
+  margin: 0  40px 30px  0px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  margin: 20px 0;
+  border-radius: 10px;
+}
+
+.sidebar ul li a {
+  color: #cbd5e1;
+  text-decoration: none;
+  display: flex;
+  gap: 10px;
+  padding: 19px;
+  border-radius: 8px;
+}
+
+.sidebar ul li:hover {
+  background-color: rgb(16, 184, 16);
+  color: white;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 25px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.header h1{
+  font-size: 1.5rem;
+  color: rgb(13, 13, 83);
+}
+.actions{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: #64748b;
+}
+
+/* CARDS */
+.cards {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card {
+  flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card i {
+  font-size: 24px;
+  color: #3b82f6;
+}
+
+.card.warn i { color: orange; }
+.card.danger i { color: red; }
+.card.success i { color: green; }
+
+/* SEARCH */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.search-bar input,
+.search-bar select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* TABLE */
+.table-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+thead {
+  background: #f8fafc;
+}
+
+tbody tr {
+  transition: 0.3s;
+  border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+  transform: translateX(5px);
+  background: #f1f5ff;
+}
+
+/* STATUS */
+.status {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: white;
+}
+
+.status.good { background: green; }
+.status.low { background: orange; }
+.status.out { background: red; }
+
+/* ACTION BUTTONS */
+.icon {
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 5px;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 1;
+}
+.icon i{
+  font-size: 0.8rem;
+}
+.edit { background: #3b82f6; color: white; }
+.delete { background: red; color: white; }
+
+/* end of invento page */
+

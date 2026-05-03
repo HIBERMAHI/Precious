@@ -1,0 +1,149 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Nyondo Reports Dashboard
+  link(rel='stylesheet' href='/css/storedash.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// SIDEBAR
+.sidebar
+  .logo
+    h2 NYONDO
+    p Hardware System
+  ul
+    li
+      a(href='dashboard.html')
+        i.fa.fa-home
+        |  Dashboard
+    li
+      a(href='inventory.html')
+        i.fa.fa-box
+        |  Inventory
+    li
+      a(href='stockin.html')
+        i.fa.fa-arrow-down
+        |  Stock In
+    li
+      a(href='stockout.html')
+        i.fa.fa-arrow-up
+        |  Stock Out
+    li
+      a(href='reports.html')
+        i.fa.fa-chart-line
+        |  Reports
+    li
+      a(href='alerts.html')
+        i.fa.fa-triangle-exclamation
+        |  Alerts
+// MAIN CONTENT
+.main
+  // TOP HEADER
+  .topbar
+    h1 Stock Reports
+    button.export-btn
+      i.fa.fa-download
+      |  Export Report
+  // SUMMARY CARDS
+  .cards
+    .card.green
+      h3 Stock In
+      p 1,245 Items
+    .card.red
+      h3 Stock Out
+      p 980 Items
+    .card.blue
+      h3 Balance
+      p 265 Items
+  // STOCK IN TABLE
+  .section
+    h2 Stock In Report
+    table
+      tr
+        th Date
+        th Product
+        th Qty
+        th Supplier
+      tr
+        td 2026-04-20
+        td Cement
+        td 50
+        td ABC Ltd
+      tr
+        td 2026-04-21
+        td Iron Sheets
+        td 120
+        td Metal Corp
+      tr
+        td 2026-04-22
+        td Nails
+        td 200
+        td Hardware Ltd
+      tr
+        td 2026-04-23
+        td Paint
+        td 80
+        td Color World
+      tr
+        td 2026-04-24
+        td Bricks
+        td 500
+        td Stone Supply
+      tr
+        td 2026-04-25
+        td Sand
+        td 300
+        td Local Quarry
+  // STOCK OUT TABLE
+  .section
+    h2 Stock Out Report
+    table
+      tr
+        th Date
+        th Product
+        th Qty
+        th Usage
+      tr
+        td 2026-04-20
+        td Cement
+        td 30
+        td Site A
+      tr
+        td 2026-04-21
+        td Iron Sheets
+        td 60
+        td Site B
+      tr
+        td 2026-04-22
+        td Nails
+        td 100
+        td Retail
+      tr
+        td 2026-04-23
+        td Paint
+        td 40
+        td Project X
+      tr
+        td 2026-04-24
+        td Bricks
+        td 200
+        td Construction
+      tr
+        td 2026-04-25
+        td Sand
+        td 150
+        td Site C
+  // SLOW MOVING STOCK
+  .section.slow
+    h2 Slow Moving Stock
+    .slow-grid
+      .slow-item
+        h4 Roofing Nails
+        p Only 5 sold this month
+      .slow-item
+        h4 Decorative Paint
+        p Low demand product
+      .slow-item
+        h4 Old Cement Stock
+        p Stored for over 2 months
+      .slow-item
+        h4 Heavy Bricks
+        p Slow sales movement

@@ -1,0 +1,114 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* PAGE BACKGROUND */
+body {
+background-color: rgb(1, 1, 21);
+  min-height: 100vh;
+  padding: 60px 20px; /* top & bottom margin effect */
+}
+
+/* LOGIN CARD */
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  margin: 20px  0 20px  400px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* LOGO */
+.logo {
+  margin-bottom: 10px;
+}
+
+/* HEADINGS */
+.card h4 {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.para {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+/* FORM FIELDS */
+form {
+  width: 100%;
+}
+
+.field {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 13px;
+  color: #444;
+}
+
+.field input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.field input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 4px rgba(74, 144, 226, 0.3);
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 11px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #357bd8;
+}
+
+/* SIGNUP TEXT */
+.login {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #555;
+  text-align: center;
+}
+
+.login a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login a:hover {
+  text-decoration: underline;
+}

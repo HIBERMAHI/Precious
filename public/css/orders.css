@@ -1,0 +1,168 @@
+
+
+/* start of orders page */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* BODY */
+body {
+  display: flex;
+  background: #f4f6f9;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background-color: rgb(5, 5, 48);
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+  color: white;
+}
+
+.sidebar .logo {
+  text-align: center;
+margin: 0  40px  30px  0;
+  color: rgb(209, 209, 22);
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  margin: 10px 0;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: white;
+  display: block;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li.active a {
+  background: #374151;
+}
+
+/* MAIN */
+.main {
+  margin-left: 240px;
+  padding: 25px;
+  width: 100%;
+}
+
+/* HEADER */
+.header h1 {
+  font-size: 26px;
+}
+
+.header p {
+  color: gray;
+  margin-top: 5px;
+}
+
+/* CARDS */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+  font-size: 14px;
+  color: gray;
+}
+
+.card p {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* ACTIONS */
+.actions {
+  margin: 15px 0;
+}
+
+.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  background: #16a34a;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.secondary {
+  background: #2563eb;
+}
+
+/* SECTIONS */
+.section {
+  background: white;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.section h2 {
+  margin-bottom: 10px;
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+th {
+  background: #f1f5f9;
+}
+
+/* STATUS */
+.status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: white;
+}
+
+.pending { background: #f59e0b; }
+.approved { background: #2563eb; }
+.received { background: #16a34a; }
+
+/* ICON BUTTONS */
+.icon {
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.approve { background: #16a34a; color: white; }
+.delete { background: #dc2626; color: white; }
+.view { background: #2563eb; color: white; }

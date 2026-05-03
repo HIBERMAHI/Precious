@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login - Nyondo</title>
 
-  <link rel="stylesheet" href="/css/login.css"/>
+  <link rel="stylesheet" href="/css/loginn.css"/>
 </head>
 
-<body class="login-page">
+<body>
 
   <div class="card">
 
@@ -17,11 +17,11 @@
     <h4>Sign In to get started</h4>
     <p class="para">Login to access your dashboard</p>
 
-    <!-- 🔥 FORM (READY FOR BACKEND) -->
+    <!-- FORM -->
     <form action="/login" method="POST">
 
-      <!-- FULL NAME (optional but useful for tracking session user) -->
-      <div class="part1">
+      <!-- FULL NAME -->
+      <div class="field">
         <label for="fullname">Full Name</label>
         <input 
           type="text" 
@@ -33,7 +33,7 @@
       </div>
 
       <!-- EMAIL -->
-      <div class="part1">
+      <div class="field">
         <label for="email">Email</label>
         <input 
           type="email" 
@@ -45,7 +45,7 @@
       </div>
 
       <!-- PASSWORD -->
-      <div class="part1">
+      <div class="field">
         <label for="password">Password</label>
         <input 
           type="password" 
@@ -56,21 +56,10 @@
         />
       </div>
 
-      <!-- REMEMBER + FORGOT -->
-      <div class="check">
-        <div class="remember">
-          <input id="checkbox" type="checkbox" name="remember"/>
-          <label for="checkbox">Remember me</label>
-        </div>
-
-        <a href="#">Forgot Password</a>
-      </div>
-
-      <!-- SUBMIT -->
       <button type="submit">Login</button>
 
       <div class="login">
-        Don't have an account? <a href="#">Sign Up</a>
+        Don't have an account? <a href="/register">Sign Up</a>
       </div>
 
     </form>

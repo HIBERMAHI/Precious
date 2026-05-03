@@ -1,0 +1,264 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* BODY */
+body {
+  display: flex;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background-color: rgb(5, 5, 41);
+  color: rgb(232, 232, 31);
+  padding: 25px 20px;
+  position: fixed;
+  height: 100%;
+}
+.logo h2 {
+  font-size: 21px;
+}
+
+.logo p {
+  font-size: 21px;
+  margin-bottom: 25px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  margin: 6px 0;
+  margin: 30px  0 0 0;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.sidebar ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 12px;
+  border-radius: 8px;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.sidebar ul li:hover {
+  background-color: rgb(24, 152, 24);
+  transform: translateX(5px);
+
+}
+
+/* MAIN */
+.main {
+  margin-left: 260px;
+  padding: 30px 20px;
+  width: 100%;
+}
+
+/* TITLE */
+.main h1 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: rgb(23, 23, 124);
+  text-align: center;
+}
+
+/* ================= FORM ================= */
+.sale-form {
+  background-color: rgb(239, 227, 227);
+  padding: 18px 20px;
+  border-radius: 14px;
+  max-width: 950px; /* same as table */
+  margin: 0  0 30px  0;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  /* border-right: 4px solid rgb(5, 5, 32); */
+  /* border-left: 4px solid rgb(6, 6, 40); */
+}
+
+.sale-form h2 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: rgb(20, 20, 101);
+}
+
+/* GRID FORM */
+.sale-form form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 14px; /* reduced spacing */
+}
+
+/* SECTION TITLES */
+.section-title {
+  grid-column: span 2;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #133e7a;
+  margin-top: 6px;
+  margin-bottom: 4px;
+}
+
+/* FORM GROUP */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+/* LABEL */
+.form-group label {
+  font-size: 0.8rem;
+  margin-bottom: 2px;
+  color: #0e3a71;
+}
+
+/* SMALL INPUTS */
+.form-group input,
+.form-group select {
+  padding: 4px 6px;
+  font-size: 0.8rem;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #f9fafb;
+  transition: 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #3b82f6;
+  background: #fff;
+  outline: none;
+}
+
+/* BUTTONS */
+.button-group {
+  grid-column: span 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+button {
+  padding: 10px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.register-btn {
+  background: #040e1f;
+  color: white;
+}
+
+.register-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.receipt-btn {
+  background: #e2e8f0;
+}
+
+.receipt-btn:hover {
+  background: #cbd5e1;
+}
+
+/* FORCE TOTAL FULL WIDTH */
+.form-group:last-of-type {
+  grid-column: span 2;
+}
+
+/* ================= TABLE ================= */
+.recent-sales {
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 14px;
+  max-width: 950px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.recent-sales h2 {
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: rgb(24, 24, 147);
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead {
+  background: #f1f5f9;
+}
+
+th {
+  text-align: left;
+  padding: 10px;
+  font-weight: 600;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* ROW ANIMATION */
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background: #f9fafb;
+  transform: translateX(6px) scale(1.01);
+}
+
+/* STATUS */
+.paid {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.pending {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .sale-form form {
+    grid-template-columns: 1fr;
+  }
+
+  .section-title,
+  .button-group {
+    grid-column: span 1;
+  }
+}

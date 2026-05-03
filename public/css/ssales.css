@@ -1,0 +1,417 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* BODY */
+body {
+  display: flex;
+  background: #f4f6f9;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+background-color: rgb(5, 5, 44);
+  color: #fff;
+  position: fixed;
+  padding: 20px;
+}
+
+.sidebar .logo {
+  text-align: center;
+margin: 0  50px 0  0;
+
+}
+
+.sidebar h2 {
+  font-size: 18px;
+  margin: 0  0 0 40px ;
+  color: rgb(224, 224, 27);
+}
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  margin: 38px 0;
+}
+
+.sidebar ul li a {
+  color: #cbd5e1;
+  text-decoration: none;
+  display: block;
+  padding: 13px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.sidebar ul li:hover {
+  color: white;
+}
+
+/* MAIN CONTENT */
+.main {
+  margin-left: 260px;
+  width: 100%;
+  padding: 30px;
+}
+
+/* HEADER */
+.header {
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  text-align: center;
+  color: rgb(26, 26, 117);
+}
+
+.header p {
+  color:rgb(21, 21, 122);
+  text-align: center;
+}
+
+/* FORM CONTAINER */
+.stock-form {
+  background: #e7e3e3;
+  padding: 25px 30px;
+  border-radius: 10px;
+  max-width: 1000px;   /* 👈 keeps form smaller */
+  margin: auto;       /* 👈 centers it */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* SECTION HEADINGS */
+.stock-form h2 {
+  margin: 20px 0 10px;
+  font-size: 16px;
+  color: #123774;
+  padding-left: 8px;
+}
+
+/* GRID LAYOUT */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+/* FIELD */
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: rgb(15, 15, 83);
+}
+
+.field input,
+.field select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+/* INPUT FOCUS */
+.field input:focus,
+.field select:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+/* BUTTONS */
+.buttons {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.btn.save {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn.save:hover {
+  background: #2563eb;
+}
+
+.btn.reset {
+  background: #e5e7eb;
+}
+
+.btn.reset:hover {
+  background: #d1d5db;
+}
+
+/* end of add stock  */
+
+/* startof ssales page */
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* BODY */
+body {
+  display: flex;
+  background: #f1f5f9;
+  color: #333;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 230px;
+  background: #020c24;
+  color: white;
+  padding: 20px;
+  position: fixed;
+  height: 100%;
+}
+
+.sidebar h2 {
+  font-size: 18px;
+  margin: 0  0px   18px  20px;
+}
+
+.sidebar p {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+.sidebar a {
+  display: block;
+  color: #cbd5f5;
+  text-decoration: none;
+  padding: 17px;
+  margin: 8px 0;
+  border-radius: 6px;
+  transition: 0.3s;
+  margin: 20px 0;
+}
+
+.sidebar a:hover {
+  background-color: rgb(28, 206, 28);
+  color: white;
+}
+
+/* MAIN */
+.main {
+  margin-left: 250px;
+  padding: 25px;
+  width: 100%;
+}
+
+/* TOP SECTION */
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.topbar h1 {
+  font-size: 1.3rem;
+  color: rgb(16, 16, 99);
+}
+
+.topbar p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* PROFILE CARD */
+.profile-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+}
+
+.avatar {
+  background: #010a19;
+  color: white;
+  padding: 12px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.profile-info h3 {
+  font-size: 14px;
+}
+
+.profile-info p {
+  font-size: 12px;
+  color: #666;
+}
+
+.profile-info span {
+  font-size: 11px;
+  color: green;
+}
+
+/* CARDS */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: white;
+  padding: 18px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card i {
+  font-size: 22px;
+  color: #4389eb;
+  margin-bottom: 8px;
+}
+
+.card h3 {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.card p {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* QUICK LINKS */
+.quick-links {
+  margin-bottom: 30px;
+}
+
+.quick-links h2 {
+  margin-bottom: 10px;
+  color: rgb(22, 22, 101);
+  font-size: 1rem;
+}
+
+.links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.link-box {
+  background: #06142b;
+  color: white;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.link-box:hover {
+  background: #2563eb;
+}
+
+/* TABLE */
+.recent-sales {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.recent-sales h2 {
+  margin-bottom: 15px;
+  color: rgb(33, 33, 167);
+  font-size: 1.1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead {
+  background: #f1f5f9;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  font-weight: 600;
+  color: #333;
+}
+
+tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* STATUS */
+.paid {
+  color: green;
+  font-weight: bold;
+}
+
+.pending {
+  color: orange;
+  font-weight: bold;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .top-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+}

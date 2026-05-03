@@ -3,50 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register - Nyondo</title>
+  <title>Sign Up - Nyondo</title>
 
   <link rel="stylesheet" href="/css/login.css"/>
 </head>
 
-<body class="register-page">
+<body>
 
   <div class="card">
 
-    <img src="/images/logo.png" width="50" height="50" alt="logo" class="logo"/>
+    <img src="/images/logo.png" class="logo" width="55" height="55" alt="logo"/>
 
-    <h4>Create an Account</h4>
-    <p class="sub">Create your account to get started</p>
+    <h2>Create Account</h2>
+    <p class="sub">Register to access Nyondo Stock System</p>
 
-    <form action="/register" method="post">
+    <form action="/register" method="POST">
 
-      <!-- FULL NAME -->
-      <div class="field">
-        <label for="fname">Full Name</label>
-        <input type="text" name="fullname" id="fname" placeholder="Enter Full Name" required/>
+      <div class="grid">
+
+        <!-- FULL NAME -->
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" name="fullname" placeholder="Enter full name" required>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="Enter email" required>
+        </div>
+
+        <!-- PHONE -->
+        <div class="field">
+          <label>Phone Number</label>
+          <input type="number" name="phone" placeholder="Enter phone number" required>
+        </div>
+
+        <!-- NIN -->
+        <div class="field">
+          <label>NIN</label>
+          <input type="text" name="nin" placeholder="Enter NIN" required>
+        </div>
+
+        <!-- ROLE -->
+        <div class="field full">
+          <label>Role</label>
+          <select name="role" required>
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="storemanager">Store Manager</option>
+            <option value="salesattendant">Sales Attendant</option>
+          </select>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="field full">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Enter password" required>
+        </div>
+
       </div>
 
-      <!-- EMAIL -->
-      <div class="field">
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" placeholder="Enter Your Email" required/>
-      </div>
+      <button type="submit">Create Account</button>
 
-      <!-- PASSWORD -->
-      <div class="field">
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" placeholder="Enter Your Password" required/>
-      </div>
-
-      <!-- CONFIRM PASSWORD -->
-      <div class="field">
-        <label for="cpassword">Confirm Password</label>
-        <input type="password" name="confirmpassword" id="cpassword" placeholder="Re-Enter Password" required/>
-      </div>
-
-      <button type="submit">Register Account</button>
-
-      <div class="login">
-        Already have an account? <a href="#">Sign In</a>
+      <div class="login-link">
+        Already have an account? <a href="/login">Login</a>
       </div>
 
     </form>

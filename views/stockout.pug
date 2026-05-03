@@ -1,0 +1,157 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Nyondo Stock Out
+  link(rel='stylesheet' href='/css/ssales.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// SIDEBAR
+.sidebar
+  .logo
+    h2 NYONDO
+    p Stock System
+  ul
+    li
+      a(href='dashboard.html')
+        i.fa.fa-home
+        |  Dashboard
+    li
+      a(href='inventory.html')
+        i.fa.fa-box
+        |  Inventory
+    li
+      a(href='stockin.html')
+        i.fa.fa-arrow-down
+        |  Stock In
+    li
+      a(href='stockout.html')
+        i.fa.fa-arrow-up
+        |  Stock Out
+    li
+      a(href='reports.html')
+        i.fa.fa-chart-line
+        |  Reports
+    li
+      a(href='alerts.html')
+        i.fa.fa-triangle-exclamation
+        |  Alerts
+// MAIN CONTENT
+.main
+  // HEADER
+  .topbar
+    h1 Stock Out Management
+  // SUMMARY CARDS
+  .cards
+    .card.red
+      h3 Today Stock Out
+      p 210 Items
+    .card.blue
+      h3 This Week
+      p 1,020 Items
+    .card.green
+      h3 Top Sold
+      p Cement
+  // STOCK OUT FORM
+  .section.form-section
+    h2 Record Stock Out
+    form
+      .form-group
+        label Product Name
+        input(type='text' placeholder='Enter product name' required='')
+      .form-group
+        label Category
+        input(type='text' placeholder='Enter category' required='')
+      .form-group
+        label Quantity Issued
+        input(type='number' placeholder='Enter quantity' required='')
+      .form-group
+        label Unit Price
+        input(type='number' placeholder='Enter unit price')
+      .form-group
+        label Customer / Project Name
+        input(type='text' placeholder='Enter customer or project' required='')
+      .form-group
+        label Purpose
+        input(type='text' placeholder='Sale / Construction / Internal use')
+      .form-group
+        label Date Issued
+        input(type='date' required='')
+      .form-group
+        label Issued By
+        input(type='text' placeholder='Staff name')
+      button(type='submit') Record Stock Out
+  // RECENT STOCK OUT TABLE
+  .section
+    h2 Recent Stock Out
+    table
+      tr
+        th Date
+        th Product
+        th Qty
+        th Customer
+        th Purpose
+        th Status
+      tr
+        td 2026-04-20
+        td Cement
+        td 30
+        td Site A
+        td Construction
+        td Completed
+      tr
+        td 2026-04-21
+        td Iron Sheets
+        td 60
+        td Site B
+        td Construction
+        td Completed
+      tr
+        td 2026-04-22
+        td Nails
+        td 100
+        td Retail
+        td Sale
+        td Completed
+      tr
+        td 2026-04-23
+        td Paint
+        td 40
+        td Project X
+        td Construction
+        td Pending
+      tr
+        td 2026-04-24
+        td Bricks
+        td 200
+        td Site C
+        td Construction
+        td Completed
+      tr
+        td 2026-04-25
+        td Sand
+        td 150
+        td Contractor
+        td Sale
+        td Pending
+  // CUSTOMER / PROJECT TRACKING
+  .section
+    h2 Customer / Project Tracking
+    .customer-grid
+      .customer-card
+        h4 Site A Construction
+        p Cement, Bricks, Sand
+        span Active Project
+      .customer-card
+        h4 Retail Customers
+        p Nails, Paint
+        span Daily Sales
+      .customer-card
+        h4 Site B Project
+        p Iron Sheets
+        span Ongoing
+  // ALERTS
+  .section.alerts
+    h2 Stock Out Alerts
+    ul
+      li &#x26A0; Cement stock below minimum level
+      li &#x26A0; Pending approval for Paint issue
+      li &#x26A0; Large withdrawal detected (Bricks)

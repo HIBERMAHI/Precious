@@ -1,0 +1,96 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Register Stock - Nyondo Hardware
+  link(rel='stylesheet' href='/css/ssales.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// SIDEBAR
+.sidebar
+  .logo
+    h2 &#x2692; NYONDO HARDWARE
+  ul
+    li
+      a(href='/dashboard')
+        i.fas.fa-home
+        |  Dashboard
+    li
+      a(href='/inventory')
+        i.fas.fa-boxes
+        |  Inventory
+    li
+      a(href='/sales')
+        i.fas.fa-cash-register
+        |  Sales
+    li.active
+      a(href='/stock')
+        i.fas.fa-plus-circle
+        |  Add Stock
+    li
+      a(href='/reports')
+        i.fas.fa-chart-line
+        |  Reports
+// MAIN
+.main
+  .header
+    h1
+      i.fas.fa-plus-circle
+      |  Stock Registration
+    p Fill in the details to add new stock to inventory
+  // FORM
+  form.stock-form(method='post' action='/addstock')
+    // PRODUCT DETAILS
+    h2 Product Details
+    .grid
+      .field
+        label Product Name
+        input(type='text' name='productName' required='')
+      .field
+        label Category
+        select(name='category' required='')
+          option(value='') Select Category
+          option Building
+          option Hardware
+          option Electrical
+          option Roofing
+          option Timber
+    h2 Stock Information
+    .grid
+      .field
+        label Quantity
+        input(type='number' name='quantity' required='')
+      .field
+        label Unit
+        select(name='unit')
+          option Bags
+          option Pieces
+          option Boxes
+          option Litres
+    // PRICING
+    h2 Pricing
+    .grid
+      .field
+        label Buying Price
+        input(type='number' name='buyingPrice' required='')
+      .field
+        label Selling Price
+        input(type='number' name='sellingPrice' required='')
+      .field
+        label Total
+        input(type='number' name='total')
+    // SUPPLIER
+    h2 Supplier Details
+    .grid
+      .field
+        label Supplier Name
+        input(type='text' name='supplierName')
+      .field
+        label Supplier Contact
+        input(type='text' name='supplierContact')
+      .field
+        label Delivery Date
+        input(type='date' name='deliveryDate')
+    .grid
+    // BUTTONS
+    .buttons
+      button.btn.save(type='submit') Save Stock
+      button.btn.reset(type='reset') Reset

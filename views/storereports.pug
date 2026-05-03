@@ -1,0 +1,131 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Nyondo Reports Dashboard
+  link(rel='stylesheet' href='/css/ssales.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// SIDEBAR
+.sidebar
+  .logo
+    h2 NYONDO
+    p Reports System
+  ul
+    li
+      a(href='dashboard.html')
+        i.fa.fa-home
+        |  Dashboard
+    li
+      a(href='inventory.html')
+        i.fa.fa-box
+        |  Inventory
+    li
+      a(href='stockin.html')
+        i.fa.fa-arrow-down
+        |  Stock In
+    li
+      a(href='stockout.html')
+        i.fa.fa-arrow-up
+        |  Stock Out
+    li
+      a(href='reports.html')
+        i.fa.fa-chart-line
+        |  Reports
+// MAIN
+.main
+  // HEADER
+  .topbar
+    h1 Store Manager Reports
+    button.export-btn
+      i.fa.fa-download
+      |  Export Report
+  // STOCK MOVEMENT
+  .cards
+    .card.green
+      h3 Total Stock In
+      p 1,450 Items
+    .card.red
+      h3 Total Stock Out
+      p 1,020 Items
+    .card.blue
+      h3 Net Balance
+      p 430 Items
+  // SALES PERFORMANCE
+  .section
+    h2 Sales Performance
+    .cards
+      .card.blue
+        h3 Total Revenue
+        p UGX 12,500,000
+      .card.green
+        h3 Best Product
+        p Cement
+      .card.red
+        h3 Least Product
+        p Decorative Paint
+  // FAST & SLOW MOVING STOCK
+  .section.grid-two
+    .box
+      h2 &#x1F525; Fast Moving Stock
+      ul
+        li Cement
+        li Iron Sheets
+        li Nails
+        li Sand
+    .box.slow
+      h2 &#x1F422; Slow Moving Stock
+      ul
+        li Decorative Paint
+        li Roof Tiles
+        li Old Cement Stock
+        li Special Bricks
+  // INVENTORY STATUS
+  .section
+    h2 Inventory Status
+    table
+      tr
+        th Product
+        th Stock Level
+        th Status
+      tr
+        td Cement
+        td 120
+        td Good
+      tr
+        td Iron Sheets
+        td 40
+        td Low
+      tr
+        td Nails
+        td 300
+        td Good
+      tr
+        td Paint
+        td 15
+        td Critical
+  // SUPPLIER REPORT
+  .section
+    h2 Supplier Performance
+    table
+      tr
+        th Supplier
+        th Deliveries
+        th Status
+      tr
+        td ABC Ltd
+        td 25
+        td Reliable
+      tr
+        td Metal Corp
+        td 18
+        td Good
+      tr
+        td Color World
+        td 10
+        td Average
+  // ALERTS
+  .section.alerts
+    h2 System Alerts
+    ul
+      li &#x26A0; Paint stock critically low
+      li &#x26A0; Unapproved stock out entries detected
+      li &#x26A0; Cement demand increasing rapidly

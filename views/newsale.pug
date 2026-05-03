@@ -1,0 +1,129 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Nyondo Sales
+  link(rel='stylesheet' href='/css/newsale.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// SIDEBAR
+.sidebar
+  .logo
+    |⚒ NYONDO HARDWARE
+  ul
+    li
+      a(href='/dashboard')
+        i.fas.fa-home
+        |  Dashboard
+    li
+      a(href='/sales')
+        i.fas.fa-cash-register
+        |  Sales
+    li
+      a(href='/products')
+        i.fas.fa-box
+        |  Stock View
+    li
+      a(href='/receipts')
+        i.fas.fa-receipt
+        |  Credit Sales
+    li
+      a(href='/returns')
+        i.fas.fa-rotate-left
+        |  sales History
+    li
+      a(href='/logout')
+        i.fas.fa-right-from-bracket
+        |  Logout
+// MAIN
+.main
+  h1 Sales Management
+  // ================= NEW SALE =================
+  section.sale-form
+    h2 Register New Sale
+    form(action='/newsale' method='post')
+      .section-title Customer Information
+      .form-group
+        label Customer Name
+        input(type='text' name='customerName')
+      .form-group
+        label Phone Number
+        input(type='text' name='phone')
+      .section-title Item Information
+      .form-group
+        label Product Name
+        select(name='productName' required )
+          option(value='' disabled selected)  Select product
+          each product in items 
+            option(value=product._id )
+             | #{product.productName} (quantity: #{product.quantity} | price:#{product.sellingPrice} UGX)
+      .form-group
+        label Quantity
+        input(type='number' name='quantity' required='')
+      .form-group
+        label Price (UGX)
+        input(type='number' name='price' required='')
+      .section-title Delivery &amp; Transport
+      .form-group
+        label Delivery Option
+        select(name='deliveryOption')
+          option(value='pickup') Pickup
+          option(value='delivery') Delivery
+      .form-group
+        label Distance (km)
+        input(type='number' name='distance')
+      .form-group
+        label Transport Fee
+        input(type='number' name='transportFee' readonly='')
+      .section-title Payment &amp; Status
+      .form-group
+        label Payment Method
+        select(name='paymentMethod')
+          option(value='cash') Cash
+          option(value='mobile') Mobile Money
+          option(value='bank') Bank
+      .form-group
+        label Status
+        select(name='status')
+          option(value='completed') Completed
+          option(value='pending') Pending
+      .form-group
+        label Total Amount
+        input(type='number' name='totalAmount' readonly='')
+      .button-group
+        button.register-btn(type='submit')
+          i.fas.fa-plus
+          |  Register Sale
+        button.receipt-btn(type='button')
+          i.fas.fa-receipt
+          |  Issue Receipt
+  // ================= RECENT SALES (6 ITEMS) =================
+  section.recent-sales
+    h2 Recent Sales
+    table
+      thead
+        tr
+          th customerName
+          th productName
+          th quantity
+          th price
+          th transportFee
+          th paymentMethod
+          th status 
+          th totalAmount 
+          th attendant 
+          th date
+          tbody
+          each sale in dbSales 
+            tr
+              td #{sale.customerName}
+              td #{sale.productName ? sale.productName.productName : 'Item deleted'}
+              td #{sale.quantity}
+              td #{sale.price ? sale.price.toLocaleString() : '0'}
+              td #{sale.transportFee ? sale.transportFee.toLocaleString() : '0'}
+              td #{sale.paymentMethod}
+              td #{sale.status}
+              td #{sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'}
+              td #{sale.attendant ? sale.attendant.fullname : 'unknown'}
+              td #{new Date(sale.date).toLocaleString()}
+          else
+            tr 
+              td.text-center(colspan='11') No sales have been recorded yet

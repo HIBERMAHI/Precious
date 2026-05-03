@@ -1,0 +1,150 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Nyondo Stock In
+  link(rel='stylesheet' href='/css/ssales.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// SIDEBAR
+.sidebar
+  .logo
+    h2 NYONDO
+    p Stock System
+  ul
+    li
+      a(href='dashboard.html')
+        i.fa.fa-home
+        |  Dashboard
+    li
+      a(href='inventory.html')
+        i.fa.fa-box
+        |  Inventory
+    li
+      a(href='stockin.html')
+        i.fa.fa-arrow-down
+        |  Stock In
+    li
+      a(href='stockout.html')
+        i.fa.fa-arrow-up
+        |  Stock Out
+    li
+      a(href='reports.html')
+        i.fa.fa-chart-line
+        |  Reports
+    li
+      a(href='alerts.html')
+        i.fa.fa-triangle-exclamation
+        |  Alerts
+// MAIN CONTENT
+.main
+  // HEADER
+  .topbar
+    h1 Stock In Management
+  // SUMMARY CARDS
+  .cards
+    .card.green
+      h3 Today Stock In
+      p 320 Items
+    .card.blue
+      h3 This Week
+      p 1,450 Items
+    .card.orange
+      h3 Top Product
+      p Cement
+  // STOCK IN FORM (WITH LABELS)
+  .section.form-section
+    h2 Record New Stock In
+    form
+      .form-group
+        label Product Name
+        input(type='text' placeholder='Enter product name' required='')
+      .form-group
+        label Category
+        input(type='text' placeholder='Enter category' required='')
+      .form-group
+        label Quantity Received
+        input(type='number' placeholder='Enter quantity' required='')
+      .form-group
+        label Unit Price
+        input(type='number' placeholder='Enter unit price')
+      .form-group
+        label Supplier Name
+        input(type='text' placeholder='Enter supplier name' required='')
+      .form-group
+        label Supplier Contact
+        input(type='text' placeholder='Enter contact')
+      .form-group
+        label Date Received
+        input(type='date' required='')
+      .form-group
+        label Invoice Number
+        input(type='text' placeholder='Enter invoice number')
+      button(type='submit') Add Stock
+  // RECENT STOCK IN TABLE
+  .section
+    h2 Recent Stock In
+    table
+      tr
+        th Date
+        th Product
+        th Qty
+        th Supplier
+        th Status
+      tr
+        td 2026-04-20
+        td Cement
+        td 50
+        td ABC Ltd
+        td Approved
+      tr
+        td 2026-04-21
+        td Iron Sheets
+        td 120
+        td Metal Corp
+        td Approved
+      tr
+        td 2026-04-22
+        td Nails
+        td 200
+        td Hardware Ltd
+        td Pending
+      tr
+        td 2026-04-23
+        td Paint
+        td 80
+        td Color World
+        td Approved
+      tr
+        td 2026-04-24
+        td Bricks
+        td 500
+        td Stone Supply
+        td Approved
+      tr
+        td 2026-04-25
+        td Sand
+        td 300
+        td Local Quarry
+        td Pending
+  // SUPPLIER SECTION
+  .section
+    h2 Supplier Overview
+    .supplier-grid
+      .supplier-card
+        h4 ABC Ltd
+        p cement, sand, bricks
+        span Reliable
+      .supplier-card
+        h4 Metal Corp
+        p iron sheets, nails
+        span Active
+      .supplier-card
+        h4 Color World
+        p paint products
+        span Good
+  // ALERTS
+  .section.alerts
+    h2 Stock Alerts
+    ul
+      li &#x26A0; Missing invoice for Nails (2026-04-22)
+      li &#x26A0; Duplicate entry detected for Sand
+      li &#x26A0; Pending approval for 2 stock entries

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nyondo Sales</title>
+
+  <link rel="stylesheet" href="/css/newsale.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <div class="logo">
+    <h2>⚒ NYONDO HARDWARE</h2>
+    <p>Sales Attendant System</p>
+  </div>
+
+  <ul>
+    <li><a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+    <li><a href="/sales"><i class="fas fa-cash-register"></i> Sales</a></li>
+    <li><a href="/products"><i class="fas fa-box"></i> Products</a></li>
+    <li><a href="/receipts"><i class="fas fa-receipt"></i> Receipts</a></li>
+    <li><a href="/returns"><i class="fas fa-rotate-left"></i> Returns</a></li>
+    <li><a href="/logout"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+  </ul>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <h1>Sales Management</h1>
+
+  <!-- ================= NEW SALE ================= -->
+  <section class="sale-form">
+
+    <h2>Register New Sale</h2>
+
+    <form action="/sales" method="POST">
+
+      <div class="section-title">Customer Information</div>
+
+      <div class="form-group">
+        <label>Customer Name</label>
+        <input type="text" name="customerName">
+      </div>
+
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" name="phone">
+      </div>
+
+      <div class="section-title">Item Information</div>
+
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" name="productName" required>
+      </div>
+
+      <div class="form-group">
+        <label>Quantity</label>
+        <input type="number" name="quantity" required>
+      </div>
+
+      <div class="form-group">
+        <label>Price (UGX)</label>
+        <input type="number" name="price" required>
+      </div>
+
+      <div class="section-title">Delivery & Transport</div>
+
+      <div class="form-group">
+        <label>Delivery Option</label>
+        <select name="deliveryOption">
+          <option value="pickup">Pickup</option>
+          <option value="delivery">Delivery</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Distance (km)</label>
+        <input type="number" name="distance">
+      </div>
+
+      <div class="form-group">
+        <label>Transport Fee</label>
+        <input type="number" name="transportFee" readonly>
+      </div>
+
+      <div class="section-title">Payment & Status</div>
+
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select name="paymentMethod">
+          <option value="cash">Cash</option>
+          <option value="mobile">Mobile Money</option>
+          <option value="bank">Bank</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Amount Paid</label>
+        <input type="number" name="amountPaid" required>
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="completed">Completed</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Total Amount</label>
+        <input type="number" name="totalAmount" readonly>
+      </div>
+
+      <div class="button-group">
+
+        <button type="submit" class="register-btn">
+          <i class="fas fa-plus"></i> Register Sale
+        </button>
+
+        <button type="button" class="receipt-btn">
+          <i class="fas fa-receipt"></i> Issue Receipt
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+  <!-- ================= RECENT SALES (6 ITEMS) ================= -->
+  <section class="recent-sales">
+
+    <h2>Recent Sales</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Items</th>
+          <th>Qty</th>
+          <th>Total</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>Hammer</td>
+          <td>2</td>
+          <td>30,000</td>
+          <td>28/04/2026</td>
+          <td>10:15 AM</td>
+          <td class="paid">Completed</td>
+        </tr>
+
+        <tr>
+          <td>Cement</td>
+          <td>5</td>
+          <td>190,000</td>
+          <td>28/04/2026</td>
+          <td>11:05 AM</td>
+          <td class="paid">Completed</td>
+        </tr>
+
+        <tr>
+          <td>Paint</td>
+          <td>2</td>
+          <td>62,000</td>
+          <td>28/04/2026</td>
+          <td>12:40 PM</td>
+          <td class="pending">Pending</td>
+        </tr>
+
+        <tr>
+          <td>Pipes</td>
+          <td>6</td>
+          <td>78,000</td>
+          <td>28/04/2026</td>
+          <td>01:10 PM</td>
+          <td class="paid">Completed</td>
+        </tr>
+
+        <tr>
+          <td>Wood</td>
+          <td>10</td>
+          <td>120,000</td>
+          <td>28/04/2026</td>
+          <td>02:00 PM</td>
+          <td class="paid">Completed</td>
+        </tr>
+
+        <tr>
+          <td>Cable</td>
+          <td>4</td>
+          <td>95,000</td>
+          <td>28/04/2026</td>
+          <td>03:20 PM</td>
+          <td class="pending">Pending</td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </section>
+
+</div>
+
+</body>
+</html>

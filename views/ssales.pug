@@ -1,0 +1,114 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Nyondo Sales Dashboard
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+  link(rel='stylesheet' href='/css/ssales.css')
+// SIDEBAR
+.sidebar
+  h2 &#x2692; NYONDO HARDWARE
+  p Sales Attendant Panel
+  a(href='/dashboard')
+    i.fas.fa-home
+    |  Dashboard
+  a(href='/sales')
+    i.fas.fa-cash-register
+    |  New Sale
+  a(href='/products')
+    i.fas.fa-box
+    |  Stock View
+  a(href='/receipts')
+    i.fas.fa-receipt
+    | Credit Sales
+  a(href='/returns')
+    i.fas.fa-rotate-left
+    |  Sales History
+  a(href='/logout')
+    i.fas.fa-right-from-bracket
+    |  Logout
+// MAIN
+.main
+  // TOP BAR + PROFILE
+  .top-section
+    .topbar
+      h1 Sales Dashboard
+      p Welcome back! Manage your daily sales efficiently.
+    // PROFILE CARD
+    .profile-card
+      .avatar
+        i.fas.fa-user
+      .profile-info
+        h3 Sales Attendant
+        p John Doe
+        span Active
+  // SUMMARY CARDS (LOW STOCK REMOVED → 5 ITEMS LEFT)
+  section.cards
+    .card
+      i.fas.fa-money-bill-wave
+      h3 Today&apos;s Sales
+      p UGX 1,250,000
+    .card
+      i.fas.fa-receipt
+      h3 Transactions
+      p 38 Sales
+    .card
+      i.fas.fa-boxes-stacked
+      h3 Items Sold
+      p 120 Items
+    .card
+      i.fas.fa-file-invoice
+      h3 Receipts
+      p 32 Issued
+    .card
+      i.fas.fa-rotate-left
+      h3 Returns
+      p 2 Today
+  // QUICK LINKS
+  section.quick-links
+    h2 Quick Actions
+    .links
+      a.link-box(href='/sales')
+        i.fas.fa-plus
+        |  New Sale
+      a.link-box(href='/stock')
+        i.fas.fa-boxes
+        |  Check Stock
+      a.link-box(href='/receipts')
+        i.fas.fa-receipt
+        |  View Receipts
+      a.link-box(href='/returns')
+        i.fas.fa-rotate-left
+        |  Process Return
+  // RECENT SALES
+  section.recent-sales
+    h2
+      i.fas.fa-clock
+      |  Recent Sales
+    table
+      thead
+        tr
+          th customerName
+          th productName
+          th quantity
+          th price
+          th PaymentMethod
+          th Status
+          th attendant 
+          th totalAmount
+          th Date
+      tbody
+        each sale in dbSales
+         tr
+            td #{sale.customerName}
+            td #{sale.productName.productName}
+            td #{sale.quantity}
+            td #{sale.price}
+            td #{sale.paymentMethod}
+            td #{sale.status}
+            td #{sale.attendant ? sale.attendant.fullname: 'Unknown'}
+            td #{sale.totalAmount} UGX
+             td #{new Date(sale.date).toLocaleString()}
+        else 
+          tr
+            td.text-center(colspan='11') No sales have been recorded yet
+          

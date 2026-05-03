@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nyondo Sales Dashboard</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/ssales.css">
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>⚒ NYONDO HARDWARE</h2>
+  <p>Sales Attendant Panel</p>
+
+  <a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+  <a href="/sales"><i class="fas fa-cash-register"></i> New Sale</a>
+  <a href="/products"><i class="fas fa-box"></i> Stock View</a>
+  <a href="/receipts"><i class="fas fa-receipt"></i>Credit Sales </a>
+  <a href="/returns"><i class="fas fa-rotate-left"></i> Sales History</a>
+  <a href="/logout"><i class="fas fa-right-from-bracket"></i> Logout</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR + PROFILE -->
+  <div class="top-section">
+
+    <div class="topbar">
+      <h1>Sales Dashboard</h1>
+      <p>Welcome back! Manage your daily sales efficiently.</p>
+    </div>
+
+    <!-- PROFILE CARD -->
+    <div class="profile-card">
+      <div class="avatar">
+        <i class="fas fa-user"></i>
+      </div>
+
+      <div class="profile-info">
+        <h3>Sales Attendant</h3>
+        <p>John Doe</p>
+        <span>Active</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SUMMARY CARDS (LOW STOCK REMOVED → 5 ITEMS LEFT) -->
+  <section class="cards">
+
+    <div class="card">
+      <i class="fas fa-money-bill-wave"></i>
+      <h3>Today's Sales</h3>
+      <p>UGX 1,250,000</p>
+    </div>
+
+    <div class="card">
+      <i class="fas fa-receipt"></i>
+      <h3>Transactions</h3>
+      <p>38 Sales</p>
+    </div>
+
+    <div class="card">
+      <i class="fas fa-boxes-stacked"></i>
+      <h3>Items Sold</h3>
+      <p>120 Items</p>
+    </div>
+
+    <div class="card">
+      <i class="fas fa-file-invoice"></i>
+      <h3>Receipts</h3>
+      <p>32 Issued</p>
+    </div>
+
+    <div class="card">
+      <i class="fas fa-rotate-left"></i>
+      <h3>Returns</h3>
+      <p>2 Today</p>
+    </div>
+
+  </section>
+
+  <!-- QUICK LINKS -->
+  <section class="quick-links">
+
+    <h2>Quick Actions</h2>
+
+    <div class="links">
+
+      <a href="/sales" class="link-box"><i class="fas fa-plus"></i> New Sale</a>
+      <a href="/stock" class="link-box"><i class="fas fa-boxes"></i> Check Stock</a>
+      <a href="/receipts" class="link-box"><i class="fas fa-receipt"></i> View Receipts</a>
+      <a href="/returns" class="link-box"><i class="fas fa-rotate-left"></i> Process Return</a>
+
+    </div>
+
+  </section>
+
+  <!-- RECENT SALES -->
+  <section class="recent-sales">
+
+    <h2><i class="fas fa-clock"></i> Recent Sales</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Receipt No</th>
+          <th>Items</th>
+          <th>Qty</th>
+          <th>Total</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Payment</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>RCP-1001</td>
+          <td>Hammer, Nails</td>
+          <td>3</td>
+          <td>45,000</td>
+          <td>28/04/2026</td>
+          <td>10:15 AM</td>
+          <td>Cash</td>
+          <td class="paid">Completed</td>
+        </tr>
+
+        <tr>
+          <td>RCP-1002</td>
+          <td>Cement Bag</td>
+          <td>5</td>
+          <td>190,000</td>
+          <td>28/04/2026</td>
+          <td>11:05 AM</td>
+          <td>Mobile Money</td>
+          <td class="paid">Completed</td>
+        </tr>
+
+        <tr>
+          <td>RCP-1003</td>
+          <td>Paint, Brush</td>
+          <td>2</td>
+          <td>62,000</td>
+          <td>28/04/2026</td>
+          <td>12:40 PM</td>
+          <td>Cash</td>
+          <td class="pending">Pending</td>
+        </tr>
+
+        <tr>
+          <td>RCP-1004</td>
+          <td>Pipe Fittings</td>
+          <td>6</td>
+          <td>78,000</td>
+          <td>28/04/2026</td>
+          <td>01:10 PM</td>
+          <td>Cash</td>
+          <td class="paid">Completed</td>
+        </tr>
+
+        <tr>
+          <td>RCP-1005</td>
+          <td>Wood Plank</td>
+          <td>10</td>
+          <td>120,000</td>
+          <td>28/04/2026</td>
+          <td>02:00 PM</td>
+          <td>Bank</td>
+          <td class="paid">Completed</td>
+        </tr>
+
+        <tr>
+          <td>RCP-1006</td>
+          <td>Electric Cable</td>
+          <td>4</td>
+          <td>95,000</td>
+          <td>28/04/2026</td>
+          <td>03:20 PM</td>
+          <td>Mobile Money</td>
+          <td class="pending">Pending</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </section>
+
+</div>
+
+</body>
+</html>

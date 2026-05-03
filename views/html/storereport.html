@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nyondo Reports Dashboard</title>
+  <link rel="stylesheet" href="/css/storedash.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <div class="logo">
+    <h2>NYONDO</h2>
+    <p>Hardware System</p>
+  </div>
+
+  <ul>
+    <li><a href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a></li>
+    <li><a href="inventory.html"><i class="fa fa-box"></i> Inventory</a></li>
+    <li><a href="stockin.html"><i class="fa fa-arrow-down"></i> Stock In</a></li>
+    <li><a href="stockout.html"><i class="fa fa-arrow-up"></i> Stock Out</a></li>
+    <li><a href="reports.html"><i class="fa fa-chart-line"></i> Reports</a></li>
+    <li><a href="alerts.html"><i class="fa fa-triangle-exclamation"></i> Alerts</a></li>
+  </ul>
+
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- TOP HEADER -->
+  <div class="topbar">
+    <h1>Stock Reports</h1>
+
+    <button class="export-btn">
+      <i class="fa fa-download"></i> Export Report
+    </button>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="cards">
+    <div class="card green">
+      <h3>Stock In</h3>
+      <p>1,245 Items</p>
+    </div>
+
+    <div class="card red">
+      <h3>Stock Out</h3>
+      <p>980 Items</p>
+    </div>
+
+    <div class="card blue">
+      <h3>Balance</h3>
+      <p>265 Items</p>
+    </div>
+  </div>
+
+  <!-- STOCK IN TABLE -->
+  <div class="section">
+    <h2>Stock In Report</h2>
+
+    <table>
+      <tr>
+        <th>Date</th><th>Product</th><th>Qty</th><th>Supplier</th>
+      </tr>
+
+      <tr><td>2026-04-20</td><td>Cement</td><td>50</td><td>ABC Ltd</td></tr>
+      <tr><td>2026-04-21</td><td>Iron Sheets</td><td>120</td><td>Metal Corp</td></tr>
+      <tr><td>2026-04-22</td><td>Nails</td><td>200</td><td>Hardware Ltd</td></tr>
+      <tr><td>2026-04-23</td><td>Paint</td><td>80</td><td>Color World</td></tr>
+      <tr><td>2026-04-24</td><td>Bricks</td><td>500</td><td>Stone Supply</td></tr>
+      <tr><td>2026-04-25</td><td>Sand</td><td>300</td><td>Local Quarry</td></tr>
+    </table>
+  </div>
+
+  <!-- STOCK OUT TABLE -->
+  <div class="section">
+    <h2>Stock Out Report</h2>
+
+    <table>
+      <tr>
+        <th>Date</th><th>Product</th><th>Qty</th><th>Usage</th>
+      </tr>
+
+      <tr><td>2026-04-20</td><td>Cement</td><td>30</td><td>Site A</td></tr>
+      <tr><td>2026-04-21</td><td>Iron Sheets</td><td>60</td><td>Site B</td></tr>
+      <tr><td>2026-04-22</td><td>Nails</td><td>100</td><td>Retail</td></tr>
+      <tr><td>2026-04-23</td><td>Paint</td><td>40</td><td>Project X</td></tr>
+      <tr><td>2026-04-24</td><td>Bricks</td><td>200</td><td>Construction</td></tr>
+      <tr><td>2026-04-25</td><td>Sand</td><td>150</td><td>Site C</td></tr>
+    </table>
+  </div>
+
+  <!-- SLOW MOVING STOCK -->
+  <div class="section slow">
+    <h2>Slow Moving Stock</h2>
+
+    <div class="slow-grid">
+
+      <div class="slow-item">
+        <h4>Roofing Nails</h4>
+        <p>Only 5 sold this month</p>
+      </div>
+
+      <div class="slow-item">
+        <h4>Decorative Paint</h4>
+        <p>Low demand product</p>
+      </div>
+
+      <div class="slow-item">
+        <h4>Old Cement Stock</h4>
+        <p>Stored for over 2 months</p>
+      </div>
+
+      <div class="slow-item">
+        <h4>Heavy Bricks</h4>
+        <p>Slow sales movement</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Orders & Deliveries - Nyondo Hardware</title>
+  <link rel="stylesheet" href="/css/ssales.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">
+    <h2>⚒ NYONDO HARDWARE</h2>
+  </div>
+
+  <ul>
+    <li><a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+    <li><a href="/inventory"><i class="fas fa-boxes"></i> Inventory</a></li>
+    <li class="active"><a href="/orders"><i class="fas fa-truck"></i> Orders</a></li>
+    <li><a href="/sales"><i class="fas fa-cash-register"></i> Sales</a></li>
+    <li><a href="/reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+  </ul>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1><i class="fas fa-truck"></i> Orders & Deliveries</h1>
+    <p>Manage supplier orders and incoming deliveries</p>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="cards">
+
+    <div class="card">
+      <h3>Pending Orders</h3>
+      <p>6</p>
+    </div>
+
+    <div class="card">
+      <h3>Approved Orders</h3>
+      <p>14</p>
+    </div>
+
+    <div class="card warn">
+      <h3>Pending Deliveries</h3>
+      <p>5</p>
+    </div>
+
+    <div class="card success">
+      <h3>Received Today</h3>
+      <p>9</p>
+    </div>
+
+  </div>
+
+  <!-- ACTION BAR -->
+  <div class="actions">
+    <button class="btn"><i class="fas fa-plus"></i> New Order</button>
+    <button class="btn secondary"><i class="fas fa-search"></i> Search</button>
+  </div>
+
+  <!-- ORDERS TABLE -->
+  <div class="section">
+
+    <h2>Supplier Orders</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Supplier</th>
+          <th>Date</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>ORD-001</td>
+          <td>Steel Supplies Ltd</td>
+          <td>2026-04-20</td>
+          <td>Cement, Iron Sheets</td>
+          <td>UGX 2,500,000</td>
+          <td><span class="status pending">Pending</span></td>
+          <td><button class="icon approve"><i class="fas fa-check"></i></button></td>
+        </tr>
+
+        <tr>
+          <td>ORD-002</td>
+          <td>Hardware Hub</td>
+          <td>2026-04-18</td>
+          <td>Nails, Hammers</td>
+          <td>UGX 800,000</td>
+          <td><span class="status approved">Approved</span></td>
+          <td><button class="icon view"><i class="fas fa-eye"></i></button></td>
+        </tr>
+
+        <tr>
+          <td>ORD-003</td>
+          <td>BuildMart</td>
+          <td>2026-04-17</td>
+          <td>Paint, Brushes</td>
+          <td>UGX 1,200,000</td>
+          <td><span class="status pending">Pending</span></td>
+          <td><button class="icon approve"><i class="fas fa-check"></i></button></td>
+        </tr>
+
+        <tr>
+          <td>ORD-004</td>
+          <td>Roofing Co</td>
+          <td>2026-04-16</td>
+          <td>Iron Sheets</td>
+          <td>UGX 3,800,000</td>
+          <td><span class="status approved">Approved</span></td>
+          <td><button class="icon view"><i class="fas fa-eye"></i></button></td>
+        </tr>
+
+        <tr>
+          <td>ORD-005</td>
+          <td>Timber World</td>
+          <td>2026-04-15</td>
+          <td>Wood Planks</td>
+          <td>UGX 2,000,000</td>
+          <td><span class="status pending">Pending</span></td>
+          <td><button class="icon approve"><i class="fas fa-check"></i></button></td>
+        </tr>
+
+        <tr>
+          <td>ORD-006</td>
+          <td>Electro Supplies</td>
+          <td>2026-04-14</td>
+          <td>Wires, Switches</td>
+          <td>UGX 950,000</td>
+          <td><span class="status approved">Approved</span></td>
+          <td><button class="icon view"><i class="fas fa-eye"></i></button></td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- DELIVERIES TABLE -->
+  <div class="section">
+
+    <h2>Incoming Deliveries</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Delivery ID</th>
+          <th>Order ID</th>
+          <th>Supplier</th>
+          <th>Date</th>
+          <th>Condition</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>DEL-001</td>
+          <td>ORD-002</td>
+          <td>Hardware Hub</td>
+          <td>2026-04-25</td>
+          <td>Good</td>
+          <td><span class="status received">Received</span></td>
+          <td><button class="icon view"><i class="fas fa-eye"></i></button></td>
+        </tr>
+
+        <tr>
+          <td>DEL-002</td>
+          <td>ORD-001</td>
+          <td>Steel Supplies Ltd</td>
+          <td>2026-04-29</td>
+          <td>Pending Check</td>
+          <td><span class="status pending">Pending</span></td>
+          <td><button class="icon approve"><i class="fas fa-check"></i></button></td>
+        </tr>
+
+        <tr>
+          <td>DEL-003</td>
+          <td>ORD-003</td>
+          <td>BuildMart</td>
+          <td>2026-04-26</td>
+          <td>Good</td>
+          <td><span class="status received">Received</span></td>
+          <td><button class="icon view"><i class="fas fa-eye"></i></button></td>
+        </tr>
+
+        <tr>
+          <td>DEL-004</td>
+          <td>ORD-004</td>
+          <td>Roofing Co</td>
+          <td>2026-04-27</td>
+          <td>Good</td>
+          <td><span class="status received">Received</span></td>
+          <td><button class="icon view"><i class="fas fa-eye"></i></button></td>
+        </tr>
+
+        <tr>
+          <td>DEL-005</td>
+          <td>ORD-005</td>
+          <td>Timber World</td>
+          <td>2026-04-28</td>
+          <td>Pending Check</td>
+          <td><span class="status pending">Pending</span></td>
+          <td><button class="icon approve"><i class="fas fa-check"></i></button></td>
+        </tr>
+
+        <tr>
+          <td>DEL-006</td>
+          <td>ORD-006</td>
+          <td>Electro Supplies</td>
+          <td>2026-04-29</td>
+          <td>Good</td>
+          <td><span class="status received">Received</span></td>
+          <td><button class="icon view"><i class="fas fa-eye"></i></button></td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+
+</body>
+</html>

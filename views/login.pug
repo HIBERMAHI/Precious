@@ -3,33 +3,26 @@ head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
   title Login - Nyondo
-  link(rel='stylesheet' href='/css/login.css')
+  link(rel='stylesheet' href='/css/loginn.css')
 .card
   img.logo(src='/images/logo.png' width='50' height='50' alt='logo')
   h4 Sign In to get started
   p.para Login to access your dashboard
-  // 🔥 FORM (READY FOR BACKEND)
+  // FORM
   form(action='/login' method='POST')
-    // FULL NAME (optional but useful for tracking session user)
-    .part1
+    // FULL NAME
+    .field
       label(for='fullname') Full Name
       input#fullname(type='text' name='fullname' placeholder='Enter Your Full Name' required='')
     // EMAIL
-    .part1
+    .field
       label(for='email') Email
       input#email(type='email' name='email' placeholder='Enter Your Email' required='')
     // PASSWORD
-    .part1
+    .field
       label(for='password') Password
       input#password(type='password' name='password' placeholder='Enter Password' required='')
-    // REMEMBER + FORGOT
-    .check
-      .remember
-        input#checkbox(type='checkbox' name='remember')
-        label(for='checkbox') Remember me
-      a(href='#') Forgot Password
-    // SUBMIT
     button(type='submit') Login
     .login
       | Don&apos;t have an account? 
-      a(href='#') Sign Up
+      a(href='/register') Sign Up

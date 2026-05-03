@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nyondo Stock In</title>
+  <link rel="stylesheet" href="/css/ssales.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <div class="logo">
+    <h2>NYONDO</h2>
+    <p>Stock System</p>
+  </div>
+
+  <ul>
+    <li><a href="dashboard.html"><i class="fa fa-home"></i> Dashboard</a></li>
+    <li><a href="inventory.html"><i class="fa fa-box"></i> Inventory</a></li>
+    <li><a href="stockin.html"><i class="fa fa-arrow-down"></i> Stock In</a></li>
+    <li><a href="stockout.html"><i class="fa fa-arrow-up"></i> Stock Out</a></li>
+    <li><a href="reports.html"><i class="fa fa-chart-line"></i> Reports</a></li>
+    <li><a href="alerts.html"><i class="fa fa-triangle-exclamation"></i> Alerts</a></li>
+  </ul>
+
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="topbar">
+    <h1>Stock In Management</h1>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="cards">
+    <div class="card green">
+      <h3>Today Stock In</h3>
+      <p>320 Items</p>
+    </div>
+
+    <div class="card blue">
+      <h3>This Week</h3>
+      <p>1,450 Items</p>
+    </div>
+
+    <div class="card orange">
+      <h3>Top Product</h3>
+      <p>Cement</p>
+    </div>
+  </div>
+
+  <!-- STOCK IN FORM (WITH LABELS) -->
+  <div class="section form-section">
+    <h2>Record New Stock In</h2>
+
+    <form>
+
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" placeholder="Enter product name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <input type="text" placeholder="Enter category" required>
+      </div>
+
+      <div class="form-group">
+        <label>Quantity Received</label>
+        <input type="number" placeholder="Enter quantity" required>
+      </div>
+
+      <div class="form-group">
+        <label>Unit Price</label>
+        <input type="number" placeholder="Enter unit price">
+      </div>
+
+      <div class="form-group">
+        <label>Supplier Name</label>
+        <input type="text" placeholder="Enter supplier name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Supplier Contact</label>
+        <input type="text" placeholder="Enter contact">
+      </div>
+
+      <div class="form-group">
+        <label>Date Received</label>
+        <input type="date" required>
+      </div>
+
+      <div class="form-group">
+        <label>Invoice Number</label>
+        <input type="text" placeholder="Enter invoice number">
+      </div>
+
+      <button type="submit">Add Stock</button>
+
+    </form>
+  </div>
+
+  <!-- RECENT STOCK IN TABLE -->
+  <div class="section">
+    <h2>Recent Stock In</h2>
+
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Supplier</th>
+        <th>Status</th>
+      </tr>
+
+      <tr><td>2026-04-20</td><td>Cement</td><td>50</td><td>ABC Ltd</td><td>Approved</td></tr>
+      <tr><td>2026-04-21</td><td>Iron Sheets</td><td>120</td><td>Metal Corp</td><td>Approved</td></tr>
+      <tr><td>2026-04-22</td><td>Nails</td><td>200</td><td>Hardware Ltd</td><td>Pending</td></tr>
+      <tr><td>2026-04-23</td><td>Paint</td><td>80</td><td>Color World</td><td>Approved</td></tr>
+      <tr><td>2026-04-24</td><td>Bricks</td><td>500</td><td>Stone Supply</td><td>Approved</td></tr>
+      <tr><td>2026-04-25</td><td>Sand</td><td>300</td><td>Local Quarry</td><td>Pending</td></tr>
+    </table>
+  </div>
+
+  <!-- SUPPLIER SECTION -->
+  <div class="section">
+    <h2>Supplier Overview</h2>
+
+    <div class="supplier-grid">
+
+      <div class="supplier-card">
+        <h4>ABC Ltd</h4>
+        <p>cement, sand, bricks</p>
+        <span>Reliable</span>
+      </div>
+
+      <div class="supplier-card">
+        <h4>Metal Corp</h4>
+        <p>iron sheets, nails</p>
+        <span>Active</span>
+      </div>
+
+      <div class="supplier-card">
+        <h4>Color World</h4>
+        <p>paint products</p>
+        <span>Good</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="section alerts">
+    <h2>Stock Alerts</h2>
+
+    <ul>
+      <li>⚠ Missing invoice for Nails (2026-04-22)</li>
+      <li>⚠ Duplicate entry detected for Sand</li>
+      <li>⚠ Pending approval for 2 stock entries</li>
+    </ul>
+  </div>
+
+</div>
+
+</body>
+</html>
