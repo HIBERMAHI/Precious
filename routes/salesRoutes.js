@@ -40,18 +40,7 @@ router.get("/newsale", async (req, res) => {
 // making a sale
 router.post("/newsale", async (req, res) => {
   try {
-    const {
-      customerName,
-      phone,
-      productName,
-      quantity,
-      price,
-      deliveryOption,
-      distance,
-      transportFee,
-      paymentMethod,
-      status,
-      date,
+    const {customerName,phone,productName,quantity,price,deliveryOption,distance,transportFee,paymentMethod,status,date,
     } = req.body;
     const item = await Stock.findById(productName);
     if (!item) return res.status(404).send("Item not found");
@@ -77,8 +66,7 @@ router.post("/newsale", async (req, res) => {
       attendant: req.user._id,
     });
     console.log(newsale);
-    await newsale
-      .save()
+    await newsale.save()
       .then((result) => {
         console.log(result);
       })
@@ -109,5 +97,9 @@ router.get("/ssales", async (req, res) => {
 router.get("/admindash", (req, res) => {
   res.render("admindash");
 });
+
+// router.post("/sla", (req, res) => {
+//   console.log(req.body)
+// });
 
 module.exports = router;

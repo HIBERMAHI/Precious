@@ -40,14 +40,12 @@ head
   section.sale-form
     h2 Register New Sale
     form(action='/newsale' method='post')
-      .section-title Customer Information
       .form-group
         label Customer Name
         input(type='text' name='customerName')
       .form-group
         label Phone Number
         input(type='text' name='phone')
-      .section-title Item Information
       .form-group
         label Product Name
         select(name='productName' required )
@@ -61,7 +59,6 @@ head
       .form-group
         label Price (UGX)
         input(type='number' name='price' required='')
-      .section-title Delivery &amp; Transport
       .form-group
         label Delivery Option
         select(name='deliveryOption')
@@ -73,7 +70,6 @@ head
       .form-group
         label Transport Fee
         input(type='number' name='transportFee' readonly='')
-      .section-title Payment &amp; Status
       .form-group
         label Payment Method
         select(name='paymentMethod')

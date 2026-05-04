@@ -9,8 +9,14 @@ router.get("/storedash", (req, res) => {
 router.get("/storsales", (req, res) => {
   res.render("storsales");
 });
-router.get("/invento", (req, res) => {
-  res.render("invento");
+router.get("/invento",async (req, res) => {
+  try {
+    const dbStock = await Stock.find()
+    res.render('invento', {dbStock})
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Unable to pick stock from the data base')
+  }
 });
 
 router.get("/storereport", (req, res) => {

@@ -13,7 +13,7 @@ body {
   color: #1e293b;
 }
 
-/* SIDEBAR */
+/* ================= SIDEBAR (UNCHANGED) ================= */
 .sidebar {
   width: 240px;
   background-color: rgb(5, 5, 41);
@@ -22,6 +22,7 @@ body {
   position: fixed;
   height: 100%;
 }
+
 .logo h2 {
   font-size: 21px;
 }
@@ -36,8 +37,7 @@ body {
 }
 
 .sidebar ul li {
-  margin: 6px 0;
-  margin: 30px  0 0 0;
+  margin: 30px 0 0 0;
   border-radius: 10px;
   transition: 0.3s;
 }
@@ -57,90 +57,94 @@ body {
 .sidebar ul li:hover {
   background-color: rgb(24, 152, 24);
   transform: translateX(5px);
-
 }
 
-/* MAIN */
+/* ================= MAIN ================= */
 .main {
   margin-left: 260px;
   padding: 30px 20px;
   width: 100%;
 }
 
-/* TITLE */
 .main h1 {
-  font-size: 20px;
-  margin-bottom: 20px;
+  font-size: 22px;
+  margin: 0;
   color: rgb(23, 23, 124);
+text-align: center;
+}
+
+/* ================= FORM (CONTROLLED SIZE) ================= */
+.sale-form {
+  background:rgb(231, 218, 218);
+
+  /* SIZE CONTROL */
+  height: 80vh;              /* 2/4 of screen */
+  width: 95%;                /* leaves space left & right */
+  margin: 40px  0;
+
+  padding: 20px 20px;
+  border-radius: 12px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+
+  /* HANDLE OVERFLOW */
+  /* overflow-y: auto; */
+}
+
+/* FORM TITLE */
+.sale-form h2 {
+  font-size: 17px;
+  margin-bottom: 8px;
+  color: #103282;
   text-align: center;
 }
 
-/* ================= FORM ================= */
-.sale-form {
-  background-color: rgb(239, 227, 227);
-  padding: 18px 20px;
-  border-radius: 14px;
-  max-width: 950px; /* same as table */
-  margin: 0  0 30px  0;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-  /* border-right: 4px solid rgb(5, 5, 32); */
-  /* border-left: 4px solid rgb(6, 6, 40); */
-}
-
-.sale-form h2 {
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-  color: rgb(20, 20, 101);
-}
-
-/* GRID FORM */
+/* GRID */
 .sale-form form {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px 14px; /* reduced spacing */
-}
-
-/* SECTION TITLES */
-.section-title {
-  grid-column: span 2;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #133e7a;
-  margin-top: 6px;
-  margin-bottom: 4px;
+  gap: 6px 10px;
 }
 
 /* FORM GROUP */
 .form-group {
   display: flex;
   flex-direction: column;
-  margin: 0;
 }
 
 /* LABEL */
 .form-group label {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   margin-bottom: 2px;
-  color: #0e3a71;
+  color: rgb(115, 17, 115);
+  padding: 4px;
 }
 
-/* SMALL INPUTS */
+/* INPUTS (SMALLER) */
 .form-group input,
 .form-group select {
-  padding: 4px 6px;
-  font-size: 0.8rem;
-  height: 26px;
-  border-radius: 6px;
+  padding: 6px 6px;
+  font-size: 0.7rem;
+  height: 29px;
+  border-radius: 5px;
   border: 1px solid #e2e8f0;
   background: #f9fafb;
-  transition: 0.2s;
+  transition: all 0.2s ease;
+  color: rgb(88, 9, 9);
 }
 
+/* FOCUS */
 .form-group input:focus,
 .form-group select:focus {
-  border-color: #3b82f6;
+  border-color: #2563eb;
   background: #fff;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
   outline: none;
+}
+
+/* FULL WIDTH FIELDS */
+.form-group.full {
+  grid-column: span 2;
 }
 
 /* BUTTONS */
@@ -148,29 +152,28 @@ body {
   grid-column: span 2;
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 6px;
 }
 
 button {
   padding: 10px 10px;
-  font-size: 16px;
+  font-size: 11px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
-  transition: 0.2s;
 }
 
+/* PRIMARY */
 .register-btn {
-  background: #040e1f;
+  background: #1e293b;
   color: white;
 }
 
 .register-btn:hover {
   background: #2563eb;
-  transform: translateY(-1px);
 }
 
+/* SECONDARY */
 .receipt-btn {
   background: #e2e8f0;
 }
@@ -179,12 +182,7 @@ button {
   background: #cbd5e1;
 }
 
-/* FORCE TOTAL FULL WIDTH */
-.form-group:last-of-type {
-  grid-column: span 2;
-}
-
-/* ================= TABLE ================= */
+/* ================= TABLE (UNCHANGED) ================= */
 .recent-sales {
   background: #fff;
   padding: 20px 25px;
@@ -199,7 +197,6 @@ button {
   color: rgb(24, 24, 147);
 }
 
-/* TABLE */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -221,7 +218,6 @@ td {
   border-bottom: 1px solid #f1f5f9;
 }
 
-/* ROW ANIMATION */
 tbody tr {
   transition: all 0.2s ease;
 }
@@ -242,7 +238,7 @@ tbody tr:hover {
   font-weight: 600;
 }
 
-/* RESPONSIVE */
+/* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .sidebar {
     display: none;
@@ -253,11 +249,15 @@ tbody tr:hover {
     padding: 20px;
   }
 
+  .sale-form {
+    width: 100%;
+    height: auto;
+  }
+
   .sale-form form {
     grid-template-columns: 1fr;
   }
 
-  .section-title,
   .button-group {
     grid-column: span 1;
   }
