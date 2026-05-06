@@ -3,160 +3,307 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
 /* BODY */
 body {
   display: flex;
-  background: #f4f6f9;
+  background: #f5f7fa;
 }
 
-/* ================= SIDEBAR ================= */
+/* SIDEBAR */
 .sidebar {
-  width: 260px;
-  min-height: 100vh;
-  background: #05112c;
-  color: white;
-  position: fixed;
+  width: 220px;
+  background: #050529;
+  color: yellow;
+  height: 100vh;
   padding: 20px;
+  position: fixed;
 }
 
-/* LOGO */
-.logo {
-  text-align: center;
-  /* margin-bottom: 35px; */
-  padding-bottom: 15px;
-  border-bottom: 1px solid #334155;
-  margin: 0 40px 25px 0;
+.sidebar h2 {
+  margin-bottom: 20px;
 }
 
-.logo h2 {
-  font-size: 1.5remx;
-  color: #facc15;
-}
-
-.logo p {
-  font-size: 1rem;
-  color: #94a3b8;
-  margin: 10px 0 0 0;
-}
-
-/* NAV */
 .sidebar ul {
   list-style: none;
 }
 
 .sidebar ul li {
-  margin: 5px 0;
-  border-radius: 6px;
+  margin: 15px 0;
 }
 
 .sidebar ul li a {
-  display: block;
-  text-decoration: none;
   color: #cbd5e1;
-  padding: 18px;
+  text-decoration: none;
+  display: flex;
+  gap: 10px;
 }
 
-.sidebar ul li:hover {
-  background-color: rgb(30, 165, 30);
+.sidebar ul li.active a {
+  color: yellow;
 }
 
-
-/* ================= MAIN ================= */
+/* MAIN */
 .main {
-  margin-left: 260px;
+  margin-left: 240px;
   padding: 20px;
   width: 100%;
 }
 
-/* TOPBAR */
-.topbar {
+/* TITLE */
+h1 {
+  margin-bottom: 20px;
+}
+
+/* CARDS */
+.cards {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card {
+  flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.warning {
+  border-left: 5px solid orange;
+}
+
+.danger {
+  border-left: 5px solid red;
+}
+
+/* FORM */
+.credit-form {
   background: white;
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 20px;
-  color: rgb(32, 32, 109);
 }
 
-.topbar h2 {
-  font-size: 1.3rem;
+.credit-form h2 {
+  margin-bottom: 10px;
 }
 
-.topbar p {
-  font-size: 1.3rem;
-}
-
-/* GRID */
 .grid {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
-/* CARD */
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.credit-form button {
+  margin-top: 10px;
+  padding: 10px;
+  width: 100%;
+  background: #1e293b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+/* TABLE */
+.table-section {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #f1f5f9;
+  padding: 10px;
+  text-align: left;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* STATUS */
+.pending {
+  color: orange;
+  font-weight: bold;
+}
+
+.overdue {
+  color: red;
+  font-weight: bold;
+}
+
+/* start of sdebit */
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* BODY */
+body {
+  display: flex;
+  background: #f5f7fa;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #050529;
+  color: yellow;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+}
+
+.sidebar ul li a {
+  color: #cbd5e1;
+  text-decoration: none;
+  display: flex;
+  gap: 10px;
+}
+
+.sidebar ul li.active a {
+  color: yellow;
+}
+
+/* MAIN */
+.main {
+  margin-left: 240px;
+  padding: 20px;
+  width: 100%;
+}
+
+/* TITLE */
+h1 {
+  margin-bottom: 20px;
+}
+
+/* CARDS */
+.cards {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
 .card {
   flex: 1;
   background: white;
-  padding: 20px;
+  padding: 15px;
   border-radius: 10px;
-  box-shadow: 0 2px 14px rgba(0,0,0,0.09);
 }
 
-.card h3 {
-  margin-bottom: 15px;
-  font-size: 1.2rem;
-  color: rgb(23, 23, 94);
+.warning {
+  border-left: 5px solid orange;
+}
+
+.success {
+  border-left: 5px solid green;
 }
 
 /* FORM */
-form label {
-  display: block;
+.debit-form {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.debit-form h2 {
+  margin-bottom: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.debit-form button {
   margin-top: 10px;
-  font-size: 1rem;
+  padding: 10px;
+  width: 100%;
+  background: #1e293b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+/* TABLE */
+.table-section {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #f1f5f9;
+  padding: 10px;
+  text-align: left;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* STATUS */
+.pending {
+  color: orange;
   font-weight: bold;
-  color: rgb(21, 21, 87);
 }
 
-form input,
-form select {
-  width: 100%;
-  padding: 13px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-/* BUTTONS */
-.btn-primary {
-  margin-top: 15px;
-  width: 100%;
-  padding: 10px;
-  background: #a01212;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-secondary {
-  margin-top: 15px;
-  width: 100%;
-  padding: 10px;
-  background: #16a34a;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  background: #b91c1c;
-}
-
-.btn-secondary:hover {
-  background: #15803d;
+.paid {
+  color: green;
+  font-weight: bold;
 }

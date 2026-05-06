@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nyondo Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!-- ================= SIDEBAR ================= -->
+    <div class="sidebar">
+      <div class="logo">
+        <h2>⚒ NYONDO ADMIN</h2>
+      </div>
+
+      <ul class="nav">
+        <li class="active">
+          <a href="/admin/dashboard">
+            <i class="fas fa-chart-line"></i> Dashboard
+          </a>
+        </li>
+
+        <li>
+          <a href="/inventory"> <i class="fas fa-boxes"></i> Inventory </a>
+        </li>
+
+        <li>
+          <a href="/sales"> <i class="fas fa-cash-register"></i> Sales </a>
+        </li>
+
+        <li>
+          <a href="/stock/add">
+            <i class="fas fa-plus-circle"></i> Add Stock
+          </a>
+        </li>
+
+        <li>
+          <a href="/deposits"> <i class="fas fa-piggy-bank"></i> Deposits </a>
+        </li>
+
+        <li>
+          <a href="/transport"> <i class="fas fa-truck"></i> Transport </a>
+        </li>
+
+        <li>
+          <a href="/users"> <i class="fas fa-users"></i> Users </a>
+        </li>
+
+        <li>
+          <a href="/reports"> <i class="fas fa-chart-pie"></i> Reports </a>
+        </li>
+
+        <li>
+          <a href="/logout"> <i class="fas fa-sign-out-alt"></i> Logout </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ================= MAIN ================= -->
+    <div class="main">
+      <!-- TOP BAR -->
+      <div class="topbar">
+        <h1>Admin Dashboard</h1>
+
+        <div class="profile">
+          <i class="fas fa-user-circle"></i>
+          <span>Admin</span>
+        </div>
+      </div>
+
+      <!-- ================= CARDS ================= -->
+      <div class="cards">
+        <div class="card">
+          <h3>Total Revenue</h3>
+          <p>UGX 5,200,000</p>
+        </div>
+
+        <div class="card success">
+          <h3>Deposits</h3>
+          <p>UGX 850,000</p>
+        </div>
+
+        <div class="card">
+          <h3>Total Users</h3>
+          <p>12</p>
+        </div>
+
+        <div class="card warn">
+          <h3>Stock Alerts</h3>
+          <p>8 Items</p>
+        </div>
+      </div>
+
+      <!-- ================= QUICK ACTIONS ================= -->
+      <div class="section">
+        <h2>Quick Actions</h2>
+
+        <div class="actions">
+          <a href="/stock/add" class="btn">+ Add Stock</a>
+          <a href="/sales/new" class="btn">Record Sale</a>
+          <a href="/reports" class="btn">Generate Report</a>
+        </div>
+      </div>
+
+      <!-- ================= FINANCIAL OVERVIEW ================= -->
+      <div class="section">
+        <h2>Financial Overview</h2>
+
+        <div class="grid">
+          <div class="box">
+            <h4>Revenue</h4>
+            <p>UGX 5.2M</p>
+          </div>
+
+          <div class="box">
+            <h4>Expenses</h4>
+            <p>UGX 3.0M</p>
+          </div>
+
+          <div class="box">
+            <h4>Profit</h4>
+            <p>UGX 2.2M</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= DEPOSITS ================= -->
+      <div class="section">
+        <h2>Deposit Scheme</h2>
+
+        <table>
+          <tr>
+            <th>Customer</th>
+            <th>Amount</th>
+          </tr>
+
+          <tr>
+            <td>John</td>
+            <td>UGX 50,000</td>
+          </tr>
+
+          <tr>
+            <td>Sarah</td>
+            <td>UGX 30,000</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- ================= USERS ================= -->
+      <div class="section">
+        <h2>User Management</h2>
+
+        <button class="btn">+ Add User</button>
+
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Status</th>
+          </tr>
+
+          <tr>
+            <td>James</td>
+            <td>Sales Attendant</td>
+            <td class="success">Active</td>
+          </tr>
+
+          <tr>
+            <td>Maria</td>
+            <td>Manager</td>
+            <td class="success">Active</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

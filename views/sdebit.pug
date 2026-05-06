@@ -1,0 +1,100 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Supplier Debit - Nyondo
+  link(rel='stylesheet' href='/css/credit.css')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+// SIDEBAR
+.sidebar
+  h2 &#x2692; NYONDO
+  ul
+    li
+      a(href='#')
+        i.fas.fa-home
+        |  Dashboard
+    li
+      a(href='#')
+        i.fas.fa-boxes
+        |  Inventory
+    li
+      a(href='#')
+        i.fas.fa-cash-register
+        |  Sales
+    li.active
+      a(href='#')
+        i.fas.fa-truck
+        |  Supplier Debit
+    li
+      a(href='#')
+        i.fas.fa-chart-line
+        |  Reports
+// MAIN
+.main
+  h1 Supplier Debit Management
+  // SUMMARY CARDS
+  .cards
+    .card
+      h3 Total Purchases
+      p UGX 3,500,000
+    .card.warning
+      h3 Outstanding Balance
+      p UGX 1,200,000
+    .card.success
+      h3 Paid
+      p UGX 2,300,000
+  // FORM
+  form.debit-form
+    h2 Record Supplier Transaction
+    .grid
+      .field
+        label Supplier Name
+        input(type='text' name='supplierName' required='')
+      .field
+        label Contact
+        input(type='text' name='contact')
+      .field
+        label Product Supplied
+        input(type='text' name='product')
+      .field
+        label Total Cost (UGX)
+        input(type='number' name='totalCost' required='')
+      .field
+        label Amount Paid
+        input(type='number' name='amountPaid')
+      .field
+        label Balance
+        input(type='number' name='balance' readonly='')
+      .field
+        label Date
+        input(type='date' name='date')
+    button(type='submit') Save Record
+  // TABLE
+  .table-section
+    h2 Supplier Debts
+    table
+      thead
+        tr
+          th Supplier
+          th Product
+          th Total Cost
+          th Paid
+          th Balance
+          th Date
+          th Status
+      tbody
+        tr
+          td ABC Suppliers
+          td Cement
+          td UGX 1,000,000
+          td UGX 400,000
+          td UGX 600,000
+          td 2026-05-01
+          td.pending Pending
+        tr
+          td Steel World
+          td Iron Sheets
+          td UGX 800,000
+          td UGX 800,000
+          td UGX 0
+          td 2026-04-20
+          td.paid Paid

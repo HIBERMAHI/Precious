@@ -37,13 +37,13 @@ head
       |  Stock Registration
     p Fill in the details to add new stock to inventory
   // FORM
-  form.stock-form(method='post' action='/addstock')
+  form.stock-form(method='post' action='/addstock' enctype="multipart/form-data" )
     // PRODUCT DETAILS
     h2 Product Details
     .grid
       .field
         label Product Name
-        input(type='text' name='productName' required='')
+        input(type='text' name='productName')
       .field
         label Category
         select(name='category' required='')
@@ -74,9 +74,6 @@ head
       .field
         label Selling Price
         input(type='number' name='sellingPrice' required='')
-      .field
-        label Total
-        input(type='number' name='total')
     // SUPPLIER
     h2 Supplier Details
     .grid
@@ -85,10 +82,10 @@ head
         input(type='text' name='supplierName')
       .field
         label Supplier Contact
-        input(type='text' name='supplierContact')
+        input(type='number' name='supplierContact')
       .field
-        label Delivery Date
-        input(type='date' name='deliveryDate')
+        label Image Uploads
+        input(type='file' name='itemImage')
     .grid
     // BUTTONS
     .buttons

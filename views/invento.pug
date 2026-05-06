@@ -33,21 +33,19 @@ html
             i.fas.fa-chart-line
             | Reports
 
-    // MAIN
     .main
       .header
         h1
           i.fas.fa-boxes
           | Inventory Overview
         .actions
-          button.btn
+          a.btn(href='/stock')
             i.fas.fa-plus
             | Add Stock
           button.btn.secondary
             i.fas.fa-file-export
             | Export
 
-      // SUMMARY CARDS
       .cards
         .card
           i.fas.fa-cubes
@@ -70,7 +68,6 @@ html
             h3 Total Value
             p UGX 45M
 
-      // SEARCH
       .search-bar
         input(type='text' placeholder='Search product...')
         select
@@ -79,12 +76,12 @@ html
           option Out of Stock
           option In Stock
 
-      // TABLE
       .table-section
         table
           thead
             tr
               th Product Name
+              th Image
               th Category
               th Quantity
               th Buying Price
@@ -94,19 +91,36 @@ html
               th Date
               th Status
               th Actions
+
           tbody
             if dbStock.length === 0
               tr
                 td(colspan='10') No stock available
-            each sale in dbStock
+
+            each stock in dbStock
               tr
-                td #{sale.productName}
-                td #{sale.category}
-                td #{sale.quantity}
-                td #{sale.buyingPrice}
-                td #{sale.sellingPrice}
-                td #{sale.supplierName}
-                td #{sale.supplierContact}
-                td #{new Date(sale.deliveryDate).toLocaleString()}
-                td #{sale.status}
-                td #{sale.actions}
+                td #{stock.productName}
+                td 
+                  if stock.itemImage
+                    img(src='/' + stock.itemImage alt='image' width='50px' height='50' )
+                  else 
+                    span no image
+                td #{stock.category}
+                td #{stock.quantity}
+                td #{stock.buyingPrice}
+                td #{stock.sellingPrice}
+                td #{stock.supplierName}
+                td #{stock.supplierContact}
+                td #{new Date(stock.deliveryDate).toLocaleString()}
+
+                td
+                  span.status #{stock.status || 'N/A'}
+
+                td
+                  .action-btns
+                    a.btn.btn-sm.btn-outline-warning(href=`/stock/edit/${stock._id}`)
+                      i.fas.fa-edit
+
+                    form(action=`/deleted/${stock._id}` method='post' onsubmit='return confirm("Are you sure you want to delete stock?")')
+                      button.btn.btn-sm.btn-outline-danger(type='submit')
+                        i.fas.fa-trash-alt

@@ -1,83 +1,94 @@
 doctype html
 head
   meta(charset='UTF-8')
-  title Credit &amp; Debit Sales
+  title Credit Sales - Nyondo
   link(rel='stylesheet' href='/css/credit.css')
   link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
-// ================= SIDEBAR =================
+// SIDEBAR
 .sidebar
-  .logo
-    h2 &#x2692; NYONDO HARDWARE
-    p Point of Sale System
+  h2 &#x2692; NYONDO
   ul
     li
-      a(href='dashboard.html')
+      a(href='#')
         i.fas.fa-home
         |  Dashboard
     li
-      a(href='NewSales.html')
-        i.fas.fa-cart-shopping
-        |  New Sales
-    li
-      a(href='stockview.html')
+      a(href='#')
         i.fas.fa-boxes
-        |  Stock View
-    li.active
-      a(href='credit.html')
-        i.fas.fa-credit-card
-        |  Credit Sales
-    li
-      a(href='saleshistory.html')
-        i.fas.fa-clock-rotate-left
-        |  Sales History
+        |  Inventory
     li
       a(href='#')
-        i.fas.fa-right-from-bracket
-        |  Logout
-// ================= MAIN =================
+        i.fas.fa-cash-register
+        |  Sales
+    li.active
+      a(href='#')
+        i.fas.fa-receipt
+        |  Credit Sales
+    li
+      a(href='#')
+        i.fas.fa-chart-line
+        |  Reports
+// MAIN
 .main
-  // TOPBAR
-  .topbar
-    h2
-      i.fas.fa-credit-card
-      |  Credit &amp; Debit Sales
-    p Manage customer credit and record payments
-  // CONTENT
-  .grid
-    // CREDIT
+  h1 Credit Sales
+  // SUMMARY
+  .cards
     .card
-      h3
-        i.fas.fa-hand-holding-dollar
-        |  Credit Sale
-      form(action='/credit' method='post')
+      h3 Total Credit Issued
+      p UGX 1,200,000
+    .card.warning
+      h3 Outstanding Balance
+      p UGX 450,000
+    .card.danger
+      h3 Overdue
+      p UGX 120,000
+  // CREDIT FORM ONLY
+  form.credit-form
+    h2 Record Credit Sale
+    .grid
+      .field
         label Customer Name
-        input(type='text' name='customername')
-        label Item
-        input(type='text' name='item')
-        label Amount Owed
-        input(type='number' name='amountowed')
+        input(type='text' name='customerName' required='')
+      .field
+        label Phone Number
+        input(type='text' name='phone' required='')
+      .field
+        label Product
+        input(type='text' name='product')
+      .field
+        label Quantity
+        input(type='number' name='quantity')
+      .field
+        label Amount (UGX)
+        input(type='number' name='amount' required='')
+      .field
         label Due Date
-        input(type='date' name='duedate')
-        button.btn-primary
-          i.fas.fa-plus
-          |  Save Credit
-    // DEBIT
-    .card
-      h3
-        i.fas.fa-money-bill
-        |  Debit Payment
-      form(action='/debit' method='post')
-        label Customer Name
-        input(type='text' name='customername')
-        label Item
-        input(type='text' name='item')
-        label Amount Paid
-        input(type='number' name='amountpaid')
-        label Payment Method
-        select(name='paymentmethod')
-          option Cash
-          option Mobile Money
-          option Bank
-        button.btn-secondary
-          i.fas.fa-check
-          |  Save Payment
+        input(type='date' name='dueDate')
+    button(type='submit') Save Credit Sale
+  // CREDIT TABLE
+  .table-section
+    h2 Outstanding Credit
+    table
+      thead
+        tr
+          th Customer
+          th Phone
+          th Product
+          th Amount
+          th Due Date
+          th Status
+      tbody
+        tr
+          td John Doe
+          td 0700000000
+          td Cement
+          td UGX 200,000
+          td 2026-06-01
+          td.pending Pending
+        tr
+          td Mary Jane
+          td 0788888888
+          td Iron Sheets
+          td UGX 300,000
+          td 2026-05-01
+          td.overdue Overdue

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Supplier Debit - Nyondo</title>
+  <link rel="stylesheet" href="/css/credit.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>⚒ NYONDO</h2>
+  <ul>
+    <li><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+    <li><a href="#"><i class="fas fa-boxes"></i> Inventory</a></li>
+    <li><a href="#"><i class="fas fa-cash-register"></i> Sales</a></li>
+    <li class="active"><a href="#"><i class="fas fa-truck"></i> Supplier Debit</a></li>
+    <li><a href="#"><i class="fas fa-chart-line"></i> Reports</a></li>
+  </ul>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <h1>Supplier Debit Management</h1>
+
+  <!-- SUMMARY CARDS -->
+  <div class="cards">
+    <div class="card">
+      <h3>Total Purchases</h3>
+      <p>UGX 3,500,000</p>
+    </div>
+
+    <div class="card warning">
+      <h3>Outstanding Balance</h3>
+      <p>UGX 1,200,000</p>
+    </div>
+
+    <div class="card success">
+      <h3>Paid</h3>
+      <p>UGX 2,300,000</p>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <form class="debit-form">
+    <h2>Record Supplier Transaction</h2>
+
+    <div class="grid">
+
+      <div class="field">
+        <label>Supplier Name</label>
+        <input type="text" name="supplierName" required>
+      </div>
+
+      <div class="field">
+        <label>Contact</label>
+        <input type="text" name="contact">
+      </div>
+
+      <div class="field">
+        <label>Product Supplied</label>
+        <input type="text" name="product">
+      </div>
+
+      <div class="field">
+        <label>Total Cost (UGX)</label>
+        <input type="number" name="totalCost" required>
+      </div>
+
+      <div class="field">
+        <label>Amount Paid</label>
+        <input type="number" name="amountPaid">
+      </div>
+
+      <div class="field">
+        <label>Balance</label>
+        <input type="number" name="balance" readonly>
+      </div>
+
+      <div class="field">
+        <label>Date</label>
+        <input type="date" name="date">
+      </div>
+
+    </div>
+
+    <button type="submit">Save Record</button>
+  </form>
+
+  <!-- TABLE -->
+  <div class="table-section">
+    <h2>Supplier Debts</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Supplier</th>
+          <th>Product</th>
+          <th>Total Cost</th>
+          <th>Paid</th>
+          <th>Balance</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>ABC Suppliers</td>
+          <td>Cement</td>
+          <td>UGX 1,000,000</td>
+          <td>UGX 400,000</td>
+          <td>UGX 600,000</td>
+          <td>2026-05-01</td>
+          <td class="pending">Pending</td>
+        </tr>
+
+        <tr>
+          <td>Steel World</td>
+          <td>Iron Sheets</td>
+          <td>UGX 800,000</td>
+          <td>UGX 800,000</td>
+          <td>UGX 0</td>
+          <td>2026-04-20</td>
+          <td class="paid">Paid</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -3,6 +3,7 @@ const express = require("express");
 const expressSession = require("express-session");
 const path = require("path");
 const passport = require("passport");
+const MongoStore = require("connect-mongo").default;
 
 require("dotenv").config();
 const mongoose = require("mongoose");
@@ -24,6 +25,7 @@ connectDb();
 
 // 4middleware
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
 // para url installations
 app.use(express.urlencoded({ extended: false }));
 app.use(
@@ -31,6 +33,13 @@ app.use(
     secret: "My secret",
     resave: false,
     saveUninitialized: false,
+    store:MongoStore.create({
+      mongoUrl:process.env.DATABASE,
+      collectionName:'sessionStorage'
+    }),
+    cookie:{
+      maxAge:1000 * 60 * 60 * 2 // two hours lfe for a login session
+    }
   }),
 );
 
@@ -41,15 +50,16 @@ passport.use(Registration.createStrategy());
 passport.serializeUser(Registration.serializeUser());
 passport.deserializeUser(Registration.deserializeUser());
 // global variable to make the loged in user available to all pug templates
-app.use((req,res,next)=>{
-    res.locals.user =  req.user || null
-    next();
-})
+app.use((req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
 
 // 5routes
 app.use("/", require("./routes/indexRoutes"));
 app.use("/", require("./routes/salesRoutes"));
 app.use("/", require("./routes/storeRoutes"));
+app.use("/", require("./routes/adminRoutes"));
 // app.use('/', require('./routes/l'))
 
 // this is the second last chunk of code

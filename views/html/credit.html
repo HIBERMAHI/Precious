@@ -1,96 +1,125 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Credit & Debit Sales</title>
-
-  <link rel="stylesheet" href="/css/credit.css" />
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <meta charset="UTF-8">
+  <title>Credit Sales - Nyondo</title>
+  <link rel="stylesheet" href="credit.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-
 <body>
 
-<!-- ================= SIDEBAR ================= -->
+<!-- SIDEBAR -->
 <div class="sidebar">
-
-  <div class="logo">
-    <h2>⚒ NYONDO HARDWARE</h2>
-    <p>Point of Sale System</p>
-  </div>
-
+  <h2>⚒ NYONDO</h2>
   <ul>
-    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-    <li><a href="NewSales.html"><i class="fas fa-cart-shopping"></i> New Sales</a></li>
-    <li><a href="stockview.html"><i class="fas fa-boxes"></i> Stock View</a></li>
-    <li class="active"><a href="credit.html"><i class="fas fa-credit-card"></i> Credit Sales</a></li>
-    <li><a href="saleshistory.html"><i class="fas fa-clock-rotate-left"></i> Sales History</a></li>
-    <li><a href="#"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+    <li><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+    <li><a href="#"><i class="fas fa-boxes"></i> Inventory</a></li>
+    <li><a href="#"><i class="fas fa-cash-register"></i> Sales</a></li>
+    <li class="active"><a href="#"><i class="fas fa-receipt"></i> Credit Sales</a></li>
+    <li><a href="#"><i class="fas fa-chart-line"></i> Reports</a></li>
   </ul>
-
 </div>
 
-<!-- ================= MAIN ================= -->
+<!-- MAIN -->
 <div class="main">
 
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <h2><i class="fas fa-credit-card"></i> Credit & Debit Sales</h2>
-    <p>Manage customer credit and record payments</p>
+  <h1>Credit Sales</h1>
+
+  <!-- SUMMARY -->
+  <div class="cards">
+    <div class="card">
+      <h3>Total Credit Issued</h3>
+      <p>UGX 1,200,000</p>
+    </div>
+
+    <div class="card warning">
+      <h3>Outstanding Balance</h3>
+      <p>UGX 450,000</p>
+    </div>
+
+    <div class="card danger">
+      <h3>Overdue</h3>
+      <p>UGX 120,000</p>
+    </div>
   </div>
 
-  <!-- CONTENT -->
-  <div class="grid">
+  <!-- CREDIT FORM ONLY -->
+  <form class="credit-form">
+    <h2>Record Credit Sale</h2>
 
-    <!-- CREDIT -->
-    <div class="card">
-      <h3><i class="fas fa-hand-holding-dollar"></i> Credit Sale</h3>
+    <div class="grid">
 
-      <form action="/credit" method="post">
+      <div class="field">
         <label>Customer Name</label>
-        <input type="text" name="customername">
+        <input type="text" name="customerName" required>
+      </div>
 
-        <label>Item</label>
-        <input type="text" name="item">
+      <div class="field">
+        <label>Phone Number</label>
+        <input type="text" name="phone" required>
+      </div>
 
-        <label>Amount Owed</label>
-        <input type="number" name="amountowed">
+      <div class="field">
+        <label>Product</label>
+        <input type="text" name="product">
+      </div>
 
+      <div class="field">
+        <label>Quantity</label>
+        <input type="number" name="quantity">
+      </div>
+
+      <div class="field">
+        <label>Amount (UGX)</label>
+        <input type="number" name="amount" required>
+      </div>
+
+      <div class="field">
         <label>Due Date</label>
-        <input type="date" name="duedate">
+        <input type="date" name="dueDate">
+      </div>
 
-        <button class="btn-primary">
-          <i class="fas fa-plus"></i> Save Credit
-        </button>
-      </form>
     </div>
 
-    <!-- DEBIT -->
-    <div class="card">
-      <h3><i class="fas fa-money-bill"></i> Debit Payment</h3>
+    <button type="submit">Save Credit Sale</button>
+  </form>
 
-      <form action="/debit" method="post">
-        <label>Customer Name</label>
-        <input type="text" name="customername">
+  <!-- CREDIT TABLE -->
+  <div class="table-section">
+    <h2>Outstanding Credit</h2>
 
-        <label>Item</label>
-        <input type="text" name="item">
+    <table>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Phone</th>
+          <th>Product</th>
+          <th>Amount</th>
+          <th>Due Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
 
-        <label>Amount Paid</label>
-        <input type="number" name="amountpaid">
+      <tbody>
+        <tr>
+          <td>John Doe</td>
+          <td>0700000000</td>
+          <td>Cement</td>
+          <td>UGX 200,000</td>
+          <td>2026-06-01</td>
+          <td class="pending">Pending</td>
+        </tr>
 
-        <label>Payment Method</label>
-        <select name="paymentmethod">
-          <option>Cash</option>
-          <option>Mobile Money</option>
-          <option>Bank</option>
-        </select>
-
-        <button class="btn-secondary">
-          <i class="fas fa-check"></i> Save Payment
-        </button>
-      </form>
-    </div>
+        <tr>
+          <td>Mary Jane</td>
+          <td>0788888888</td>
+          <td>Iron Sheets</td>
+          <td>UGX 300,000</td>
+          <td>2026-05-01</td>
+          <td class="overdue">Overdue</td>
+        </tr>
+      </tbody>
+    </table>
 
   </div>
 

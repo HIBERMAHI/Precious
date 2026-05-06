@@ -4,6 +4,7 @@ const StockSchema = new mongoose.Schema({
   productName: {
     type: String,
     trim: true,
+    required: true
   },
   category: {
     type: String,
@@ -11,6 +12,8 @@ const StockSchema = new mongoose.Schema({
   },
   quantity: {
     type: Number,
+    required: true,
+    default: 0
   },
   unit: {
     type: String,
@@ -18,13 +21,17 @@ const StockSchema = new mongoose.Schema({
   },
   buyingPrice: {
     type: Number,
+    required: true,
+    default: 0
   },
   sellingPrice: {
     type: Number,
     required: true,
+    default: 0
   },
   total: {
     type: Number,
+    default: 0
   },
   supplierName: {
     type: String,
@@ -35,7 +42,12 @@ const StockSchema = new mongoose.Schema({
   },
   deliveryDate: {
     type: Date,
+    default: Date.now,
   },
+  itemImage: {
+    type: String,
+  }
 });
+
 
 module.exports = mongoose.model("Stock", StockSchema);

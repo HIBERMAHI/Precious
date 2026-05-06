@@ -1,7 +1,20 @@
 const express = require("express");
+const multer = require("multer");
 const router = express.Router();
 const Stock = require("../models/Stock");
 
+// ================= IMAGE UPLOADS =================
+let storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+let upload = multer({ storage: storage });
+
+// ================= DASHBOARD ROUTES =================
 router.get("/storedash", (req, res) => {
   res.render("storedash");
 });
@@ -9,13 +22,14 @@ router.get("/storedash", (req, res) => {
 router.get("/storsales", (req, res) => {
   res.render("storsales");
 });
-router.get("/invento",async (req, res) => {
+
+router.get("/invento", async (req, res) => {
   try {
-    const dbStock = await Stock.find()
-    res.render('invento', {dbStock})
+    const dbStock = await Stock.find();
+    res.render("invento", { dbStock });
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Unable to pick stock from the data base')
+    res.status(500).send("Unable to pick stock from the database");
   }
 });
 
@@ -39,11 +53,12 @@ router.get("/orders", (req, res) => {
   res.render("orders");
 });
 
+// ================= ADD STOCK =================
 router.get("/addstock", (req, res) => {
   res.render("addstock");
 });
 
-router.post("/addstock", async (req, res) => {
+router.post("/addstock", upload.single("itemImage"), async (req, res) => {
   try {
     const {
       productName,
@@ -56,9 +71,47 @@ router.post("/addstock", async (req, res) => {
       supplierContact,
       deliveryDate,
     } = req.body;
-    const total = parseInt(quantity) * parseFloat(sellingPrice);
+const qty = Number(quantity) || 0;
+const buy = Number(buyingPrice) || 0;
+const sell = Number(sellingPrice) || 0;
+    const total = qty * buy;
     let newItem = new Stock({
       productName,
+      category,
+      quantity: qty,
+      unit,
+      buyingPrice: buy,
+      sellingPrice: sell,
+      supplierName,
+      supplierContact,
+      deliveryDate,
+      total,
+      itemImage: req.file ? req.file.path : null,
+    });
+
+    await newItem.save();
+    res.redirect("/invento");
+  } catch (error) {
+    console.error(error.message);
+    res.render("addstock", { error: error.message });
+  }
+});
+
+// ================= EDIT STOCK =================
+router.get("/stock/edit/:id", async (req, res) => {
+  try {
+    const stock = await Stock.findById(req.params.id);
+    if (!stock) return res.status(404).send("Stock not found");
+    res.render("stockedit", { stock });
+  } catch (error) {
+    console.error(error.message);
+    res.status(404).send("Unable to find stock");
+  }
+});
+
+router.post("/stock/edit/:id", async (req, res) => {
+  try {
+    const {
       category,
       quantity,
       unit,
@@ -66,14 +119,37 @@ router.post("/addstock", async (req, res) => {
       sellingPrice,
       supplierName,
       supplierContact,
+    } = req.body;
+const qty = Number(quantity) || 0
+const buy = Number(buyingPrice) || 0
+const sell = Number(sellingPrice) || 0
+const total = qty * buy;
+    await Stock.findByIdAndUpdate(req.params.id, {
+      category,
+      quantity:qty,
+      unit,
+      buyingPrice: buy,
+      sellingPrice:sell,
+      supplierName,
+      supplierContact,
       total,
-      deliveryDate,
     });
-    console.log(newItem)
-    await newItem.save();
-    res.redirect('/')
+
+    res.redirect("/invento");
   } catch (error) {
-   res.render('/addstock',{error: error.message})
+    console.error(error.message);
+    res.status(400).send("Error updating stock");
+  }
+});
+
+// ================= DELETE STOCK =================
+router.post("/deleted/:id", async (req, res) => {
+  try {
+    await Stock.findByIdAndDelete(req.params.id);
+    res.redirect("/invento");
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).send("Error deleting stock");
   }
 });
 

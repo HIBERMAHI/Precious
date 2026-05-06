@@ -1,0 +1,158 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Nyondo Admin Dashboard
+    link(rel='stylesheet' href='/css/admindash.css')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+
+  body
+
+    // ================= SIDEBAR =================
+    .sidebar
+      .logo
+        h2 ⚒ NYONDO ADMIN
+
+      ul.nav
+        li.active
+          a(href='/admin/dashboard')
+            i.fas.fa-chart-line
+            |  Dashboard
+
+        li
+          a(href='/inventory')
+            i.fas.fa-boxes
+            |  Inventory
+
+        li
+          a(href='/sales')
+            i.fas.fa-cash-register
+            |  Sales
+
+        li
+          a(href='/stock/add')
+            i.fas.fa-plus-circle
+            |  Add Stock
+
+        li
+          a(href='/deposits')
+            i.fas.fa-piggy-bank
+            |  Deposits
+
+        li
+          a(href='/transport')
+            i.fas.fa-truck
+            |  Transport
+
+        li
+          a(href='/users')
+            i.fas.fa-users
+            |  Users
+
+        li
+          a(href='/reports')
+            i.fas.fa-chart-pie
+            |  Reports
+
+        li
+          a(href='/logout')
+            i.fas.fa-sign-out-alt
+            |  Logout
+
+    // ================= MAIN =================
+    .main
+
+      // TOP BAR
+      .topbar
+        h1 Admin Dashboard
+
+        .profile
+          i.fas.fa-user-circle
+          span Admin
+
+      // ================= CARDS =================
+      .cards
+        .card
+          h3 Stock Expenditure
+          //- Changed below to use optional chaining to prevent crash
+          //- p #{stats && stats.inventoryValue ? stats.inventoryValue.toLocaleString() : '0'}
+          p #{stats.salesRevenue.toLocaleString()} UGX
+
+        .card.success
+          h3 Total Sales Revenue
+          //- Changed below to use optional chaining to prevent crash
+          //- p #{stats && stats.salesRevenue ? stats.salesRevenue.toLocaleString() : '0'} UGX
+          p #{stats.inventoryValue.toLocaleString()} UGX
+
+        .card
+          h3 Total Users
+          p 12
+
+        .card.warn
+          h3 Stock Alerts
+          p 8 Items
+
+      // ================= QUICK ACTIONS =================
+      .section
+        h2 Quick Actions
+
+        .actions
+          a.btn(href='/stock/add') + Add Stock
+          a.btn(href='/sales/new') Record Sale
+          a.btn(href='/reports') Generate Report
+
+      // ================= FINANCIAL OVERVIEW =================
+      .section
+        h2 Financial Overview
+
+        .grid
+          .box
+            h4 Revenue
+            p UGX 5.2M
+
+          .box
+            h4 Expenses
+            p UGX 3.0M
+
+          .box
+            h4 Profit
+            p UGX 2.2M
+
+      // ================= DEPOSITS =================
+      .section
+        h2 Deposit Scheme
+
+        table
+          tr
+            th Customer
+            th Amount
+
+          tr
+            td John
+            td UGX 50,000
+
+          tr
+            td Sarah
+            td UGX 30,000
+
+      // ================= USERS =================
+      .section
+        h2 User Management
+
+        button.btn + Add User
+
+        table
+          tr
+            th Name
+            th Role
+            th Status
+
+          tr
+            td James
+            td Sales Attendant
+            td.success Active
+
+          tr
+            td Maria
+            td Manager
+            td.success Active
