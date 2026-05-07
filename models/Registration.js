@@ -7,13 +7,18 @@ const registrationSchema = new mongoose.Schema({
   fullname: {
     type: String,
     trim: true,
+    required:true,
   },
   email: {
     type: String,
     trim: true,
+    required: true,
+    unique:true,
   },
   phone: {
-    type: Number,
+    type: String,
+    required:true,
+    match:[/^\+256\d{9}$/,"please use the format +256xxxxxxx"]
   },
   nin: {
     type: String,

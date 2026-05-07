@@ -16,13 +16,12 @@ head
     .receipt-meta
       p
         strong Date:
-        |  25 May 2025
-      p
-        strong Time:
-        |  10:45 AM
+        |  small Date: #{new Date(sale.date).toLocaleString()}
+      
       p
         strong Cashier:
-        |  John Semanda
+        //- using the last six characters of the mongo db id as a short receipt number
+        |  small receipts #:#{sale._id.toString().slice(-6).toUpperCase()}
       p
         strong Branch:
         |  Nyondo Main Branch

@@ -27,8 +27,15 @@ const StockSchema = new mongoose.Schema({
   sellingPrice: {
     type: Number,
     required: true,
-    default: 0
+    default: 0,
+    validate:{
+      validator: function(value){
+        return value > this.buyingPrice;
+      },
+      message:"Sellingprice ({value})  must be greator than buyingPrice"
+    }
   },
+  
   total: {
     type: Number,
     default: 0

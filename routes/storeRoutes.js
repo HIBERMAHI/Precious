@@ -71,9 +71,21 @@ router.post("/addstock", upload.single("itemImage"), async (req, res) => {
       supplierContact,
       deliveryDate,
     } = req.body;
-const qty = Number(quantity) || 0;
-const buy = Number(buyingPrice) || 0;
-const sell = Number(sellingPrice) || 0;
+    const qty = Number(quantity) || 0;
+    const buy = Number(buyingPrice) || 0;
+    const sell = Number(sellingPrice) || 0;
+    if (buy <= 0 || sell <= 0 || qty <= 0) {
+      return res.render("addstock", {
+        error: "Prices and quantity must be greater than zero.",
+        formData: req.body,
+      });
+    }
+    if (sell <= buy) {
+      return res.render("addstock", {
+        error: `selling price (${sell}) cannot be less than buying price (${buy})`,
+        formData: req.body,
+      });
+    }
     const total = qty * buy;
     let newItem = new Stock({
       productName,
@@ -120,16 +132,30 @@ router.post("/stock/edit/:id", async (req, res) => {
       supplierName,
       supplierContact,
     } = req.body;
-const qty = Number(quantity) || 0
-const buy = Number(buyingPrice) || 0
-const sell = Number(sellingPrice) || 0
-const total = qty * buy;
+    const qty = Number(quantity) || 0;
+    const buy = Number(buyingPrice) || 0;
+    const sell = Number(sellingPrice) || 0;
+    const total = qty * buy;
+    if (buy <= 0 || sell <= 0 || qty <= 0) {
+      const stock = await Stock.findById(req.params.id);
+      return res.render("stockedit", {
+        error: "prices and quantity must be greater than zero.",
+        stock: { ...req.body, _id: req.params.id },
+      });
+    }
+    if (sell <= buy) {
+      const stock = await Stock.findById(req.params.id);
+      return res.render("stockedit", {
+        error: `Selling price (${sell}) cannot be less than or equal to buying price (${buy})`,
+        stock: { ...req.body, _id: req.params.id },
+      });
+    }
     await Stock.findByIdAndUpdate(req.params.id, {
       category,
-      quantity:qty,
+      quantity: qty,
       unit,
       buyingPrice: buy,
-      sellingPrice:sell,
+      sellingPrice: sell,
       supplierName,
       supplierContact,
       total,
