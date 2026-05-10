@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credit Customer Registration</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="register-box">
+
+      <div class="top">
+        <i class="fas fa-user-plus"></i>
+        <h1>Credit Customer Registration</h1>
+        <p>Register customer details</p>
+      </div>
+
+      <form action="/register-credit-customer" method="POST">
+
+        <!-- Full Names -->
+        <div class="input-group">
+          <label>Full Names</label>
+
+          <div class="input-field">
+            <i class="fas fa-user"></i>
+
+            <input 
+              type="text" 
+              name="fullName" 
+              placeholder="Enter full names"
+            >
+          </div>
+        </div>
+
+        <!-- NIN -->
+        <div class="input-group">
+          <label>NIN Number</label>
+
+          <div class="input-field">
+            <i class="fas fa-id-card"></i>
+
+            <input 
+              type="text" 
+              name="nin"
+              placeholder="Enter NIN Number"
+            >
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="input-group">
+          <label>Phone Number</label>
+
+          <div class="input-field">
+            <i class="fas fa-phone"></i>
+
+            <input 
+              type="text" 
+              name="phone"
+              placeholder="Enter phone number"
+            >
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="input-group">
+          <label>Address</label>
+
+          <div class="input-field">
+            <i class="fas fa-location-dot"></i>
+
+            <input 
+              type="text" 
+              name="address"
+              placeholder="Enter address"
+            >
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="input-group">
+          <label>Email</label>
+
+          <div class="input-field">
+            <i class="fas fa-envelope"></i>
+
+            <input 
+              type="email" 
+              name="email"
+              placeholder="Enter email"
+            >
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="input-group">
+          <label>Password</label>
+
+          <div class="input-field">
+            <i class="fas fa-lock"></i>
+
+            <input 
+              type="password" 
+              name="password"
+              placeholder="Enter password"
+            >
+          </div>
+        </div>
+
+        <button type="submit" class="btn">
+          <i class="fas fa-user-check"></i>
+          Register Customer
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  title Credit Customer Registration
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css')
+  link(rel='stylesheet' href='/css/login.css')
+
+.container
+  .register-box
+    .top
+      i.fas.fa-user-plus
+      h1 Credit Registration
+      p Secure Customer Enrollment
+    
+    form(action='/regicredit' method='post')
+      .input-group
+        label Full Names
+        .input-field
+          i.fas.fa-user
+          input(type='text' name='fullName' required)
+      
+      .input-group
+        label NIN (14 Characters)
+        .input-field
+          i.fas.fa-id-card
+          input(type='text' name='nin' placeholder='Exactly 14 chars' required)
+      
+      .input-group
+        label Phone (+256...)
+        .input-field
+          i.fas.fa-phone
+          input(type='text' name='phoneNumber' placeholder='+256...' required)
+      
+      .input-group
+        label Address
+        .input-field
+          i.fas.fa-location-dot
+          input(type='text' name='address' required)
+
+      .input-group
+        label Distance (KM)
+        .input-field
+          i.fas.fa-truck-fast
+          input(type='number' name='distanceFromStore' required)
+      
+      .input-group
+        label Email (Username)
+        .input-field
+          i.fas.fa-envelope
+          input(type='email' name='email' required)
+      
+      .input-group
+        label Create Password
+        .input-field
+          i.fas.fa-lock
+          input(type='password' name='password' required)
+      
+      button.btn(type='submit')
+        i.fas.fa-user-check
+        |  Register Customer

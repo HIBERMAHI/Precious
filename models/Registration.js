@@ -18,12 +18,13 @@ const registrationSchema = new mongoose.Schema({
   phone: {
     type: String,
     required:true,
-    match:[/^\+256\d{9}$/,"please use the format +256xxxxxxx"]
+    match:[/^\+256[0-9]{9}$/,"please use the format +256xxxxxxx"]
   },
   nin: {
     type: String,
     trim: true,
     unique: true,
+    match:[/^[A-Z0-9]{14}$/,"NIN  must be 14 characters"]
   },
   role: {
     type: String,

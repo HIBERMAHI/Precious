@@ -5,9 +5,12 @@ const SaleSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  phone: {
-    type: Number,
+  phone:{
+    type: String,
+    required:true,
+    match:[/^\+256[0-9]{9}$/,"please use the format +256xxxxxxx"]
   },
+  
   productName: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Stock',

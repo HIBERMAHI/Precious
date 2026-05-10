@@ -9,6 +9,7 @@ const {
   isstoremanagerOradmin,
   issalesattendantOradmin,
 } = require("../middleware/auth");
+const { transformAuthInfo } = require("passport");
 
 router.get("/credit", (req, res) => {
   res.render("credit");
@@ -47,7 +48,7 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
       quantity,
       price,
       deliveryOption,
-      distance: coverdDistance,
+      distance,
       paymentMethod,
       status,
       date,
@@ -55,26 +56,27 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
 
     const item = await Stock.findById(productName);
     if (!item) return res.status(404).send("Item not found");
-    
+
     if (item.quantity < quantity) {
       return res.status(400).send("Quantity is low");
     }
-
+    const totalAmount = parseInt(quantity) * parseFloat(price)
+    let transportFee = 0
+    if(distance <=10 && totalAmount >=500000){
+      transportFee = 0
+    } else{
+      transportFee = 30000
+    }
+    let cleanPhone = phone.replace(/\s/g, "");
+    if (!cleanPhone.startsWith("+")) {
+      cleanPhone = "+" + cleanPhone;
+    }
     // Modern Await: Update Stock
     item.quantity -= quantity;
     await item.save();
-
-    let transportFee = 0;
-    const distance = parseFloat(coverdDistance) || 0;
-    if (deliveryOption === "delivery") {
-      transportFee = distance > 10 ? 30000 : 0;
-    }
-
-    const totalAmount = parseInt(quantity) * parseFloat(price) + transportFee;
-
     const newsale = new Sale({
       customerName,
-      phone,
+      phone:cleanPhone,
       productName,
       quantity,
       price,
@@ -90,8 +92,8 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
 
     // Modern Await: Save Sale (Removed .then/.catch)
     await newsale.save();
-    
-    res.redirect("/newsale"); // Redirected back to sales page
+
+    res.redirect(`/receipt/${newsale._id}`); // Redirected back to sales page
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
@@ -124,23 +126,18 @@ router.post("/delete/:id", issalesattendantOradmin, async (req, res) => {
 // updating sale (POST)
 router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
   try {
-    const {
-      customerName,
-      phone,
-      quantity,
-      price,
-      deliveryOption,
-      distance: coveredDistance,
-    } = req.body;
-
-    const distance = parseFloat(coveredDistance) || 0;
-    let transportFee = 0;
-    if (deliveryOption === "delivery") {
-      transportFee = distance > 10 ? 30000 : 0;
-    }
+    const { customerName, phone, quantity, price, deliveryOption, distance } =
+      req.body;
 
     // Fixed: Using price from req.body instead of undefined item.price
-    const totalAmount = parseInt(quantity) * parseFloat(price) + transportFee;
+    const totalAmount = parseInt(quantity) * parseFloat(price);
+
+    let transportFee = 0;
+    if (distance <= 10 && totalAmount >= 500000) {
+      transportFee = 0;
+    } else {
+      transportFee = 30000;
+    }
 
     await Sale.findByIdAndUpdate(req.params.id, {
       customerName,
@@ -161,17 +158,17 @@ router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
 });
 
 // generating receipt (Fixed URL parameter and population fields)
-router.get('/receipt/:id', async (req, res) => {
+router.get("/receipt/:id", async (req, res) => {
   try {
     const sale = await Sale.findById(req.params.id)
-      .populate('productName', 'productName')
-      .populate('attendant', 'fullname'); // Fixed typo from 'fullNmae'
-    
-    if (!sale) return res.status(404).send('Receipt not found');
-    res.render('receipt', { sale });
+      .populate("productName", "productName")
+      .populate("attendant", "fullname"); // Fixed typo from 'fullNmae'
+
+    if (!sale) return res.status(404).send("Receipt not found");
+    res.render("receipt", { sale });
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Receipt generation failed');
+    res.status(500).send("Receipt generation failed");
   }
 });
 

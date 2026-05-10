@@ -11,6 +11,7 @@ const { connect } = require("http2");
 const connectDb = require("./config/db");
 // import user model
 const Registration = require("./models/Registration");
+const Regicredit = require("./models/Regicredit");
 // installations
 
 //2 instanciations

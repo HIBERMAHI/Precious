@@ -8,23 +8,17 @@ head
 .sidebar
   h2 &#x2692; NYONDO HARDWARE
   p Sales Attendant Panel
-  a(href='/dashboard')
+  a(href='ssales')
     i.fas.fa-home
     |  Dashboard
-  a(href='/sales')
+  a(href='newsale')
     i.fas.fa-cash-register
     |  New Sale
-  a(href='/products')
+  a(href='stockview')
     i.fas.fa-box
     |  Stock View
-  a(href='/receipts')
-    i.fas.fa-receipt
-    | Credit Sales
-  a(href='/returns')
-    i.fas.fa-rotate-left
-    |  Sales History
-  a(href='/logout')
-    i.fas.fa-right-from-bracket
+  a(href='logout')
+    i.fas.fa-sign-out-alt
     |  Logout
 // MAIN
 .main
@@ -67,10 +61,10 @@ head
   section.quick-links
     h2 Quick Actions
     .links
-      a.link-box(href='/sales')
+      a.link-box(href='newsale')
         i.fas.fa-plus
         |  New Sale
-      a.link-box(href='/stock')
+      a.link-box(href='stockview')
         i.fas.fa-boxes
         |  Check Stock
       a.link-box(href='/receipts')

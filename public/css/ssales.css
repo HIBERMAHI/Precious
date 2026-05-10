@@ -38,7 +38,7 @@ margin: 0  50px 0  0;
 }
 
 .sidebar ul li {
-  margin: 38px 0;
+  margin: 50px 0;
 }
 
 .sidebar ul li a {
@@ -195,7 +195,7 @@ body {
 }
 
 .sidebar h2 {
-  font-size: 18px;
+  font-size: 22px;
   margin: 0  0px   18px  20px;
 }
 
@@ -209,11 +209,10 @@ body {
   display: block;
   color: #cbd5f5;
   text-decoration: none;
-  padding: 17px;
-  margin: 8px 0;
+  padding: 14px;
+  margin: 40px 0;
   border-radius: 6px;
   transition: 0.3s;
-  margin: 20px 0;
 }
 
 .sidebar a:hover {

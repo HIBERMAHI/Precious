@@ -3,17 +3,24 @@ html
   head
     meta(charset='UTF-8')
     title Nyondo Admin Dashboard
+
     link(rel='stylesheet' href='/css/admindash.css')
-    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+
+    link(
+      rel='stylesheet'
+      href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'
+    )
 
   body
 
     // ================= SIDEBAR =================
     .sidebar
+
       .logo
         h2 ⚒ NYONDO ADMIN
 
       ul.nav
+
         li.active
           a(href='/admin/dashboard')
             i.fas.fa-chart-line
@@ -62,27 +69,25 @@ html
     // ================= MAIN =================
     .main
 
-      // TOP BAR
+      // ================= TOP BAR =================
       .topbar
+
         h1 Admin Dashboard
 
         .profile
           i.fas.fa-user-circle
           span Admin
 
-      // ================= CARDS =================
+      // ================= DASHBOARD CARDS =================
       .cards
+
         .card
           h3 Stock Expenditure
-          //- Changed below to use optional chaining to prevent crash
-          //- p #{stats && stats.inventoryValue ? stats.inventoryValue.toLocaleString() : '0'}
-          p #{stats.salesRevenue.toLocaleString()} UGX
+          p #{stats.inventoryValue.toLocaleString()} UGX
 
         .card.success
           h3 Total Sales Revenue
-          //- Changed below to use optional chaining to prevent crash
-          //- p #{stats && stats.salesRevenue ? stats.salesRevenue.toLocaleString() : '0'} UGX
-          p #{stats.inventoryValue.toLocaleString()} UGX
+          p #{stats.salesRevenue.toLocaleString()} UGX
 
         .card
           h3 Total Users
@@ -94,35 +99,34 @@ html
 
       // ================= QUICK ACTIONS =================
       .section
+
         h2 Quick Actions
 
         .actions
-          a.btn(href='/stock/add') + Add Stock
-          a.btn(href='/sales/new') Record Sale
-          a.btn(href='/reports') Generate Report
 
-      // ================= FINANCIAL OVERVIEW =================
-      .section
-        h2 Financial Overview
+          a.btn(href='/stock/add')
+            i.fas.fa-plus-circle
+            |  Add Stock
 
-        .grid
-          .box
-            h4 Revenue
-            p UGX 5.2M
+          a.btn(href='/sales/new')
+            i.fas.fa-cash-register
+            |  Record Sale
 
-          .box
-            h4 Expenses
-            p UGX 3.0M
+          a.btn(href='/reports')
+            i.fas.fa-chart-pie
+            |  Generate Report
 
-          .box
-            h4 Profit
-            p UGX 2.2M
+          a.btn(href='/regicredit')
+            i.fas.fa-user-plus
+            |  Register Credit Customer
 
       // ================= DEPOSITS =================
       .section
+
         h2 Deposit Scheme
 
         table
+
           tr
             th Customer
             th Amount
@@ -137,11 +141,15 @@ html
 
       // ================= USERS =================
       .section
+
         h2 User Management
 
-        button.btn + Add User
+        button.btn
+          i.fas.fa-user-plus
+          |  Add User
 
         table
+
           tr
             th Name
             th Role

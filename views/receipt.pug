@@ -1,111 +1,55 @@
 doctype html
-head
-  meta(charset='UTF-8')
-  title Nyondo Receipt
-  link(rel='stylesheet' href='/css/receipt.css')
-.receipt-container
-  // HEADER
-  .header
-    .logo
-      h1 NYONDO
-      p GENERAL HARDWARE
-    .company-info
-      p P.O Box 123, Mubende - Uganda
-      p +256 700 123 456
-      p info@nyondohardware.ug
-    .receipt-meta
-      p
-        strong Date:
-        |  small Date: #{new Date(sale.date).toLocaleString()}
-      
-      p
-        strong Cashier:
-        //- using the last six characters of the mongo db id as a short receipt number
-        |  small receipts #:#{sale._id.toString().slice(-6).toUpperCase()}
-      p
-        strong Branch:
-        |  Nyondo Main Branch
-  // CUSTOMER INFO
-  .section
-    h3 Customer Information
-    .customer-box
-      p
-        strong Customer Name:
-        |  Walk-in Customer
-      p
-        strong Phone Number:
-        |  -
-      p
-        strong Customer Type:
-        |  Cash Sale
-  // ITEMS TABLE
-  .section
-    table
-      thead
-        tr
-          th #
-          th Item Name
-          th Quantity
-          th Unit Price (UGX)
-          th Total (UGX)
-      tbody
-        tr
-          td 1
-          td Nails 2&quot; (Box)
-          td 5
-          td 10,000
-          td 50,000
-        tr
-          td 2
-          td Cement (Hima)
-          td 2
-          td 35,000
-          td 70,000
-        tr
-          td 3
-          td Iron Bars 12mm
-          td 4
-          td 18,000
-          td 72,000
-        tr
-          td 4
-          td Paint (Crown 4L)
-          td 1
-          td 55,000
-          td 55,000
-        tr
-          td 5
-          td Wire Roll
-          td 2
-          td 8,000
-          td 16,000
-  // SUMMARY
-  .summary-grid
-    .box
-      h3 Payment Summary
-      p
-        | Subtotal: 
-        span UGX 263,000
-      p
-        | Discount: 
-        span UGX 8,000
-      p
-        | VAT (18%): 
-        span UGX 45,900
-      hr
-      h2 Grand Total: UGX 300,900
-    .box
-      h3 Payment Method
-      p
-        | Method: 
-        span Cash
-      p
-        | Amount Paid: 
-        span UGX 300,900
-      p
-        | Balance: 
-        span UGX 0
-  // THANK YOU MESSAGE
-  .thank-you
-    h2 Thank you for shopping with us!
-    p Nyondo General Hardware appreciates your business.
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Nyondo Hardware Receipt
+    link(rel='stylesheet' href='/css/receipt.css')
+  body
+    .receipt-container
+      .hardware-header
+      .card.shadow.border-0.rounded-0
+          .card-body.p-4 
+            .text-center.mb-4
+              h4.fw-bold.mb-1 NYONDO GENERAL HARDWARE
+              p Nansana, Wakiso District - Katooke Road
+              p Tel: 0721-234567 | 0772-987654
+              small Date: #{new Date(sale.date).toLocaleString()}
+              br
+              //-  using the last six characters of the mongo db id as a short receipt number
+              small Receipts #:#{sale._id.toString().slice(-6).toUpperCase()}
+            hr.border-dark.border-2.opacity-100
+            .d-flex.justify-content-between.mb-2 
+              span.fw-bold Description
+            
+            
+            hr.border-dark.opacity-100
+            d-flex.justify-content-between.mb-1 
+              span Item Name :
+              span #{sale.productName.productName} 
+            hr.border-dark.opacity-100
+            .d-flex.justify-content-between.mb-1 
+              span Qty :
+              span #{sale.quantity} (units)
+            
+            .d-flex.justify-content-between.mb-1 
+              span Transport Charge :
+              span #{sale.transportFee.toLocaleString()} UGX 
+            hr.border-dark.opacity-100
+            .d-flex.justify-content-between.mb-1 
+              span Total Cost(Products) :
+              span #{(sale.totalAmount).toLocaleString()} UGX
+            hr.border-dark.opacity-100
+            .d-flex.justify-content-between.mb-1 
+              span Total Charge :
+              span #{(sale.totalAmount + sale.transportFee).toLocaleString()} UGX
+            hr.border-dark.border-2.opacity-100
+            .text-center.mt-4 
+              p.mb-0.small Served by: #{sale.attendant.fullname}
+              p.mb-0.fw-bold Thanks For Shopping With 
+              p.mb-0.small.text-muted Goods ounce sold are not returnable 
+      .text-center.mt-4.d-print-none 
+        button.btn.btn-primary.me-2(onclick='window.print()')
+          i.fas.fa-print.me-1 
+          | Print Receipt 
+        a.btn.btn-outline-secondary(href='/newsale') View Sales

@@ -136,3 +136,134 @@ button:hover {
     grid-column: span 1;
   }
 }
+
+
+/* start of creditform css  */
+
+/* register.css */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#0f172a,#1e293b,#334155);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:30px;
+}
+
+.container{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.register-box{
+  width:100%;
+  max-width:500px;
+  background:#fff;
+  border-radius:20px;
+  padding:35px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.top{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.top i{
+  font-size:55px;
+  color:#2563eb;
+  margin-bottom:10px;
+}
+
+.top h1{
+  font-size:28px;
+  color:#111827;
+  margin-bottom:8px;
+}
+
+.top p{
+  color:#6b7280;
+  font-size:15px;
+}
+
+.input-group{
+  margin-bottom:18px;
+}
+
+.input-group label{
+  display:block;
+  margin-bottom:7px;
+  font-weight:600;
+  color:#374151;
+}
+
+.input-field{
+  position:relative;
+}
+
+.input-field i{
+  position:absolute;
+  left:15px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#2563eb;
+}
+
+.input-field input{
+  width:100%;
+  padding:14px 14px 14px 45px;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  font-size:15px;
+  transition:0.3s;
+}
+
+.input-field input:focus{
+  border-color:#2563eb;
+  outline:none;
+  box-shadow:0 0 8px rgba(37,99,235,0.3);
+}
+
+.btn{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:12px;
+  background:#2563eb;
+  color:#fff;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+  margin-top:10px;
+}
+
+.btn:hover{
+  background:#1d4ed8;
+}
+
+.btn i{
+  margin-right:8px;
+}
+
+@media(max-width:600px){
+
+  .register-box{
+    padding:25px;
+  }
+
+  .top h1{
+    font-size:22px;
+  }
+
+}

@@ -1,131 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Nyondo Receipt</title>
-  <link rel="stylesheet" href="/css/receipt.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Receipt - Nyondo General Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/credit.css">
 </head>
-
 <body>
 
-<div class="receipt-container">
+    <div class="receipt-wrapper">
+        <div class="receipt-card">
+            
+            <header class="receipt-header">
+                <div class="brand">
+                    <h1><i class="fas fa-tools"></i> Nyondo General Hardware</h1>
+                    <p class="tagline">Quality Building Materials & Hardware</p>
+                </div>
+                <div class="contact-info">
+                    <p><i class="fas fa-location-dot"></i> Seeta, Uganda</p>
+                    <p><i class="fas fa-phone"></i> +256 700 000 000</p>
+                    <p><i class="fas fa-envelope"></i> sales@nyondohardware.com</p>
+                </div>
+            </header>
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="logo">
-      <h1>NYONDO</h1>
-      <p>GENERAL HARDWARE</p>
+            <div class="horizontal-line"></div>
+
+            <section class="receipt-details">
+                <div class="col">
+                    <p><i class="fas fa-hashtag"></i> <strong>Receipt No:</strong> #NYO-88291</p>
+                    <p><i class="fas fa-calendar-day"></i> <strong>Date:</strong> May 08, 2026</p>
+                </div>
+                <div class="col text-right">
+                    <p><i class="fas fa-user"></i> <strong>Customer:</strong> Walk-in Client</p>
+                    <p><i class="fas fa-user-tie"></i> <strong>Served By:</strong> Admin</p>
+                </div>
+            </section>
+
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-box-open"></i> Item Description</th>
+                        <th class="qty">Qty</th>
+                        <th class="price">Unit Price</th>
+                        <th class="amount">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cement - Bamburi (50kg)</td>
+                        <td class="qty">10</td>
+                        <td class="price">32,000</td>
+                        <td class="amount">320,000</td>
+                    </tr>
+                    <tr>
+                        <td>Iron Sheets - G28 Green (3m)</td>
+                        <td class="qty">5</td>
+                        <td class="price">55,000</td>
+                        <td class="amount">275,000</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="summary-wrapper">
+                <div class="payment-info">
+                    <p><i class="fas fa-credit-card"></i> <strong>Payment Method:</strong> Cash / Mobile Money</p>
+                    <p><i class="fas fa-circle-check" style="color: #27ae60;"></i> <strong>Status:</strong> Paid In Full</p>
+                </div>
+                <div class="totals-board">
+                    <div class="total-row">
+                        <span>Sub-Total:</span>
+                        <span>595,000 UGX</span>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span><i class="fas fa-money-bill-wave"></i> Grand Total:</span>
+                        <span>595,000 UGX</span>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="receipt-footer">
+                <p class="notice"><i class="fas fa-circle-info"></i> Goods once sold are not returnable. Thank you!</p>
+                
+                <div class="signature-section">
+                    <div class="sig-box">
+                        <div class="line"></div>
+                        <p><i class="fas fa-pen-nib"></i> Issued By</p>
+                    </div>
+                    <div class="sig-box">
+                        <div class="line"></div>
+                        <p><i class="fas fa-file-signature"></i> Received By</p>
+                    </div>
+                </div>
+                <p class="motto">"Building the Nation Together"</p>
+            </footer>
+        </div>
+
+        <div class="action-bar">
+            <button onclick="window.print()" class="btn btn-primary">
+                <i class="fas fa-print"></i> Print Receipt
+            </button>
+            <button onclick="window.history.back()" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Sales
+            </button>
+        </div>
     </div>
-
-    <div class="company-info">
-      <p>P.O Box 123, Mubende - Uganda</p>
-      <p>+256 700 123 456</p>
-      <p>info@nyondohardware.ug</p>
-    </div>
-
-    <div class="receipt-meta">
-      <p><strong>Date:</strong> 25 May 2025</p>
-      <p><strong>Time:</strong> 10:45 AM</p>
-      <p><strong>Cashier:</strong> John Semanda</p>
-      <p><strong>Branch:</strong> Nyondo Main Branch</p>
-    </div>
-  </div>
-
-  <!-- CUSTOMER INFO -->
-  <div class="section">
-    <h3>Customer Information</h3>
-    <div class="customer-box">
-      <p><strong>Customer Name:</strong> Walk-in Customer</p>
-      <p><strong>Phone Number:</strong> -</p>
-      <p><strong>Customer Type:</strong> Cash Sale</p>
-    </div>
-  </div>
-
-  <!-- ITEMS TABLE -->
-  <div class="section">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Item Name</th>
-          <th>Quantity</th>
-          <th>Unit Price (UGX)</th>
-          <th>Total (UGX)</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Nails 2" (Box)</td>
-          <td>5</td>
-          <td>10,000</td>
-          <td>50,000</td>
-        </tr>
-
-        <tr>
-          <td>2</td>
-          <td>Cement (Hima)</td>
-          <td>2</td>
-          <td>35,000</td>
-          <td>70,000</td>
-        </tr>
-
-        <tr>
-          <td>3</td>
-          <td>Iron Bars 12mm</td>
-          <td>4</td>
-          <td>18,000</td>
-          <td>72,000</td>
-        </tr>
-
-        <tr>
-          <td>4</td>
-          <td>Paint (Crown 4L)</td>
-          <td>1</td>
-          <td>55,000</td>
-          <td>55,000</td>
-        </tr>
-
-        <tr>
-          <td>5</td>
-          <td>Wire Roll</td>
-          <td>2</td>
-          <td>8,000</td>
-          <td>16,000</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- SUMMARY -->
-  <div class="summary-grid">
-
-    <div class="box">
-      <h3>Payment Summary</h3>
-      <p>Subtotal: <span>UGX 263,000</span></p>
-      <p>Discount: <span>UGX 8,000</span></p>
-      <p>VAT (18%): <span>UGX 45,900</span></p>
-      <hr>
-      <h2>Grand Total: UGX 300,900</h2>
-    </div>
-
-    <div class="box">
-      <h3>Payment Method</h3>
-      <p>Method: <span>Cash</span></p>
-      <p>Amount Paid: <span>UGX 300,900</span></p>
-      <p>Balance: <span>UGX 0</span></p>
-    </div>
-
-  </div>
-
-  <!-- THANK YOU MESSAGE -->
-  <div class="thank-you">
-    <h2>Thank you for shopping with us!</h2>
-    <p>Nyondo General Hardware appreciates your business.</p>
-  </div>
-
-</div>
 
 </body>
 </html>

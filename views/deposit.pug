@@ -1,0 +1,81 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Deposit Scheme - Nyondo Hardware
+    link(rel='stylesheet' href='/css/deposit.css')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+  body
+    .sidebar
+      .logo ⚒ NYONDO HARDWARE
+      ul
+        li: a(href='/storedash'): i.fas.fa-home Dashboard
+        li.active: a(href='/deposit'): i.fas.fa-piggy-bank Deposit Scheme
+        li: a(href='/regicredit'): i.fas.fa-user-plus Register Customer
+        li: a(href='/logout'): i.fas.fa-sign-out-alt Logout
+
+    .main
+      h1 Salary Earner Deposit Scheme
+
+      //- NEW DEPOSIT ENTRY FORM
+      section.sale-form
+        h2 Record New Transaction
+        form(action='/deposit' method='POST')
+          .form-group
+            label Select Registered Customer
+            select(name='customerId' required)
+              option(value='' disabled selected) -- Choose Customer --
+              each c in customers
+                option(value=c._id) #{c.fullName} (#{c.address})
+          
+          .form-group
+            label Select Item (Displays Stock & Price)
+            select(name='itemId' required)
+              option(value='' disabled selected) -- Select Product --
+              each item in stockItems
+                if item.quantity > 0
+                  option(value=item._id) #{item.productName} (Stock: #{item.quantity} | Price: #{item.sellingPrice.toLocaleString()} UGX)
+                else
+                  option(value=item._id disabled) #{item.productName} (OUT OF STOCK)
+
+          .form-group
+            label Quantity Wanted
+            input(type='number' name='quantity' value="1" min="1" required)
+
+          .form-group
+            label Initial Deposit Amount (UGX)
+            input(type='number' name='initialDeposit' required placeholder="Enter amount paid today")
+            
+          button.register-btn(type='submit') 
+            i.fas.fa-file-invoice-dollar
+            |  Process & Save Transaction
+
+      //- DATABASE RETRIEVAL TABLE
+      section.recent-sales
+        h2 Deposit Records & Balance Tracking
+        table
+          thead
+            tr
+              th Receipt #
+              th Customer
+              th Item (Qty)
+              th Total Price
+              th Amt Paid
+              th Balance Due
+              th Action
+          tbody
+            each d in deposits
+              tr
+                td(style="font-weight:bold") #{d.receiptNumber}
+                td #{d.customer ? d.customer.fullName : 'Deleted'}
+                td #{d.productType} (x#{d.quantity})
+                td #{d.totalAmount.toLocaleString()}
+                td(style="color: green;") #{d.initialDeposit.toLocaleString()}
+                td(style="color: red; font-weight: bold;") #{d.balance.toLocaleString()} UGX
+                td
+                  a(href=`/deposit/receipt/${d._id}` target="_blank" style="color: #3498db; text-decoration: none;")
+                    i.fas.fa-print
+                    |  Print
+            else
+              tr
+                td(colspan="7" style="text-align:center") No deposits recorded yet.

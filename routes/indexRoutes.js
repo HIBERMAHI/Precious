@@ -30,14 +30,14 @@ router.post(
 );
 
 // logout
-router.get('/logout',(req,res,next)=>{
-    req.logout( (err)=>{
-        if(err){
-            return next(err)
-        }
-        res.redirect('/')
-    })
-})
+router.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
+});
 
 router.get("/register", (req, res) => {
   res.render("register");
@@ -50,13 +50,16 @@ router.post("/register", async (req, res) => {
     if (user) {
       return res.render("register", { email: "error is already registered" });
     }
+    let cleanPhone = phone.replace(/\s/g, "");
+    if (!cleanPhone.startsWith("+")) {
+      cleanPhone = "+" + cleanPhone;
+    }
     const newuser = new Registration({
       fullname,
       email: email.toLowerCase(),
-      phone,
+      phone:cleanPhone,
       nin: nin.toUpperCase(),
       role,
-      password,
     });
     console.log(newuser);
     await Registration.register(newuser, req.body.password, (err) => {
@@ -64,7 +67,7 @@ router.post("/register", async (req, res) => {
         return res.redirect("/register");
       }
     });
-    res.redirect('/login');
+    res.redirect("/login");
   } catch (error) {
     console.error(error);
     res.render("register", { error: error.message });
@@ -75,8 +78,6 @@ router.get("/stockview", (req, res) => {
   res.render("stockview");
 });
 
-router.get("/receipt", (req, res) => {
-  res.render("receipt");
-});
+
 
 module.exports = router;
