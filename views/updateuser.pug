@@ -1,0 +1,37 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Update User - Nyondo
+    link(rel='stylesheet' href='/css/login.css')
+  body
+    .card
+      img.logo(src='/images/logo.png' width='55' height='55' alt='logo')
+      h2 Update User
+      p.sub Modify account details for #{user.fullname}
+      
+      form(action=`/user/update/${user._id}` method='post')
+        .grid
+          // FULL NAME
+          .field.full
+            label Full Name
+            input(type='text' name='fullname' value=user.fullname required='')
+          
+          // PHONE NUMBER
+          .field.full
+            label Phone Number
+            input(type='text' name='phone' value=user.phone placeholder='+256...' required='')
+            small(style="color: #666; font-size: 0.8rem;") Format: +256700000000
+          
+          // ROLE
+          .field.full
+            label Role
+            select(name='role' required='')
+              option(value='admin' selected=user.role==='admin') Admin
+              option(value='storemanager' selected=user.role==='storemanager') Store Manager
+              option(value='salesattendant' selected=user.role==='salesattendant') Sales Attendant
+
+        button(type='submit') Update Account
+        .login-link
+          a(href='/admindash' style="color: #666; text-decoration: none;") Cancel and Go Back

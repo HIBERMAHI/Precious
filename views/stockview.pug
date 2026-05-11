@@ -23,7 +23,7 @@ head
         i.fas.fa-boxes
         |  Stock View
     li
-      a(href='saleshistory.html')
+      a(href='storsales')
         i.fas.fa-clock-rotate-left
         |  Sales History
     li
@@ -43,89 +43,25 @@ head
       input(type='text' placeholder='Search item (cement, nails, paint...)')
       button
         i.fas.fa-search
-  // ================= STOCK CARDS =================
-  .cards
-    .card.ok
-      h3 Cement
-      p 50 Bags
-      span Available
-    .card.low
-      h3 Nails
-      p 10 Boxes
-      span Low Stock
-    .card.out
-      h3 Paint
-      p 0 Tins
-      span Out of Stock
-  // ================= TABLE =================
   table
-    tr
-      th Item
-      th Category
-      th Price
-      th Quantity
-      th Status
-      th Action
-    tr
-      td Cement
-      td Building
-      td 20,000
-      td 50 bags
-      td
-        span.ok OK
-      td
-        button.request-btn Request
-    tr
-      td Nails
-      td Tools
-      td 5,000
-      td 10 boxes
-      td
-        span.low LOW
-      td
-        button.request-btn Request
-    tr
-      td Paint
-      td Finishing
-      td 30,000
-      td 0 tins
-      td
-        span.out OUT
-      td
-        button.request-btn Request
-    tr
-      td Iron Sheets
-      td Roofing
-      td 45,000
-      td 25 sheets
-      td
-        span.ok OK
-      td
-        button.request-btn Request
-    tr
-      td Wood Planks
-      td Carpentry
-      td 12,000
-      td 8 pcs
-      td
-        span.low LOW
-      td
-        button.request-btn Request
-    tr
-      td Bolts &amp; Nuts
-      td Tools
-      td 3,000
-      td 100 packs
-      td
-        span.ok OK
-      td
-        button.request-btn Request
-    tr
-      td Plumbing Pipes
-      td Plumbing
-      td 12,000
-      td 15 pcs
-      td
-        span.ok OK
-      td
-        button.request-btn Request
+    thead
+      tr
+        th ProductName
+        th Image
+        th Buying Price
+        th Selling Price
+        th Quantity
+    tbody
+    if dbStock.length === 0
+      tr
+        td(colspan='5') No stock available
+    each stock in dbStock   
+        td #{stock.productName}
+        td 
+          if stock.itemImage 
+            img(src='/' + stock.itemImage alt='image'  width='50px' height='50px')
+          else 
+            span no image
+        td #{stock.buyingPrice}
+        td #{stock.sellingPrice}
+        td #{stock.quantity}

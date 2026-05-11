@@ -9,10 +9,10 @@ html
     .sidebar
       .logo ⚒ NYONDO HARDWARE
       ul
-        li: a(href='/storedash'): i.fas.fa-home Dashboard
-        li.active: a(href='/deposit'): i.fas.fa-piggy-bank Deposit Scheme
-        li: a(href='/regicredit'): i.fas.fa-user-plus Register Customer
-        li: a(href='/logout'): i.fas.fa-sign-out-alt Logout
+        li: a(href='admindash'): i.fas.fa-home Dashboard
+        li.active: a(href='deposit'): i.fas.fa-piggy-bank Deposit Scheme
+        li: a(href='regicredit'): i.fas.fa-user-plus Register Customer
+        li: a(href='logout'): i.fas.fa-sign-out-alt Logout
 
     .main
       h1 Salary Earner Deposit Scheme
@@ -61,7 +61,7 @@ html
               th Item (Qty)
               th Total Price
               th Amt Paid
-              th Balance Due
+              th Status / Balance
               th Action
           tbody
             each d in deposits
@@ -71,11 +71,27 @@ html
                 td #{d.productType} (x#{d.quantity})
                 td #{d.totalAmount.toLocaleString()}
                 td(style="color: green;") #{d.initialDeposit.toLocaleString()}
-                td(style="color: red; font-weight: bold;") #{d.balance.toLocaleString()} UGX
+                
+                //- STATUS & BALANCE FIELD
                 td
-                  a(href=`/deposit/receipt/${d._id}` target="_blank" style="color: #3498db; text-decoration: none;")
+                  if d.balance > 0
+                    span(style="color: #e67e22; font-weight: bold;") PENDING: #{d.balance.toLocaleString()} UGX
+                  else
+                    span(style="color: #27ae60; font-weight: bold;") COMPLETED (0 UGX)
+
+                //- ACTION FIELD
+                td(style="display: flex; gap: 10px; align-items: center;")
+                  a(href=`/deposit/receipt/${d._id}` target="_blank" style="color: #3498db;")
                     i.fas.fa-print
-                    |  Print
+                  
+                  if d.balance > 0
+                    a(href=`/deposit/edit/${d._id}` style="color: #f39c12; text-decoration: none; font-weight: bold;")
+                      i.fas.fa-edit
+                  
+                  //- DELETE BUTTON FOR MISTAKES
+                  form(action=`/deposit/delete/${d._id}` method="POST" style="display:inline;" onsubmit="return confirm('CORRECTION: Delete this record and return items to stock?')")
+                    button(type="submit" style="background:none; border:none; color:#e74c3c; cursor:pointer; padding:0;")
+                      i.fas.fa-trash-alt
             else
               tr
                 td(colspan="7" style="text-align:center") No deposits recorded yet.

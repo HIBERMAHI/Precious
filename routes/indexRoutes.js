@@ -3,6 +3,16 @@ const Registration = require("../models/Registration");
 const router = express.Router();
 const passport = require("passport");
 
+const {
+  issalesattendant,
+  isadmin,
+  isstoremanager,
+  isstoremanagerOradmin,
+  issalesattendantOradmin,
+} = require("../middleware/auth");
+const { transformAuthInfo } = require("passport");
+
+
 // get index page
 
 router.get("/", (req, res) => {
@@ -74,9 +84,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.get("/stockview", (req, res) => {
-  res.render("stockview");
-});
 
 
 

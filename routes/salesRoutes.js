@@ -90,7 +90,6 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
       attendant: req.user._id,
     });
 
-    // Modern Await: Save Sale (Removed .then/.catch)
     await newsale.save();
 
     res.redirect(`/receipt/${newsale._id}`); // Redirected back to sales page
@@ -129,7 +128,7 @@ router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
     const { customerName, phone, quantity, price, deliveryOption, distance } =
       req.body;
 
-    // Fixed: Using price from req.body instead of undefined item.price
+
     const totalAmount = parseInt(quantity) * parseFloat(price);
 
     let transportFee = 0;
@@ -158,7 +157,7 @@ router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
 });
 
 // generating receipt (Fixed URL parameter and population fields)
-router.get("/receipt/:id", async (req, res) => {
+router.get("/receipt/:id",issalesattendantOradmin, async (req, res) => {
   try {
     const sale = await Sale.findById(req.params.id)
       .populate("productName", "productName")
@@ -175,15 +174,48 @@ router.get("/receipt/:id", async (req, res) => {
 // getting data to display in dashboard
 router.get("/ssales", issalesattendantOradmin, async (req, res) => {
   try {
+    let stats = {
+      salesRevenue:0,
+      itemsSold:0,
+      transactions:0,
+      receipts:0,
+    };
+    const salesAgg = await Sale.aggregate(
+      [{$group: {_id:null, grandTotal: {$sum:'$totalAmount'}}},]
+    );
+    stats.salesRevenue = salesAgg.length >0? salesAgg[0].grandTotal:0;
+    const itemsAgg = await Sale.aggregate(
+      [{$group:{_id:null,grandItems:{$sum:'$quantity'}}},]
+    );
+    stats.itemsSold = itemsAgg.length>0? itemsAgg[0].grandItems:0;
+    const transactionsAgg = await Sale.aggregate(
+      [{$group: {_id:null,grandTransactions: {$sum:1}}},]
+    );
+    stats.transactions = transactionsAgg.length>0?transactionsAgg[0].grandTransactions:0;
+    const receiptsAgg = await Sale.aggregate(
+     [ {$group:{_id:null,grandReceipts: {$sum:1}}},]
+    );
+    stats.receipts = receiptsAgg.length>0?receiptsAgg[0].grandReceipts:0;
+    // displaying cards on dashboard
     const dbSales = await Sale.find()
       .populate("productName", "productName")
       .populate("attendant", "fullname")
       .sort({ date: -1 });
-    res.render("ssales", { dbSales });
+    res.render("ssales", { dbSales , stats});
   } catch (error) {
     console.error(error);
     res.status(500).send("Unable to pick sales from the data base");
   }
 });
 
+// displaying stock in stckview page
+router.get('/stockview', issalesattendantOradmin,async (req,res)=>{
+try {
+  const dbStock = await Stock.find();
+  res.render('stockview', {dbStock});
+} catch (error) {
+  console.error(error.message)
+  res.status(500).send('Unable to pick stock from the data base')
+}
+})
 module.exports = router;

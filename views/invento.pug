@@ -21,7 +21,7 @@ html
             i.fas.fa-boxes
             | Inventory
         li
-          a(href='/sales')
+          a(href='storsales')
             i.fas.fa-cash-register
             | Sales
         li
@@ -29,7 +29,7 @@ html
             i.fas.fa-plus-circle
             | Add Stock
         li
-          a(href='/reports')
+          a(href='logout')
             i.fas.fa-sign-out-alt
             | Logout
 
@@ -51,22 +51,22 @@ html
           i.fas.fa-cubes
           div
             h3 Total Products
-            p 120
+            p #{stats.totalProducts.toLocaleString()}
         .card.warn
           i.fas.fa-exclamation-triangle
           div
             h3 Low Stock
-            p 8
+            p #{stats.lowStock.toLocaleString()}
         .card.danger
           i.fas.fa-times-circle
           div
-            h3 Out of Stock
-            p 3
+            h3 Enougth Stock
+            p #{stats.enougthStock.toLocaleString()}
         .card.success
           i.fas.fa-coins
           div
             h3 Total Value
-            p UGX 45M
+            p #{stats.inventoryValue.toLocaleString()} UGX
 
       .search-bar
         input(type='text' placeholder='Search product...')

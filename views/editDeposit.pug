@@ -1,0 +1,47 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Update Deposit - Nyondo Hardware
+    link(rel='stylesheet' href='/css/deposit.css')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+  body
+    .sidebar
+      .logo ⚒ NYONDO HARDWARE
+      ul
+        li: a(href='/admindash'): i.fas.fa-home Dashboard
+        li: a(href='/deposit'): i.fas.fa-arrow-left Back
+
+    .main
+      h1 Update Payment for Receipt #{d.receiptNumber}
+
+      section.sale-form
+        h2 Customer: #{d.customer.fullName}
+        form(action=`/deposit/edit/${d._id}` method='POST')
+          
+          .form-group
+            label Item being purchased (Read Only)
+            input(type="text" value=d.productType readonly style="background:#eee")
+
+          .form-group
+            label Quantity Wanted
+            input(type='number' name='quantity' value=d.quantity min="1" required)
+
+          .form-group
+            label Current Amount Paid (UGX)
+            input(type="text" value=d.initialDeposit.toLocaleString() readonly style="background:#eee")
+
+          .form-group
+            label Current Balance Due
+            input(type="text" value=d.balance.toLocaleString() + " UGX" readonly style="color:red; font-weight:bold; background:#fff3f3")
+
+          hr
+
+          .form-group
+            label(style="color: green; font-weight: bold;") Enter New Money Deposited Today (UGX)
+            input(type='number' name='newPayment' placeholder="e.g. 50000" required)
+            small.text-muted This amount will be added to the total paid.
+
+          button.register-btn(type='submit' style="background: #27ae60;") 
+            i.fas.fa-hand-holding-usd
+            |  Update Balance

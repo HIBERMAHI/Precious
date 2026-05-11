@@ -13,7 +13,6 @@ html
 
   body
 
-    // ================= SIDEBAR =================
     .sidebar
 
       .logo
@@ -22,54 +21,51 @@ html
       ul.nav
 
         li.active
-          a(href='/admin/dashboard')
+          a(href='admindash')
             i.fas.fa-chart-line
-            |  Dashboard
+            |   Dashboard
 
         li
-          a(href='/inventory')
+          a(href='deposit')
             i.fas.fa-boxes
-            |  Inventory
+            |   Inventory
 
         li
-          a(href='/sales')
+          a(href='Supplier')
             i.fas.fa-cash-register
-            |  Sales
+            |   Sales
 
         li
-          a(href='/stock/add')
+          a(href='addstock')
             i.fas.fa-plus-circle
-            |  Add Stock
+            |   Add Stock
 
         li
-          a(href='/deposits')
+          a(href='deposits')
             i.fas.fa-piggy-bank
-            |  Deposits
+            |   Deposits
 
         li
           a(href='/transport')
             i.fas.fa-truck
-            |  Transport
+            |   Transport
 
         li
           a(href='/users')
             i.fas.fa-users
-            |  Users
+            |   Users
 
         li
           a(href='/reports')
             i.fas.fa-chart-pie
-            |  Reports
+            |   Reports
 
         li
-          a(href='/logout')
+          a(href='logout')
             i.fas.fa-sign-out-alt
-            |  Logout
-
-    // ================= MAIN =================
+            |   Logout
     .main
 
-      // ================= TOP BAR =================
       .topbar
 
         h1 Admin Dashboard
@@ -78,89 +74,80 @@ html
           i.fas.fa-user-circle
           span Admin
 
-      // ================= DASHBOARD CARDS =================
       .cards
 
         .card
           h3 Stock Expenditure
           p #{stats.inventoryValue.toLocaleString()} UGX
+          small Value of store items
 
         .card.success
           h3 Total Sales Revenue
           p #{stats.salesRevenue.toLocaleString()} UGX
+          small Completed sales
 
-        .card
-          h3 Total Users
-          p 12
+        .card.info
+          h3 Deposits Collected
+          p #{stats.depositsCollected.toLocaleString()} UGX
+          small Cash from scheme
 
         .card.warn
-          h3 Stock Alerts
-          p 8 Items
+          h3 Pending Balances
+          p #{stats.pendingBalance.toLocaleString()} UGX
+          small Total customer debt
 
-      // ================= QUICK ACTIONS =================
       .section
 
         h2 Quick Actions
 
         .actions
 
-          a.btn(href='/stock/add')
+          a.btn(href='addstock')
             i.fas.fa-plus-circle
-            |  Add Stock
+            |   Add Stock
 
-          a.btn(href='/sales/new')
+          a.btn(href='newsale')
             i.fas.fa-cash-register
-            |  Record Sale
+            |   Record Sale
 
           a.btn(href='/reports')
             i.fas.fa-chart-pie
-            |  Generate Report
+            |   Generate Report
 
-          a.btn(href='/regicredit')
+          a.btn(href='regicredit')
             i.fas.fa-user-plus
-            |  Register Credit Customer
-
-      // ================= DEPOSITS =================
-      .section
-
-        h2 Deposit Scheme
-
-        table
-
-          tr
-            th Customer
-            th Amount
-
-          tr
-            td John
-            td UGX 50,000
-
-          tr
-            td Sarah
-            td UGX 30,000
-
-      // ================= USERS =================
+            |   Register Credit Customer
       .section
 
         h2 User Management
 
         button.btn
           i.fas.fa-user-plus
-          |  Add User
+          |   Add User
 
         table
-
-          tr
-            th Name
-            th Role
-            th Status
-
-          tr
-            td James
-            td Sales Attendant
-            td.success Active
-
-          tr
-            td Maria
-            td Manager
-            td.success Active
+          thead
+            tr
+              th Name
+              th Role
+              th Phone
+              th Actions
+          tbody
+            if dbusers && dbusers.length > 0
+              each user in dbusers
+                tr
+                  td #{user.fullname}
+                  td #{user.role}
+                  td #{user.phone}
+                  td
+                    // Edit Link
+                    a(href=`/user/update/${user._id}` style="color: #007bff; margin-right: 15px;" title="Edit User")
+                      i.fas.fa-edit
+                    
+                    // Delete Form
+                    form(method="POST" action=`/user/delete/${user._id}` style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?')")
+                      button(type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer; padding: 0;")
+                        i.fas.fa-trash
+            else
+              tr
+                td(colspan="4" style="text-align:center") No users found in database.
