@@ -4,6 +4,7 @@ head
   title Nyondo Sales
   link(rel='stylesheet' href='/css/newsale.css')
   link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+
 // SIDEBAR
 .sidebar
   .logo
@@ -12,62 +13,88 @@ head
     li
       a(href='ssales')
         i.fas.fa-home
-        |  Dashboard
+        |   Dashboard
     li
       a(href='newsale')
         i.fas.fa-cash-register
-        |  Sales
+        |   Sales
     li
       a(href='stockview')
         i.fas.fa-box
-        |  Stock View
+        |   Stock View
     li
       a(href='/receipts')
         i.fas.fa-receipt
-        |  Credit Sales
+        |   Credit Sales
     
     li
       a(href='logout')
         i.fas.fa-sign-out-alt
-        |  Logout
+        |   Logout
+
 // MAIN
 .main
-  h1 Sales Management
-  // ================= NEW SALE =================
+  h1 Sales Edit
+
+  // ================= EDIT SALE =================
   section.sale-form
-    h2 Register New Sale
+    h2 Edit Sale
+
+    //- Added the error banner here as we discussed
+    if error
+      p#error-msg(style="color: white; background-color: #d9534f; padding: 12px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; text-align: center; border: 1px solid #b94a48;") #{error}
+
     form(action=`/sale/edit/${sale._id}` method='post')
       .form-group
         label Customer Name
-        input(type='text' value=sale.customerName  name='customerName')
+        input(type='text' value=sale.customerName name='customerName')
       .form-group
         label Phone Number
-        input(type='text' value=sale.phone  name='phone')
+        input(type='text' value=sale.phone name='phone' pattern='^(07[0-9]{8}|\\+256[0-9]{9})$' title="Format: 07... or +256...")
       .form-group
         label Quantity
-        input(type='number' name='quantity' value=quantity  required='')
+        input(type='number' name='quantity' value=sale.quantity required='' min='1'  )
       .form-group
         label Price (UGX)
-        input(type='number' name='price' value=price  required='')
-        .form-group
+        input(type='number' name='price' value=sale.price required='')
+      .form-group
         label Delivery Option
         select(name='deliveryOption')
-          option(value='pickup' selected=sale.deliveryOption === 'pickup' ) Pickup
-          option(value='delivery' selected=sale.deliveryOption === 'delivery' ) Delivery
-        .form-group
+          option(value='pickup' selected=sale.deliveryOption === 'pickup') Pickup
+          option(value='delivery' selected=sale.deliveryOption === 'delivery') Delivery
+      .form-group
         label Distance (km)
-        input(type='number' value=distance   name='distance')
-        .form-group
+        input(type='number' value=sale.distance name='distance')
+      .form-group
         label Transport Fee
-        input(type='number' value=transportFee  name='transportFee' readonly='')
+        input(type='number' value=sale.transportFee name='transportFee' readonly='')
       .form-group
         label Total Amount
-        input(type='number' value=totalAmount  name='totalAmount')
+        input(type='number' value=sale.totalAmount name='totalAmount' readonly)
       .button-group
         button.register-btn(type='submit')
-          i.fas.fa-plus
-          |  Register Sale
+          i.fas.fa-save
+          |   Update Sale
         button.receipt-btn(type='button')
           i.fas.fa-receipt
-          |  Issue Receipt
-  // 
+          |   Issue Receipt
+
+  script.
+    document.addEventListener('DOMContentLoaded', () => {
+      const errorMsg = document.getElementById('error-msg');
+      // Select all inputs and the dropdown
+      const allInputs = document.querySelectorAll('input, select');
+
+      if (errorMsg) {
+        allInputs.forEach(element => {
+          // Listen for typing or changing options
+          element.addEventListener('input', () => {
+            errorMsg.style.display = 'none';
+          }, { once: true });
+          
+          element.addEventListener('change', () => {
+            errorMsg.style.display = 'none';
+          }, { once: true });
+        });
+      }
+    });

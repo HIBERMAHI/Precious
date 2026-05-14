@@ -39,54 +39,104 @@ router.get("/admindash", async (req, res) => {
     const pendingBalanceAgg = await Deposit.aggregate([
       { $group: { _id: null, balance: { $sum: "$balance" } } },
     ]);
-    stats.pendingBalance = pendingBalanceAgg.length > 0 ? pendingBalanceAgg[0].balance : 0;
-    res.render("admindash", { stats , dbusers});
+    stats.pendingBalance =
+      pendingBalanceAgg.length > 0 ? pendingBalanceAgg[0].balance : 0;
+    res.render("admindash", { stats, dbusers });
   } catch (error) {
     console.error(error.message);
     res.status(404).send("Ooops stats not found");
   }
 });
+
 // 2. Credit Customer Registration (GET)
 router.get("/regicredit", (req, res) => {
   res.render("regicredit");
 });
-// 3. Credit Customer Registration (POST)
-router.post("/regicredit", async (req, res) => {
-  try {
-    let {
-      fullName,
-      nin,
-      phoneNumber,
-      address,
-      distanceFromStore,
-      email,
-      password,
-    } = req.body;
 
-    phoneNumber = phoneNumber.replace(/\s+/g, "");
-    if (phoneNumber.startsWith("0")) {
-      phoneNumber = "+256" + phoneNumber.substring(1);
-    } else if (phoneNumber.startsWith("256") && !phoneNumber.startsWith("+")) {
-      phoneNumber = "+" + phoneNumber;
+// 3. Credit Customer Registration (POST) - FIXED VALIDATION & SYNTAX
+
+router.post("/regicredit", async (req, res) => {
+  const {
+    fullName,
+    nin,
+    phoneNumber,
+    address,
+    distanceFromStore,
+    email,
+    password,
+  } = req.body;
+
+  try {
+    // 1. Email Validation (Matching your Model Regex)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.render("regicredit", {
+        error: "Enter a valid email address.",
+      });
     }
 
+    // 2. NIN Validation (Matching your Model Regex)
+    const cleanNIN = nin.toUpperCase().trim();
+    const ninRegex = /^[A-Z0-9]{14}$/;
+    if (!ninRegex.test(cleanNIN)) {
+      return res.render("regicredit", {
+        error: "NIN must be exactly 14 uppercase letters and numbers.",
+      });
+    }
+
+    // 3. Password Validation
+    if (!password || password.length < 6) {
+      return res.render("regicredit", {
+        error: "Password must be at least 6 characters long.",
+      });
+    }
+
+    // 4. Phone Formatting (Ensuring it matches your +256\d{9} or 07\d{8} requirement)
+    let cleanPhone = phoneNumber.replace(/\s+/g, "");
+    if (cleanPhone.startsWith("0")) {
+      // Converts 0772123456 to +256772123456 (matching the 13-char model requirement)
+      cleanPhone = "+256" + cleanPhone.substring(1);
+    }
+
+    // 5. Database Save
     const newCustomer = new Regicredit({
       fullName,
-      nin: nin.toUpperCase().trim(),
-      phoneNumber,
+      nin: cleanNIN,
+      phoneNumber: cleanPhone,
       address,
-      distanceFromStore,
-      email,
+      distanceFromStore: Number(distanceFromStore), // Model expects a Number
+      email: email.toLowerCase().trim(),
     });
 
+    // Passport handles the hashing and unique 'email' check
     await Regicredit.register(newCustomer, password);
     res.redirect("/deposit");
   } catch (error) {
-    console.error("Registration Error:", error.message);
-    res.status(400).send(`Error: ${error.message}`);
+    console.error(error);
+
+    // Catch specific Mongoose errors (like unique constraint on NIN)
+    if (error.code === 11000) {
+      return res.render("regicredit", {
+        error: "NIN or Email already exists.",
+        user: req.body,
+      });
+    }
+
+    if (error.name === "UserExistsError") {
+      return res.render("regicredit", {
+        error: "This email is already registered.",
+        user: req.body,
+      });
+    }
+
+    res.render("regicredit", {
+      error: "Registration failed: " + error.message,
+      user: req.body,
+    });
   }
 });
-// 4. Deposit Page (G
+
+// 4. Deposit Page
 router.get("/deposit", async (req, res) => {
   try {
     const stockItems = await Stock.find({
@@ -107,6 +157,7 @@ router.get("/deposit", async (req, res) => {
     res.status(500).send("Error loading deposit page: " + error.message);
   }
 });
+
 // 5. Process Deposit (POST)
 router.post("/deposit", async (req, res) => {
   try {
@@ -158,6 +209,7 @@ router.post("/deposit", async (req, res) => {
     res.status(400).send("Processing Error: " + error.message);
   }
 });
+
 // 6. Receipt (GET)
 router.get("/deposit/receipt/:id", async (req, res) => {
   try {
@@ -168,6 +220,7 @@ router.get("/deposit/receipt/:id", async (req, res) => {
     res.status(500).send("Error: " + error.message);
   }
 });
+
 // 7. Edit Deposit (GET)
 router.get("/deposit/edit/:id", async (req, res) => {
   try {
@@ -178,6 +231,7 @@ router.get("/deposit/edit/:id", async (req, res) => {
     res.status(500).send("Error: " + error.message);
   }
 });
+
 // 8. Update Deposit (POST)
 router.post("/deposit/edit/:id", async (req, res) => {
   try {
@@ -212,6 +266,7 @@ router.post("/deposit/edit/:id", async (req, res) => {
     res.status(400).send("Update Error: " + error.message);
   }
 });
+
 // 9. Delete Deposit (POST)
 router.post("/deposit/delete/:id", async (req, res) => {
   try {
@@ -230,26 +285,23 @@ router.post("/deposit/delete/:id", async (req, res) => {
   }
 });
 
-
-// delet user
+// 10. Delete User
 router.post("/user/delete/:id", async (req, res) => {
   try {
     await Registration.findByIdAndDelete(req.params.id);
-    res.redirect("/admindash"); // Refresh the dashboard to show the user is gone
+    res.redirect("/admindash");
   } catch (error) {
     console.error("Delete Error:", error.message);
     res.status(500).send("Unable to delete user");
   }
 });
 
-// editing user
+// 11. Edit User
 router.get("/user/update/:id", async (req, res) => {
   try {
     const user = await Registration.findById(req.params.id);
     if (!user) return res.status(404).send("User not found");
-    
-    // Render a new pug file (e.g., editUser.pug) and pass the user data
-    res.render("editUser", { user }); 
+    res.render("editUser", { user });
   } catch (error) {
     res.status(500).send("Error fetching user details");
   }
@@ -258,14 +310,11 @@ router.get("/user/update/:id", async (req, res) => {
 router.post("/user/update/:id", async (req, res) => {
   try {
     const { fullname, role, phone } = req.body;
-    
-    // Update the user in the database
-    await Registration.findByIdAndUpdate(req.params.id, { 
-      fullname, 
-      role, 
-      phone 
+    await Registration.findByIdAndUpdate(req.params.id, {
+      fullname,
+      role,
+      phone,
     });
-    
     res.redirect("/admindash");
   } catch (error) {
     console.error("Update Error:", error.message);

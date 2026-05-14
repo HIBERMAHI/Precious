@@ -8,25 +8,24 @@ head
 // SIDEBAR
 .sidebar
   .logo
-    |⚒ NYONDO HARDWARE
+    | ⚒ NYONDO HARDWARE
   ul
     li
       a(href='ssales')
         i.fas.fa-home
-        |  Dashboard
+        |   Dashboard
     li
       a(href='newsale')
         i.fas.fa-cash-register
-        |  New Sale
+        |   New Sale
     li
       a(href='stockview')
         i.fas.fa-box
-        |  Stock View
-    
+        |   Stock View
     li
       a(href='logout')
         i.fas.fa-sign-out-alt
-        |  Logout
+        |   Logout
 
 // MAIN
 .main
@@ -35,6 +34,10 @@ head
   // ================= NEW SALE =================
   section.sale-form
     h2 Register New Sale
+
+    if error
+      p#error-msg(style="color: white; background-color: #d9534f; padding: 12px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; text-align: center; border: 1px solid #b94a48;") #{error}
+
     form(action='/newsale' method='post')
       .form-group
         label Customer Name
@@ -54,11 +57,11 @@ head
 
       .form-group
         label Quantity
-        input(type='number' name='quantity' required='')
+        input(type='number' name='quantity' required='' min='1' )
 
       .form-group
         label Price (UGX)
-        input(type='number' name='price' required='')
+        input(type='number' name='price' required='' )
 
       .form-group
         label Delivery Option
@@ -94,16 +97,15 @@ head
       .button-group
         button.register-btn(type='submit')
           i.fas.fa-plus
-          |  Register Sale
+          |   Register Sale
 
         button.receipt-btn(type='button')
           i.fas.fa-receipt
-          |  Issue Receipt
+          |   Issue Receipt
 
   // ================= RECENT SALES =================
   section.recent-sales
     h2 Recent Sales
-
     table
       thead
         tr
@@ -118,32 +120,54 @@ head
           th attendant
           th date
           if user.role === "salesattendant" || user.role === "admin"
-            th Update
-
+            th Actions
       tbody
-        each sale in dbSales
-          tr
-            td #{sale.customerName}
-            td #{sale.productName ? sale.productName.productName : 'Item deleted'}
-            td #{sale.quantity}
-            td #{sale.price ? sale.price.toLocaleString() : '0'}
-            td #{sale.transportFee ? sale.transportFee.toLocaleString() : '0'}
-            td #{sale.paymentMethod}
-            td #{sale.status}
-            td #{sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'}
-            td #{sale.attendant ? sale.attendant.fullname : 'unknown'}
-            td #{new Date(sale.date).toLocaleString()}
-            if user.role === "salesattendant" || user.role === "admin"
-
-              td
-                span.action-btns
-                  a.btn.btn-sm-outline-warning(href=`/sale/edit/${sale._id}`)
-                    i.fas.fa-edit
-
-                  form(action=`/delete/${sale._id}` method='post' onsubmit='return confirm("Are you sure you want to delete this sale")')
-                    button.btn.btn-sm.btn-outline-danger(type='submit')
-                      i.fas.fa-trash-alt
-
+        if dbSales && dbSales.length > 0
+          each sale in dbSales
+            tr
+              td #{sale.customerName}
+              td #{sale.productName ? sale.productName.productName : 'Item deleted'}
+              td #{sale.quantity}
+              td #{sale.price ? sale.price.toLocaleString() : '0'}
+              td #{sale.transportFee ? sale.transportFee.toLocaleString() : '0'}
+              td #{sale.paymentMethod}
+              td #{sale.status}
+              td #{sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'}
+              td #{sale.attendant ? sale.attendant.fullname : 'unknown'}
+              td #{new Date(sale.date).toLocaleString()}
+              if user.role === "salesattendant" || user.role === "admin"
+                td
+                  span.action-btns
+                    //- NEW RECEIPT BUTTON
+                    a.btn.btn-sm.btn-outline-primary(href=`/receipt/${sale._id}` title="View Receipt" style="margin-right: 5px;")
+                      i.fas.fa-file-invoice
+                    
+                    //- EDIT BUTTON
+                    a.btn.btn-sm-outline-warning(href=`/sale/edit/${sale._id}`)
+                      i.fas.fa-edit
+                    
+                    //- DELETE BUTTON
+                    form(action=`/delete/${sale._id}` method='post' onsubmit='return confirm("Are you sure you want to delete this sale")' style='display:inline;')
+                      button.btn.btn-sm.btn-outline-danger(type='submit')
+                        i.fas.fa-trash-alt
         else
           tr
             td.text-center(colspan='11') No sales have been recorded yet
+
+  script.
+    document.addEventListener('DOMContentLoaded', () => {
+      const errorMsg = document.getElementById('error-msg');
+      const allInputs = document.querySelectorAll('input, select');
+
+      if (errorMsg) {
+        allInputs.forEach(element => {
+          element.addEventListener('input', () => {
+            errorMsg.style.display = 'none';
+          }, { once: true });
+          
+          element.addEventListener('change', () => {
+            errorMsg.style.display = 'none';
+          }, { once: true });
+        });
+      }
+    });

@@ -5,49 +5,65 @@ html
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
     title Nyondo Hardware Receipt
     link(rel='stylesheet' href='/css/receipt.css')
+    //- Adding Bootstrap for the utility classes you used (d-flex, shadow, etc.)
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css')
+
   body
     .receipt-container
-      .hardware-header
-      .card.shadow.border-0.rounded-0
+      .card.shadow.border-0.rounded-0.receipt-card
           .card-body.p-4 
-            .text-center.mb-4
+            .text-center.mb-4.receipt-header
               h4.fw-bold.mb-1 NYONDO GENERAL HARDWARE
-              p Nansana, Wakiso District - Katooke Road
-              p Tel: 0721-234567 | 0772-987654
-              small Date: #{new Date(sale.date).toLocaleString()}
-              br
-              //-  using the last six characters of the mongo db id as a short receipt number
-              small Receipts #:#{sale._id.toString().slice(-6).toUpperCase()}
+              p.address Nansana, Wakiso District - Katooke Road
+              p.contact Tel: 0721-234567 | 0772-987654
+              .meta-info
+                small.date Date: #{new Date(sale.date).toLocaleString()}
+                br
+                small.receipt-no Receipts #: #{sale._id.toString().slice(-6).toUpperCase()}
+            
             hr.border-dark.border-2.opacity-100
-            .d-flex.justify-content-between.mb-2 
+            
+            .d-flex.justify-content-between.mb-2.section-title
               span.fw-bold Description
             
+            hr.border-dark.opacity-100
+            
+            //- Fixed indentation here so it displays correctly
+            .d-flex.justify-content-between.mb-1.item-row
+              span.label Item Name :
+              span.value.fw-bold.text-uppercase #{sale.productName.productName} 
             
             hr.border-dark.opacity-100
-            d-flex.justify-content-between.mb-1 
-              span Item Name :
-              span #{sale.productName.productName} 
-            hr.border-dark.opacity-100
-            .d-flex.justify-content-between.mb-1 
-              span Qty :
-              span #{sale.quantity} (units)
             
-            .d-flex.justify-content-between.mb-1 
-              span Transport Charge :
-              span #{sale.transportFee.toLocaleString()} UGX 
+            .d-flex.justify-content-between.mb-1.qty-row
+              span.label Qty :
+              span.value #{sale.quantity} (units)
+            
+            .d-flex.justify-content-between.mb-1.transport-row
+              span.label Transport Charge :
+              span.value #{sale.transportFee.toLocaleString()} UGX 
+            
             hr.border-dark.opacity-100
-            .d-flex.justify-content-between.mb-1 
-              span Total Cost(Products) :
-              span #{(sale.totalAmount).toLocaleString()} UGX
+            
+            .d-flex.justify-content-between.mb-1.subtotal-row
+              span.label Total Cost (Products) :
+              span.value #{sale.totalAmount.toLocaleString()} UGX
+            
             hr.border-dark.opacity-100
-            .d-flex.justify-content-between.mb-1 
-              span Total Charge :
-              span #{(sale.totalAmount + sale.transportFee).toLocaleString()} UGX
+            
+            .d-flex.justify-content-between.mb-1.grand-total-row
+              span.label.fw-bold Total Charge :
+              //- Using your logic: Total + Transport
+              span.value.fw-bold.total-price #{(sale.totalAmount + sale.transportFee).toLocaleString()} UGX
+            
             hr.border-dark.border-2.opacity-100
-            .text-center.mt-4 
+            
+            .text-center.mt-4.receipt-footer
               p.mb-0.small Served by: #{sale.attendant.fullname}
-              p.mb-0.fw-bold Thanks For Shopping With 
-              p.mb-0.small.text-muted Goods ounce sold are not returnable 
+              p.mb-0.fw-bold Thanks For Shopping With Us
+              p.mb-0.small.text-muted.disclaimer Goods once sold are not returnable 
+
       .text-center.mt-4.d-print-none 
         button.btn.btn-primary.me-2(onclick='window.print()')
           i.fas.fa-print.me-1 

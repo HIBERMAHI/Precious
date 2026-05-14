@@ -1,0 +1,152 @@
+/* Styling for Nyondo Credit Registration */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #1a2b3c; /* Deep Professional Blue */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 650px;
+}
+
+.register-box {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.top {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.top i {
+    font-size: 40px;
+    color: #1a2b3c;
+    margin-bottom: 10px;
+}
+
+.top h1 {
+    color: #1a2b3c;
+    font-size: 26px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.top p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Grid Layout for a cleaner look */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.input-group.full-width {
+    grid-column: span 2;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+}
+
+.input-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-field i:not(.toggle-eye) {
+    position: absolute;
+    left: 12px;
+    color: #1a2b3c;
+    font-size: 14px;
+}
+
+.input-field input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.input-field input:focus {
+    outline: none;
+    border-color: #1a2b3c;
+    box-shadow: 0 0 0 3px rgba(26, 43, 60, 0.1);
+}
+
+/* Password Toggle Icon */
+.toggle-eye {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    color: #9ca3af;
+    transition: color 0.2s;
+}
+
+.toggle-eye:hover {
+    color: #1a2b3c;
+}
+
+/* Register Button */
+.btn {
+    width: 100%;
+    background-color: #1a2b3c;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.btn:hover {
+    background-color: #2c3e50;
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Responsive adjustment */
+@media (max-width: 600px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    .input-group.full-width, .input-group {
+        grid-column: span 1;
+    }
+    .register-box {
+        padding: 25px;
+    }
+}

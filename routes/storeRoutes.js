@@ -3,6 +3,7 @@ const multer = require("multer");
 const router = express.Router();
 const Stock = require("../models/Stock");
 const Sale = require("../models/Sale");
+const Registration = require("../models/Registration");
 
 const {
   issalesattendant,

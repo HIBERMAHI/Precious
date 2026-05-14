@@ -7,24 +7,31 @@ const registrationSchema = new mongoose.Schema({
   fullname: {
     type: String,
     trim: true,
-    required:true,
+    required: true,
   },
   email: {
     type: String,
     trim: true,
     required: true,
-    unique:true,
+    unique: true,
+    match: [/^\S+@\S+\.\S+$/, "Please use a valid email address"],
   },
   phone: {
     type: String,
-    required:true,
-    match:[/^\+256[0-9]{9}$/,"please use the format +256xxxxxxx"]
+    required: true,
+    match: [
+      /^(07[0-9]{8}|\+256[0-9]{9})$/,
+      "Phone must be 10 digits starting with 07 or 13 characters starting with +256",
+    ],
   },
   nin: {
     type: String,
     trim: true,
     unique: true,
-    match:[/^[A-Z0-9]{14}$/,"NIN  must be 14 characters"]
+    match: [
+      /^[A-Z0-9]{14}$/,
+      "NIN must be exactly 14 characters (Numbers and Uppercase letters)",
+    ],
   },
   role: {
     type: String,

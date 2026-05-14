@@ -12,7 +12,6 @@ const {
 } = require("../middleware/auth");
 const { transformAuthInfo } = require("passport");
 
-
 // get index page
 
 router.get("/", (req, res) => {
@@ -49,42 +48,65 @@ router.get("/logout", (req, res, next) => {
   });
 });
 
-router.get("/register", (req, res) => {
+router.get("/register", isadmin, (req, res) => {
   res.render("register");
 });
 
-router.post("/register", async (req, res) => {
+router.post("/register", isadmin, async (req, res) => {
+  const { fullname, email, phone, nin, role, password } = req.body;
+
   try {
-    const { fullname, email, phone, nin, role, password } = req.body;
-    let user = await Registration.findOne({ email: email.toLowerCase() });
-    if (user) {
-      return res.render("register", { email: "error is already registered" });
+    // 1. Password Validation (6-14 characters)
+    if (!password || password.length < 6 || password.length > 14) {
+      return res.render("register", {
+        error: "Password must be between 6 and 14 characters long.",
+        // We do NOT pass back the body, so the form returns fresh/empty
+      });
     }
-    let cleanPhone = phone.replace(/\s/g, "");
-    if (!cleanPhone.startsWith("+")) {
-      cleanPhone = "+" + cleanPhone;
+
+    // 2. Formatting Data for consistency
+    const cleanEmail = email.toLowerCase().trim();
+    const cleanNIN = nin.toUpperCase().trim();
+
+    // 3. Duplicate Email Check (Manual check before Register)
+    let existingUser = await Registration.findOne({ email: cleanEmail });
+    if (existingUser) {
+      return res.render("register", {
+        error: "A user with this email already exists.",
+      });
     }
+
+    // 4. Create User Instance
+    // Note: Phone and NIN will be validated against the model's match regex during .register()
     const newuser = new Registration({
       fullname,
-      email: email.toLowerCase(),
-      phone:cleanPhone,
-      nin: nin.toUpperCase(),
+      email: cleanEmail,
+      phone, // Model regex handles the 07... or +256... check
+      nin: cleanNIN,
       role,
     });
-    console.log(newuser);
-    await Registration.register(newuser, req.body.password, (err) => {
-      if (err) {
-        return res.redirect("/register");
-      }
-    });
+
+    // 5. Register with Passport
+    // We use the promise-based version (await) instead of a callback for cleaner code
+    await Registration.register(newuser, password);
+
     res.redirect("/login");
   } catch (error) {
-    console.error(error);
-    res.render("register", { error: error.message });
+    console.error("Registration Error:", error);
+
+    let errorMessage = "Registration failed. Please try again.";
+
+    // Catching Model Match Errors (Phone/NIN regex failures)
+    if (error.name === "ValidationError") {
+      errorMessage = Object.values(error.errors).message;
+    }
+    // Catching Duplicate NIN (MongoDB error code 11000)
+    else if (error.code === 11000) {
+      errorMessage = "This NIN is already registered to another account.";
+    }
+
+    res.render("register", { error: errorMessage });
   }
 });
-
-
-
 
 module.exports = router;

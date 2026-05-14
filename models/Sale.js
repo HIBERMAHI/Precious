@@ -8,7 +8,7 @@ const SaleSchema = new mongoose.Schema({
   phone:{
     type: String,
     required:true,
-    match:[/^\+256[0-9]{9}$/,"please use the format +256xxxxxxx"]
+    match:[/^(?:\+256| 07)[0-9]{8,9}$/,"please use the format +256 | 07 "]
   },
   
   productName: {

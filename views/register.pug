@@ -1,44 +1,104 @@
 doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title Sign Up - Nyondo
-  link(rel='stylesheet' href='/css/login.css')
-.card
-  img.logo(src='/images/logo.png' width='55' height='55' alt='logo')
-  h2 Create Account
-  p.sub Register to access Nyondo Stock System
-  form(action='/register' method='post')
-    .grid
-      // FULL NAME
-      .field
-        label Full Name
-        input(type='text' name='fullname' placeholder='Enter full name' required='')
-      // EMAIL
-      .field
-        label Email
-        input(type='email' name='email' placeholder='Enter email' required='')
-      // PHONE
-      .field
-        label Phone Number
-        input(type='number' name='phone' placeholder='Enter phone number' required='')
-      // NIN
-      .field
-        label NIN
-        input(type='text' name='nin' placeholder='Enter NIN' required='')
-      // ROLE
-      .field.full
-        label Role
-        select(name='role' required='')
-          option(value='') Select Role
-          option(value='admin') Admin
-          option(value='storemanager') Store Manager
-          option(value='salesattendant') Sales Attendant
-      // PASSWORD
-      .field.full
-        label Password
-        input(type='password' name='password' placeholder='Enter password' required='')
-    button(type='submit') Create Account
-    .login-link
-      | Already have an account? 
-      a(href='/login') Login
+html(lang="en")
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Sign Up - Nyondo Stock System
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
+    link(rel='stylesheet' href='/css/login.css')
+  
+  body
+    .page-wrapper
+      .card
+        .header
+          img.logo(src='/images/logo.png' width='60' height='60' alt='Nyondo Logo')
+          h2 Create Account
+          p.subtitle Fill in the details to register a new user
+        
+        if error
+          .error-banner
+            i.fas.fa-exclamation-circle
+            span #{error}
+
+        form(action='/register' method='post' class='registration-form')
+          .form-grid
+            .form-field
+              label Full Name
+              .input-group
+                i.fas.fa-user.field-icon
+                input(type='text' name='fullname' placeholder='John Doe' required)
+            
+            .form-field
+              label Email Address
+              .input-group
+                i.fas.fa-envelope.field-icon
+                input(type='email' name='email' placeholder='example@gmail.com' required)
+            
+            .form-field
+              label Phone Number
+              .input-group
+                i.fas.fa-phone.field-icon
+                //- Updated pattern to support both 07 and +256 as per your model
+                input(type='text' name='phone' placeholder='07... or +256...' required pattern='^(07[0-9]{8}|\\+256[0-9]{9})$')
+            
+            .form-field
+              label NIN
+              .input-group
+                i.fas.fa-id-card.field-icon
+                input(type='text' name='nin' placeholder='14 Characters' required minlength='14' maxlength='14')
+            
+            .form-field.full-width
+              label System Role
+              .input-group
+                i.fas.fa-briefcase.field-icon
+                select(name='role' required)
+                  option(value='' disabled selected) Choose a role...
+                  option(value='admin') Admin
+                  option(value='storemanager') Store Manager
+                  option(value='salesattendant') Sales Attendant
+            
+            .form-field.full-width
+              label Password
+              .input-group
+                i.fas.fa-lock.field-icon
+                input#password(type='password' name='password' placeholder='6-14 characters' required minlength='6' maxlength='14')
+                i#togglePassword.fas.fa-eye.toggle-icon
+          
+          button(type='submit' class='submit-btn') Create Account
+          
+          .footer-links
+            p Already have an account? 
+              a(href='/login') Login here
+
+    script.
+      document.addEventListener('DOMContentLoaded', () => {
+        // 1. Password Toggle Logic
+        const toggleBtn = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#password');
+
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            toggleBtn.classList.toggle('fa-eye');
+            toggleBtn.classList.toggle('fa-eye-slash');
+          });
+        }
+
+        // 2. Hide Error Logic
+        const errorBanner = document.querySelector('.error-banner');
+        // Select all inputs and the select dropdown
+        const inputs = document.querySelectorAll('input, select');
+
+        if (errorBanner) {
+          inputs.forEach(element => {
+            // Listen for typing (input) or dropdown selection (change)
+            element.addEventListener('input', () => {
+              errorBanner.style.display = 'none';
+            });
+            element.addEventListener('change', () => {
+              errorBanner.style.display = 'none';
+            });
+          });
+        }
+      });
