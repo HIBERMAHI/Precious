@@ -1,152 +1,394 @@
-/* Styling for Nyondo Credit Registration */
+/* ================= RESET ================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-family: "Inter", "Segoe UI", sans-serif;
 }
 
+/* ================= BODY ================= */
 body {
-    background-color: #1a2b3c; /* Deep Professional Blue */
-    min-height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+    background: #f1f5f9;
+    color: #1e293b;
 }
 
+/* ================= SIDEBAR ================= */
+.sidebar {
+    width: 240px;
+    background: #020617;
+    color: white;
+
+    position: fixed;
+    height: 100vh;
+
+    padding: 25px 18px;
+
+    overflow-y: auto;
+}
+
+/* LOGO */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: #facc15;
+
+    font-size: 1.6rem;
+    font-weight: 800;
+
+    margin-bottom: 10px;
+}
+
+
+
+/* SIDEBAR LINKS */
+.sidebar ul {
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+    margin: 16px 0;
+
+    color: #cbd5e1;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: 0.3s ease;
+}
+
+.sidebar ul li a:hover{
+     background: rgba(250, 204, 21, 0.12);
+  color: #facc15;
+  transform: translateX(4px);
+}
+
+/* ================= MAIN CONTENT ================= */
+.main-content {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+
+    padding: 30px;
+}
+
+/* ================= FORM CONTAINER ================= */
 .container {
     width: 100%;
-    max-width: 650px;
+    margin-bottom: 35px;
 }
 
+/* ================= FORM BOX ================= */
 .register-box {
-    background: #ffffff;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    background: white;
+
+    border-radius: 22px;
+
+    padding: 32px;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,0.08);
 }
 
+/* ================= TOP ================= */
 .top {
     text-align: center;
     margin-bottom: 30px;
 }
 
-.top i {
-    font-size: 40px;
-    color: #1a2b3c;
-    margin-bottom: 10px;
-}
+
 
 .top h1 {
-    color: #1a2b3c;
-    font-size: 26px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-size: 28px;
+    color: #020617;
+    margin-bottom: 6px;
 }
 
 .top p {
-    color: #666;
-    font-size: 14px;
+    color: #0b3878;
+    font-size: 1.6rem;
+    font-weight: bold;
 }
 
-/* Grid Layout for a cleaner look */
+/* ================= GRID ================= */
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
 }
 
 .input-group.full-width {
     grid-column: span 2;
 }
 
+/* ================= LABELS ================= */
 .input-group label {
     display: block;
+
     margin-bottom: 8px;
+
+    color: #334155;
+
     font-size: 13px;
-    font-weight: 600;
-    color: #444;
+    font-weight: 700;
 }
 
+/* ================= INPUT FIELD ================= */
 .input-field {
     position: relative;
     display: flex;
     align-items: center;
 }
 
+/* LEFT ICON */
 .input-field i:not(.toggle-eye) {
     position: absolute;
-    left: 12px;
-    color: #1a2b3c;
+    left: 14px;
+
+    color: #64748b;
     font-size: 14px;
 }
 
+/* ================= INPUTS ================= */
 .input-field input {
     width: 100%;
-    padding: 12px 15px 12px 40px;
-    border: 1.5px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: all 0.3s ease;
+    height: 52px;
+
+    border-radius: 14px;
+
+    border: 1.5px solid #dbe4ee;
+
+    background: #f8fafc;
+
+    padding: 0 45px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: 0.3s ease;
 }
 
 .input-field input:focus {
     outline: none;
-    border-color: #1a2b3c;
-    box-shadow: 0 0 0 3px rgba(26, 43, 60, 0.1);
+
+    border-color: #38bdf8;
+
+    background: white;
+
+    box-shadow:
+        0 0 0 4px rgba(56,189,248,0.12);
 }
 
-/* Password Toggle Icon */
+/* ================= TOGGLE EYE ================= */
 .toggle-eye {
     position: absolute;
-    right: 12px;
+    right: 14px;
+
+    color: #94a3b8;
+
     cursor: pointer;
-    color: #9ca3af;
-    transition: color 0.2s;
 }
 
-.toggle-eye:hover {
-    color: #1a2b3c;
-}
-
-/* Register Button */
+/* ================= BUTTON ================= */
 .btn {
     width: 100%;
-    background-color: #1a2b3c;
-    color: white;
-    padding: 15px;
+    height: 55px;
+
+    margin-top: 28px;
+
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 15px;
+
+    background: linear-gradient(
+        135deg,
+        #020617,
+        #1e293b
+    );
+
+    color: white;
+
+    font-size: 15px;
     font-weight: 700;
-    cursor: pointer;
-    margin-top: 30px;
+
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     gap: 10px;
-    transition: background 0.3s ease, transform 0.2s;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+.btn i {
+    color: #38bdf8;
 }
 
 .btn:hover {
-    background-color: #2c3e50;
     transform: translateY(-2px);
+
+    background: linear-gradient(
+        135deg,
+        #0f172a,
+        #334155
+    );
 }
 
-.btn:active {
-    transform: translateY(0);
+/* ================= TABLE SECTION ================= */
+.customer-table {
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.05);
 }
 
-/* Responsive adjustment */
-@media (max-width: 600px) {
+/* TABLE HEADER */
+.table-header {
+    margin-bottom: 20px;
+}
+
+.table-header h2 {
+    color: #0c1c67;
+    font-size: 22px;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* TABLE HEAD */
+thead {
+    background: #020617;
+    border-radius: 10px;
+}
+
+thead th {
+    color: white;
+
+    padding: 15px 10px;
+
+    text-align: center;
+
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 5px;
+}
+
+/* TABLE BODY */
+tbody td {
+    padding: 15px 10px;
+
+    text-align: center;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    font-size: 13px;
+}
+
+/* ROW HOVER */
+tbody tr {
+    transition: 0.3s ease;
+}
+
+tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* EMPTY */
+.empty {
+    padding: 25px;
+    color: #64748b;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* EDIT */
+.edit-btn {
+    width: 35px;
+    height: 35px;
+
+    border-radius: 8px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-decoration: none;
+
+    background: #dbeafe;
+    color: #2563eb;
+
+    transition: 0.3s ease;
+}
+
+.edit-btn:hover {
+    background: #2563eb;
+    color: white;
+}
+
+/* DELETE */
+.delete-btn {
+    width: 35px;
+    height: 35px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #fee2e2;
+    color: #dc2626;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+.delete-btn:hover {
+    background: #dc2626;
+    color: white;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+
     .grid-container {
         grid-template-columns: 1fr;
     }
-    .input-group.full-width, .input-group {
+
+    .input-group.full-width {
         grid-column: span 1;
     }
-    .register-box {
-        padding: 25px;
+
+    .main-content {
+        padding: 20px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
     }
 }

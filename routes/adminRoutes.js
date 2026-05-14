@@ -5,6 +5,7 @@ const Sale = require("../models/Sale");
 const Regicredit = require("../models/Regicredit");
 const Deposit = require("../models/Deposit");
 const Registration = require("../models/Registration");
+const { isadmin } = require("../middleware/auth");
 
 // ==========================================
 // 1. Dashboard Stats Route (CORRECTED)
@@ -49,8 +50,14 @@ router.get("/admindash", async (req, res) => {
 });
 
 // 2. Credit Customer Registration (GET)
-router.get("/regicredit", (req, res) => {
-  res.render("regicredit");
+router.get("/regicredit", isadmin, async (req, res) => {
+  try {
+    const customers = await Regicredit.find().sort({ _id: -1 });;
+    res.render("regicredit", { customers });
+  } catch (error) {
+    console.error(error.mesage);
+    res.status(400).send("Oooops customers not found");
+  }
 });
 
 // 3. Credit Customer Registration (POST) - FIXED VALIDATION & SYNTAX
@@ -118,22 +125,67 @@ router.post("/regicredit", async (req, res) => {
     if (error.code === 11000) {
       return res.render("regicredit", {
         error: "NIN or Email already exists.",
-        user: req.body,
+        // user: req.body,
       });
     }
 
     if (error.name === "UserExistsError") {
       return res.render("regicredit", {
         error: "This email is already registered.",
-        user: req.body,
+        // user: req.body,
       });
     }
 
     res.render("regicredit", {
       error: "Registration failed: " + error.message,
-      user: req.body,
+      // user: req.body,
     });
   }
+});
+
+// editing and deleting regicredit
+
+router.get("/credit/edit/:id", async (req, res) => {
+  try {
+    // Use 'Regicredit' because that is what you imported at the top
+    const customer = await Regicredit.findById(req.params.id);
+    res.render("editcredit", { customer, error: req.query.error });
+  } catch (error) {
+    res.redirect("/regicredit?error=Customer+not+found");
+  }
+});
+
+router.post('/credit/update/:id', async (req, res) => {
+    try {
+        const { fullName, phoneNumber, address, distanceFromStore, password } = req.body;
+
+        // Validation: Ensure password length matches your rules
+        if (password.length < 6 || password.length > 14) {
+            return res.redirect(`/credit/edit/${req.params.id}?error=Password+must+be+6-14+characters`);
+        }
+
+        await Regicredit.findByIdAndUpdate(req.params.id, {
+            fullName,
+            phoneNumber,
+            address,
+            distanceFromStore
+        });
+
+        res.redirect('/regicredit'); // Return to table after success
+    } catch (err) {
+        res.redirect(`/credit/edit/${req.params.id}?error=Update+failed`);
+    }
+});
+
+// --- 3. DELETE THE CUSTOMER ---
+// Triggered by the form inside your main table
+router.post('/credit/delete/:id', async (req, res) => {
+    try {
+        await Regicredit.findByIdAndDelete(req.params.id);
+        res.redirect('/regicredit');
+    } catch (err) {
+        res.redirect('/regicredit?error=Could+not+delete+customer');
+    }
 });
 
 // 4. Deposit Page
@@ -282,43 +334,6 @@ router.post("/deposit/delete/:id", async (req, res) => {
     res.redirect("/deposit");
   } catch (error) {
     res.status(500).send("Error deleting record: " + error.message);
-  }
-});
-
-// 10. Delete User
-router.post("/user/delete/:id", async (req, res) => {
-  try {
-    await Registration.findByIdAndDelete(req.params.id);
-    res.redirect("/admindash");
-  } catch (error) {
-    console.error("Delete Error:", error.message);
-    res.status(500).send("Unable to delete user");
-  }
-});
-
-// 11. Edit User
-router.get("/user/update/:id", async (req, res) => {
-  try {
-    const user = await Registration.findById(req.params.id);
-    if (!user) return res.status(404).send("User not found");
-    res.render("editUser", { user });
-  } catch (error) {
-    res.status(500).send("Error fetching user details");
-  }
-});
-
-router.post("/user/update/:id", async (req, res) => {
-  try {
-    const { fullname, role, phone } = req.body;
-    await Registration.findByIdAndUpdate(req.params.id, {
-      fullname,
-      role,
-      phone,
-    });
-    res.redirect("/admindash");
-  } catch (error) {
-    console.error("Update Error:", error.message);
-    res.status(400).send("Update failed: " + error.message);
   }
 });
 

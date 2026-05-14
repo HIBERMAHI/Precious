@@ -85,7 +85,6 @@ router.post("/register", isadmin, async (req, res) => {
       nin: cleanNIN,
       role,
     });
-
     // 5. Register with Passport
     // We use the promise-based version (await) instead of a callback for cleaner code
     await Registration.register(newuser, password);
@@ -106,6 +105,69 @@ router.post("/register", isadmin, async (req, res) => {
     }
 
     res.render("register", { error: errorMessage });
+  }
+});
+
+// editing and deleting 
+// ==========================================
+// 10. Edit User (GET) - Load the Edit Page
+// ==========================================
+router.get("/user/update/:id", async (req, res) => {
+  try {
+    const user = await Registration.findById(req.params.id);
+    if (!user) return res.status(404).send("User not found");
+    
+    // Ensure 'updateUser' matches your Pug filename
+    res.render("updateUser", { user }); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error fetching user details");
+  }
+});
+
+// ==========================================
+// 11. Update User (POST) - Save changes with Validation
+// ==========================================
+router.post("/user/update/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { phone, role } = req.body;
+
+    // Validation for Ugandan formats: +256... or 07...
+    const phoneRegex = /^(\+256|07)\d{8}$/;
+
+    if (!phoneRegex.test(phone)) {
+      // If validation fails, we find the user again to keep the Name/ID for the page
+      const user = await Registration.findById(userId);
+      return res.render("updateUser", { 
+        user, 
+        error: "Invalid phone! Use +256700000000 or 0700000000." 
+      });
+    }
+
+    // Update only the Phone and Role
+    await Registration.findByIdAndUpdate(userId, { phone, role });
+    
+    // Success - go back to the dashboard
+    res.redirect("/admindash");
+
+  } catch (err) {
+    console.error("Update Error:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// ==========================================
+// 12. Delete User (POST) - Triggered by Dashboard Form
+// ==========================================
+router.post("/user/delete/:id", async (req, res) => {
+  try {
+    // Finds the user by ID from the URL and removes them
+    await Registration.findByIdAndDelete(req.params.id);
+    res.redirect("/admindash");
+  } catch (err) {
+    console.error("Delete Error:", err);
+    res.status(500).send("Error deleting user");
   }
 });
 

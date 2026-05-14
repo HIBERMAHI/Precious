@@ -16,7 +16,7 @@ html
     .sidebar
 
       .logo
-        h2 ⚒ NYONDO ADMIN
+        h2 ⚒ NYONDO HARDWARE
 
       ul.nav
 
@@ -28,42 +28,23 @@ html
         li
           a(href='deposit')
             i.fas.fa-boxes
-            |   Inventory
+            |   Deposits
 
         li
           a(href='Supplier')
             i.fas.fa-cash-register
-            |   Sales
+            |   Suppliers
 
         li
-          a(href='addstock')
-            i.fas.fa-plus-circle
-            |   Add Stock
-
-        li
-          a(href='deposits')
+          a(href='regicredit')
             i.fas.fa-piggy-bank
             |   Deposits
-
-        li
-          a(href='/transport')
-            i.fas.fa-truck
-            |   Transport
-
-        li
-          a(href='/users')
-            i.fas.fa-users
-            |   Users
-
-        li
-          a(href='/reports')
-            i.fas.fa-chart-pie
-            |   Reports
 
         li
           a(href='logout')
             i.fas.fa-sign-out-alt
             |   Logout
+
     .main
 
       .topbar
@@ -117,13 +98,14 @@ html
           a.btn(href='regicredit')
             i.fas.fa-user-plus
             |   Register Credit Customer
+
       .section
 
         h2 User Management
 
-        button.btn
+        a.btn(href='register')
           i.fas.fa-user-plus
-          |   Add User
+          |            Add User
 
         table
           thead
@@ -141,13 +123,26 @@ html
                   td #{user.phone}
                   td
                     // Edit Link
-                    a(href=`/user/update/${user._id}` style="color: #007bff; margin-right: 15px;" title="Edit User")
+                    a(
+                      href=`/user/update/${user._id}`
+                      style="color: #007bff; margin-right: 15px;"
+                      title="Edit User"
+                    )
                       i.fas.fa-edit
-                    
+
                     // Delete Form
-                    form(method="POST" action=`/user/delete/${user._id}` style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?')")
-                      button(type="submit" style="background: none; border: none; color: #dc3545; cursor: pointer; padding: 0;")
+                    form(
+                      method="POST"
+                      action=`/user/delete/${user._id}`
+                      style="display:inline;"
+                      onsubmit="return confirm('Are you sure you want to delete this user?')"
+                    )
+                      button(
+                        type="submit"
+                        style="background: none; border: none; color: #dc3545; cursor: pointer; padding: 0;"
+                      )
                         i.fas.fa-trash
             else
               tr
-                td(colspan="4" style="text-align:center") No users found in database.
+                td(colspan="4" style="text-align:center")
+                  | No users found in database.

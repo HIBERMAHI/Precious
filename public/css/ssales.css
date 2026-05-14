@@ -17,7 +17,7 @@ body {
 /* SIDEBAR */
 .sidebar {
   width: 230px;
-  background: #020c24;
+  background: #02060f;
   color: white;
   padding: 20px;
   position: fixed;
@@ -27,13 +27,14 @@ body {
 .sidebar h2 {
   font-size: 22px;
   margin: 0 0 18px 20px;
-  color: rgb(224, 224, 27);
+  color:#facc15; ;
 }
 
 .sidebar p {
   font-size: 12px;
   color: #94a3b8;
-  margin-bottom: 20px;
+/* margin: 0 40px 20px 0; */
+
 }
 
 .sidebar a {
@@ -47,8 +48,9 @@ body {
 }
 
 .sidebar a:hover {
-  background-color: rgb(28, 206, 28);
-  color: white;
+  background: rgba(250, 204, 21, 0.12);
+  color: #facc15;
+  transform: translateX(4px);
 }
 
 /* MAIN */
@@ -167,17 +169,20 @@ body {
 }
 
 .link-box {
-  background: #06142b;
+  background: #081e41;
   color: white;
   text-decoration: none;
   padding: 12px;
   border-radius: 8px;
   text-align: center;
-  transition: 0.3s;
+   transition: all 0.3s ease;
 }
 
 .link-box:hover {
-  background: #2563eb;
+  background: #072d7f;
+  /* background: rgba(250, 204, 21, 0.12); */
+  /* color: #facc15; */
+  transform: translateX(4px);
 }
 
 /* RECENT SALES TABLE */

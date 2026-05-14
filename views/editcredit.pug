@@ -1,0 +1,124 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Update Customer - Nyondo Hardware
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css')
+    link(rel='stylesheet' href='/css/regicredit.css')
+    style.
+      .error-message {
+        background-color: #fce4e4;
+        border: 1px solid #fcc2c2;
+        color: #cc0033;
+        padding: 12px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+      }
+      .hidden { display: none !important; }
+
+  body
+    .sidebar
+      .logo: span ⚒ NYONDO HARDWARE
+      ul
+        li: a(href='/dashboard'): i.fas.fa-home | Dashboard
+        li: a(href='/regicredit').active: i.fas.fa-user-edit | Edit Customer
+
+    .main-content
+      .container
+        .register-box
+          .top
+            p Update Customer Profile: #{customer.fullName}
+          
+          //- Error Box: Displays message from server if validation fails
+          if error
+            #errorBox.error-message
+              i.fas.fa-circle-exclamation
+              span #{error}
+
+          form#editForm(action=`/credit/update/${customer._id}` method='post')
+            .grid-container
+              
+              .input-group
+                label Full Names
+                .input-field
+                  i.fas.fa-user
+                  input(type='text' name='fullName' value=customer.fullName required)
+
+              .input-group
+                label Phone Number
+                .input-field
+                  i.fas.fa-phone
+                  input(type='text' name='phoneNumber' value=customer.phoneNumber required)
+
+              .input-group
+                label Address
+                .input-field
+                  i.fas.fa-location-dot
+                  input(type='text' name='address' value=customer.address required)
+
+              .input-group
+                label Distance (KM)
+                .input-field
+                  i.fas.fa-truck-fast
+                  input(type='number' name='distanceFromStore' value=customer.distanceFromStore required min='1')
+
+              //- Identity/Auth fields (usually kept read-only or hidden during simple edits)
+              .input-group
+                label Email (Locked)
+                .input-field
+                  i.fas.fa-envelope
+                  input(type='email' value=customer.email disabled)
+              
+              .input-group
+                label NIN (Locked)
+                .input-field
+                  i.fas.fa-id-card
+                  input(type='text' value=customer.nin disabled)
+
+              .input-group.full-width
+                label Confirm Password to Save Changes
+                .input-field
+                  i.fas.fa-lock
+                  input#password(type='password' name='password' placeholder='Enter password to verify' required)
+                  i#togglePassword.fas.fa-eye.toggle-eye
+
+            button.btn(type='submit')
+              i.fas.fa-save
+              span Update Information
+
+    script.
+      const errorBox = document.getElementById('errorBox');
+      const allInputs = document.querySelectorAll('input');
+      const togglePassword = document.querySelector('#togglePassword');
+      const passwordField = document.querySelector('#password');
+
+      // 1. Password Visibility Toggle
+      togglePassword.addEventListener('click', function () {
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+      });
+
+      // 2. Hide error message as soon as customer starts typing
+      if (errorBox) {
+        allInputs.forEach(input => {
+          input.addEventListener('input', () => {
+            errorBox.classList.add('hidden');
+          }, { once: true });
+        });
+      }
+
+      // 3. Frontend Validation before submission
+      document.getElementById('editForm').addEventListener('submit', function(e) {
+        const pass = passwordField.value;
+        if (pass.length < 6 || pass.length > 14) {
+          e.preventDefault(); // STOP submission
+          alert("Password must be between 6 and 14 characters.");
+        }
+      });

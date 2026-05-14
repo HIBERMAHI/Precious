@@ -4,30 +4,51 @@ html
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
     title Update User - Nyondo
-    link(rel='stylesheet' href='/css/login.css')
+    link(rel='stylesheet' href='/css/edituer.css')
+    style.
+      .error-msg {
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+        display: #{error ? 'block' : 'none'};
+      }
   body
     .card
       img.logo(src='/images/logo.png' width='55' height='55' alt='logo')
       h2 Update User
       p.sub Modify account details for #{user.fullname}
       
+      // Error message container
+      #error-box.error-msg #{error}
+      
       form(action=`/user/update/${user._id}` method='post')
         .grid
-          // FULL NAME
+          // FULL NAME (Read-only)
           .field.full
             label Full Name
-            input(type='text' name='fullname' value=user.fullname required='')
+            input(type='text' name='fullname' value=user.fullname readonly style="background: #f9f9f9; cursor: not-allowed;")
           
-          // PHONE NUMBER
+          // PHONE NUMBER (Value logic removed)
           .field.full
             label Phone Number
-            input(type='text' name='phone' value=user.phone placeholder='+256...' required='')
-            small(style="color: #666; font-size: 0.8rem;") Format: +256700000000
+            input#phoneInput(
+              type='text' 
+              name='phone' 
+              placeholder='+256...' 
+              required
+              pattern="^(\\+256|07)\\d{8}$"
+              title="Phone must start with +256 or 07 followed by 8 digits"
+            )
+            small(style="color: #666; font-size: 0.8rem;") Format: +256700000000 or 0700000000
           
           // ROLE
           .field.full
             label Role
-            select(name='role' required='')
+            select#roleSelect(name='role' required='')
               option(value='admin' selected=user.role==='admin') Admin
               option(value='storemanager' selected=user.role==='storemanager') Store Manager
               option(value='salesattendant' selected=user.role==='salesattendant') Sales Attendant
@@ -35,3 +56,16 @@ html
         button(type='submit') Update Account
         .login-link
           a(href='/admindash' style="color: #666; text-decoration: none;") Cancel and Go Back
+
+    script.
+      const phoneInput = document.getElementById('phoneInput');
+      const roleSelect = document.getElementById('roleSelect');
+      const errorBox = document.getElementById('error-box');
+
+      const clearError = () => {
+        if (errorBox) errorBox.style.display = 'none';
+      };
+
+      // Hides error when user starts typing or changes role
+      phoneInput.addEventListener('input', clearError);
+      roleSelect.addEventListener('change', clearError);

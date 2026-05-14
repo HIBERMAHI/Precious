@@ -73,10 +73,7 @@ head
         label Distance (km)
         input(type='number' name='distance')
 
-      .form-group
-        label(for='transportFee') Transport Fee
-        input(type='number' name='transportFee' readonly='')
-
+      
       .form-group
         label Payment Method
         select(name='paymentMethod')
@@ -90,27 +87,20 @@ head
           option(value='completed') Completed
           option(value='pending') Pending
 
-      .form-group
-        label Total Amount
-        input(type='number' name='totalAmount' readonly='')
+      
 
       .button-group
         button.register-btn(type='submit')
           i.fas.fa-plus
           |   Register Sale
-
-        button.receipt-btn(type='button')
-          i.fas.fa-receipt
-          |   Issue Receipt
-
   // ================= RECENT SALES =================
   section.recent-sales
     h2 Recent Sales
     table
       thead
         tr
-          th C.Name
-          th P.Name
+          th Client
+          th Item
           th quantity
           th price
           th T.Fee

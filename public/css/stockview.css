@@ -18,7 +18,7 @@ body {
 .sidebar {
   width: 260px;
   height: 100vh;
-  background: #051029;
+  background: #010613;
   color: white;
   position: fixed;
   padding: 20px;
@@ -27,19 +27,19 @@ body {
 /* LOGO */
 .logo {
   text-align: center;
-  margin: 0  40px  25px  0;
+  margin: 0  53px  25px  0;
   padding-bottom: 15px;
   border-bottom: 1px solid #334155;
 }
 
 .logo h2 {
-  font-size: 1.5rem;
+  font-size: 1.34rem;
   color: #facc15;
   letter-spacing: 1px;
 }
 
 .logo p {
-  font-size: 1rem;
+  font-size: 0.6rem;
   color: #e4e8ec;
   margin-top: 10px;
 }
@@ -64,8 +64,9 @@ body {
 }
 
 .sidebar ul li a:hover {
-  background-color: rgb(29, 143, 29);
-  color: white;
+  background: rgba(250, 204, 21, 0.12);
+  color: #facc15;
+  transform: translateX(4px);
 }
 
 

@@ -1,0 +1,147 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #01080c; /* Soft grey-blue background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Card Container */
+.card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 450px;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+/* Header & Logo */
+.logo {
+    display: block;
+    margin: 0 auto 1.5rem;
+    object-fit: contain;
+}
+
+h2 {
+    color: #2c3e50;
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.sub {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Form Grid & Fields */
+.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.field label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #34495e;
+    margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dcdde1;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #2f3640;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+/* Read-only field styling */
+input[readonly] {
+    background-color: #f1f2f6 !important;
+    border-color: #dcdde1;
+    color: #7f8c8d;
+    cursor: not-allowed;
+}
+
+input:focus, 
+select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+small {
+    display: block;
+    margin-top: 0.4rem;
+}
+
+/* Submit Button */
+button[type="submit"] {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 14px;
+    background-color: #2c3e50; /* Professional hardware dark blue */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #1a252f;
+}
+
+button[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+/* Cancel Link */
+.login-link {
+    margin-top: 1.2rem;
+    text-align: center;
+}
+
+.login-link a {
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.login-link a:hover {
+    color: #e74c3c !important; /* Turns red to signal cancellation */
+    text-decoration: underline !important;
+}
+
+/* Error Box Styling */
+.error-msg {
+    text-align: center;
+    font-weight: 500;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

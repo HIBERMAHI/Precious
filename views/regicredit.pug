@@ -4,8 +4,10 @@ html(lang="en")
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
     title Credit Customer Registration - Nyondo
+
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css')
     link(rel='stylesheet' href='/css/regicredit.css')
+
     style.
       .error-message {
         background-color: #fce4e4;
@@ -19,93 +21,240 @@ html(lang="en")
         gap: 10px;
         font-weight: bold;
       }
+
       .hidden {
         display: none !important;
       }
 
   body
-    .container
-      .register-box
-        .top
-          i.fas.fa-user-plus
-          h1 Credit Registration
-          p Secure Customer Enrollment
-        
-        //- Added ID 'errorBox' to target it with JS
-        if error
-          #errorBox.error-message
-            i.fas.fa-circle-exclamation
-            span #{error}
-        
-        form(action='/regicredit' method='post')
-          .grid-container
-            .input-group
-              label Full Names
-              .input-field
-                i.fas.fa-user
-                input(type='text' name='fullName' placeholder='Enter full name' required)
-            
-            .input-group
-              label NIN (14 Characters)
-              .input-field
-                i.fas.fa-id-card
-                input(type='text' name='nin' placeholder='Exactly 14 characters' required minlength='14' maxlength='14')
-            
-            .input-group
-              label Phone (+256...)
-              .input-field
-                i.fas.fa-phone
-                input(type='text' name='phoneNumber' placeholder='+2567...' required)
-            
-            .input-group
-              label Address
-              .input-field
-                i.fas.fa-location-dot
-                input(type='text' name='address' placeholder='e.g. Nansana, Kampala' required)
 
-            .input-group
-              label Distance (KM)
-              .input-field
-                i.fas.fa-truck-fast
-                input(type='number' name='distanceFromStore' placeholder='0' required min='1')
-            
-            .input-group
-              label Email (Username)
-              .input-field
-                i.fas.fa-envelope
-                input(type='email' name='email' placeholder='customer@gmail.com' required)
-            
-            .input-group.full-width
-              label Create Password
-              .input-field
-                i.fas.fa-lock
-                input#password(type='password' name='password' placeholder='Between 6  and 14 characters' required)
-                i#togglePassword.fas.fa-eye.toggle-eye
-          
-          button.btn(type='submit')
-            i.fas.fa-user-check
-            span Register Customer
+    // ================= SIDEBAR =================
+    .sidebar
+      .logo
+        span ⚒ NYONDO HARDWARE
+
+      ul
+        li
+          a(href='/dashboard')
+            i.fas.fa-home
+            | Dashboard
+
+        li
+          a(href='/newsale')
+            i.fas.fa-cash-register
+            | New Sale
+
+        li
+          a(href='/stockview')
+            i.fas.fa-boxes
+            | Stock View
+
+        li
+          a.active(href='/regicredit')
+            i.fas.fa-user-plus
+            | Credit Customers
+
+        li
+          a(href='/logout')
+            i.fas.fa-right-from-bracket
+            | Logout
+
+    // ================= MAIN =================
+    .main-content
+
+      // ================= FORM SECTION =================
+      .container
+        .register-box
+
+          .top
+            p Secure Customer Enrollment
+
+          if error
+            #errorBox.error-message
+              i.fas.fa-circle-exclamation
+              span #{error}
+
+          form(action='/regicredit' method='post')
+
+            .grid-container
+
+              .input-group
+                label Full Names
+                .input-field
+                  i.fas.fa-user
+                  input(
+                    type='text'
+                    name='fullName'
+                    placeholder='Enter full name'
+                    required
+                  )
+
+              .input-group
+                label NIN (14 Characters)
+                .input-field
+                  i.fas.fa-id-card
+                  input(
+                    type='text'
+                    name='nin'
+                    placeholder='Exactly 14 characters'
+                    required
+                    minlength='14'
+                    maxlength='14'
+                  )
+
+              .input-group
+                label Phone (+256...)
+                .input-field
+                  i.fas.fa-phone
+                  input(
+                    type='text'
+                    name='phoneNumber'
+                    placeholder='+2567...'
+                    required
+                  )
+
+              .input-group
+                label Address
+                .input-field
+                  i.fas.fa-location-dot
+                  input(
+                    type='text'
+                    name='address'
+                    placeholder='e.g. Nansana, Kampala'
+                    required
+                  )
+
+              .input-group
+                label Distance (KM)
+                .input-field
+                  i.fas.fa-truck-fast
+                  input(
+                    type='number'
+                    name='distanceFromStore'
+                    placeholder='0'
+                    required
+                    min='1'
+                  )
+
+              .input-group
+                label Email (Username)
+                .input-field
+                  i.fas.fa-envelope
+                  input(
+                    type='email'
+                    name='email'
+                    placeholder='customer@gmail.com'
+                    required
+                  )
+
+              .input-group.full-width
+                label Create Password
+
+                .input-field
+                  i.fas.fa-lock
+
+                  input#password(
+                    type='password'
+                    name='password'
+                    placeholder='Between 6 and 14 characters'
+                    required
+                  )
+
+                  i#togglePassword.fas.fa-eye.toggle-eye
+
+            button.btn(type='submit')
+              i.fas.fa-user-check
+              span Register Customer
+
+      // ================= TABLE SECTION =================
+      section.customer-table
+
+        .table-header
+          h2 Registered Credit Customers
+
+        table
+          thead
+            tr
+              th Full Name
+              th NIN
+              th Phone
+              th Address
+              th Distance
+              th Email
+              th Actions
+
+          tbody
+
+            if customers && customers.length > 0
+
+              each customer in customers
+
+                tr
+                  td #{customer.fullName}
+                  td #{customer.nin}
+                  td #{customer.phoneNumber}
+                  td #{customer.address}
+                  td #{customer.distanceFromStore} KM
+                  td #{customer.email}
+
+                  td
+                    .action-buttons
+
+                      a.edit-btn(
+                        href=`/credit/edit/${customer._id}`
+                      )
+                        i.fas.fa-pen
+
+                      form(
+                        action=`/credit/delete/${customer._id}`
+                        method='post'
+                        onsubmit='return confirm("Delete this customer?")'
+                      )
+
+                        button.delete-btn(type='submit')
+                          i.fas.fa-trash
+
+            else
+
+              tr
+                td.empty(colspan='7')
+                  | No registered credit customers yet
 
     script.
-      // 1. Password Toggle Logic
+      // PASSWORD TOGGLE
       const togglePassword = document.querySelector('#togglePassword');
       const passwordField = document.querySelector('#password');
 
       togglePassword.addEventListener('click', function () {
-        const isPassword = passwordField.getAttribute('type') === 'password';
-        passwordField.setAttribute('type', isPassword ? 'text' : 'password');
+
+        const isPassword =
+          passwordField.getAttribute('type') === 'password';
+
+        passwordField.setAttribute(
+          'type',
+          isPassword ? 'text' : 'password'
+        );
+
         this.classList.toggle('fa-eye');
         this.classList.toggle('fa-eye-slash');
       });
 
-      // 2. Logic to hide error message when user starts typing
+      // HIDE ERROR MESSAGE
       const errorBox = document.getElementById('errorBox');
-      const allInputs = document.querySelectorAll('input');
+
+      const allInputs =
+        document.querySelectorAll('input');
 
       if (errorBox) {
+
         allInputs.forEach(input => {
+
           input.addEventListener('input', () => {
+
             errorBox.classList.add('hidden');
-          }, { once: true }); // Runs only once per input to save resources
+
+          }, { once: true });
+
         });
+
       }
