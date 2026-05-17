@@ -1,102 +1,135 @@
 doctype html
-head
-  meta(charset='UTF-8')
-  title Nyondo Sales Dashboard
-  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
-  link(rel='stylesheet' href='/css/ssales.css')
-// SIDEBAR
-.sidebar
-  h2 &#x2692; NYONDO HARDWARE
-  p Sales Attendant Panel
-  a(href='ssales')
-    i.fas.fa-home
-    |  Dashboard
-  a(href='newsale')
-    i.fas.fa-cash-register
-    |  New Sale
-  a(href='stockview')
-    i.fas.fa-box
-    |  Stock View
-  a(href='logout')
-    i.fas.fa-sign-out-alt
-    |  Logout
-// MAIN
-.main
-  // TOP BAR + PROFILE
-  .top-section
-    .topbar
-      h1 Sales Dashboard
-      p Welcome back! Manage your daily sales efficiently.
-    // PROFILE CARD
-    .profile-card
-      .avatar
-        i.fas.fa-user
-      .profile-info
-        h3 Sales Attendant
-        p John Doe
-        span Active
-  // SUMMARY CARDS (LOW STOCK REMOVED → 5 ITEMS LEFT)
-  section.cards
-    .card
-      i.fas.fa-money-bill-wave
-      h3 Today's Sales
-      p #{stats.salesRevenue.toLocaleString()} UGX
-    .card
-      i.fas.fa-receipt
-      h3 Transactions
-      p #{stats.transactions.toLocaleString()}
-    .card
-      i.fas.fa-boxes-stacked
-      h3 Items Sold
-      p #{stats.itemsSold.toLocaleString()} Items
-    .card
-      i.fas.fa-file-invoice
-      h3 Receipts
-      p #{stats.receipts.toLocaleString()} Receipts
-    
-  // QUICK LINKS
-  section.quick-links
-    h2 Quick Actions
-    .links
-      a.link-box(href='newsale')
-        i.fas.fa-plus
-        |  New Sale
-      a.link-box(href='stockview')
-        i.fas.fa-boxes
-        |  Check Stock
-      a.link-box(href='receipt')
-        i.fas.fa-receipt
-        |  View Receipts
-  // RECENT SALES
-  section.recent-sales
-    h2
-      i.fas.fa-clock
-      |  Recent Sales
-    table
-      thead
-        tr
-          th customerName
-          th productName
-          th quantity
-          th price
-          th PaymentMethod
-          th Status
-          th attendant 
-          th totalAmount
-          th Date
-      tbody
-        each sale in dbSales
-         tr
-            td #{sale.customerName}
-            td #{sale.productName ? sale.productName.productName : 'Item deleted'}
-            td #{sale.quantity}
-            td #{sale.price}
-            td #{sale.paymentMethod}
-            td #{sale.status}
-            td #{sale.attendant ? sale.attendant.fullname: 'Unknown'}
-            td #{sale.totalAmount} UGX
-             td #{new Date(sale.date).toLocaleString()}
-        else 
-          tr
-            td.text-center(colspan='11') No sales have been recorded yet
-          
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Nyondo Sales Dashboard
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+    link(rel='stylesheet' href='/css/ssales.css')
+
+  body
+
+    // ================= SIDEBAR =================
+    .sidebar
+      h2.sidebar-title ⚒ NYONDO HARDWARE
+      p.sidebar-subtitle Sales Attendant Panel
+
+      ul.sidebar-menu
+        li.menu-item
+          a.menu-link(href='ssales')
+            i.fas.fa-home
+            span Dashboard
+
+        li.menu-item
+          a.menu-link(href='newsale')
+            i.fas.fa-cash-register
+            span New Sale
+
+        li.menu-item
+          a.menu-link(href='stockview')
+            i.fas.fa-box
+            span Stock View
+
+        li.menu-item
+          a.menu-link.logout-link(href='logout')
+            i.fas.fa-sign-out-alt
+            span Logout
+
+    // ================= MAIN =================
+    .main
+
+      // ================= TOP SECTION =================
+      .top-section
+        .topbar
+          h1.dashboard-heading Sales Dashboard
+          p.dashboard-subtext Welcome back! Manage your daily sales efficiently.
+
+        .profile-card
+          .avatar
+            i.fas.fa-user
+          .profile-info
+            h3.profile-role Sales Attendant
+            p.profile-name John Doe
+            span.profile-status Active
+
+      // ================= SUMMARY CARDS =================
+      section.cards-container
+        .stat-card.revenue-card
+          i.fas.fa-money-bill-wave.card-icon
+          h3.card-title Today's Sales
+          p.card-value #{stats.salesRevenue.toLocaleString()} UGX
+
+        .stat-card.trans-card
+          i.fas.fa-receipt.card-icon
+          h3.card-title Transactions
+          p.card-value #{stats.transactions.toLocaleString()}
+
+        .stat-card.sold-card
+          i.fas.fa-boxes-stacked.card-icon
+          h3.card-title Items Sold
+          p.card-value #{stats.itemsSold.toLocaleString()} Items
+
+        .stat-card.receipts-card
+          i.fas.fa-file-invoice.card-icon
+          h3.card-title Receipts
+          p.card-value #{stats.receipts.toLocaleString()} Receipts
+
+      // ================= QUICK LINKS =================
+      section.quick-actions-section
+        h2.section-heading Quick Actions
+
+        .links-grid
+          a.action-link-box(href='newsale')
+            i.fas.fa-plus
+            span New Sale
+
+          a.action-link-box(href='stockview')
+            i.fas.fa-boxes
+            span Check Stock
+
+      // ================= RECENT SALES =================
+      section.recent-sales-section
+        h2.section-heading
+          i.fas.fa-clock.heading-icon
+          span Recent Sales
+
+        .table-responsive-wrapper
+          table.sales-data-table
+            thead
+              tr
+                th Customer
+                th Items Detailed Summary
+                th Payment Method
+                th Status
+                th Attendant
+                th Total Amount
+                th Date
+
+            tbody
+              if dbSales && dbSales.length
+                each sale in dbSales
+                  tr.table-row
+                    td.customer-cell #{sale.customerName}
+
+                    // ================= UNIFIED MULTI-ITEM CELL =================
+                    td.summary-cell
+                      if sale.items && sale.items.length > 0
+                        .item-summary-card
+                          each item in sale.items
+                            .item-detail-row
+                              span.item-name #{item.productName ? item.productName.productName : 'Item deleted'}
+                              span.item-qty-badge [x#{item.quantity}]
+                              span.item-unit-price #{item.price ? item.price.toLocaleString() : '0'} UGX
+                      else
+                        span.no-items-fallback No items listed
+
+                    td.payment-cell #{sale.paymentMethod || 'N/A'}
+                    td.status-cell
+                      span.status-badge(class=sale.status) #{sale.status || 'completed'}
+                    td.attendant-cell #{sale.attendant ? sale.attendant.fullname : 'Unknown'}
+                    td.amount-cell #{sale.totalAmount.toLocaleString()} UGX
+                    td.date-cell #{new Date(sale.date).toLocaleString()}
+
+              else
+                tr.empty-table-row
+                  td.text-center-fallback(colspan='7') No sales have been recorded yet

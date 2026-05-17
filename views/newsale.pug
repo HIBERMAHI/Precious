@@ -1,163 +1,258 @@
 doctype html
-head
-  meta(charset='UTF-8')
-  title Nyondo Sales
-  link(rel='stylesheet' href='/css/newsale.css')
-  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+html
+  head
+    meta(charset='UTF-8')
+    title Nyondo Sales
+    link(rel='stylesheet' href='/css/newsale.css')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
 
-// SIDEBAR
-.sidebar
-  .logo
-    | ⚒ NYONDO HARDWARE
-  ul
-    li
-      a(href='ssales')
-        i.fas.fa-home
-        |   Dashboard
-    li
-      a(href='newsale')
-        i.fas.fa-cash-register
-        |   New Sale
-    li
-      a(href='stockview')
-        i.fas.fa-box
-        |   Stock View
-    li
-      a(href='logout')
-        i.fas.fa-sign-out-alt
-        |   Logout
+  body
+    // ================= SIDEBAR =================
+    .sidebar
+      .logo
+        | ⚒ NYONDO HARDWARE
+      ul
+        li
+          a(href='ssales')
+            i.fas.fa-home
+            |   Dashboard
+        li
+          a(href='newsale').active
+            i.fas.fa-cash-register
+            |   New Sale
+        li
+          a(href='stockview')
+            i.fas.fa-box
+            |   Stock View
+        li
+          a(href='logout')
+            i.fas.fa-sign-out-alt
+            |   Logout
 
-// MAIN
-.main
-  h1 Sales Management
+    // ================= MAIN CONTENT =================
+    .main
+      h1 Sales Management
 
-  // ================= NEW SALE =================
-  section.sale-form
-    h2 Register New Sale
+      // ================= NEW SALE FORM CARD =================
+      section.sale-form-card
+        h2.form-title Register New Sale
 
-    if error
-      p#error-msg(style="color: white; background-color: #d9534f; padding: 12px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; text-align: center; border: 1px solid #b94a48;") #{error}
+        // Global Alert Message Block
+        if error
+          p#error-msg(style="color: white; background-color: #d9534f; padding: 12px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; text-align: center; border: 1px solid #b94a48;") #{error}
 
-    form(action='/newsale' method='post')
-      .form-group
-        label Customer Name
-        input(type='text' name='customerName')
-
-      .form-group
-        label Phone Number
-        input(type='text' name='phone')
-
-      .form-group
-        label Product Name
-        select(name='productName' required)
-          option(value='' disabled selected) Select product
-          each product in items
-            option(value=product._id)
-              | #{product.productName} (quantity: #{product.quantity} | price:#{product.sellingPrice} UGX)
-
-      .form-group
-        label Quantity
-        input(type='number' name='quantity' required='' min='1' )
-
-      .form-group
-        label Price (UGX)
-        input(type='number' name='price' required='' )
-
-      .form-group
-        label Delivery Option
-        select(name='deliveryOption')
-          option(value='pickup') Pickup
-          option(value='delivery') Delivery
-
-      .form-group
-        label Distance (km)
-        input(type='number' name='distance')
-
-      
-      .form-group
-        label Payment Method
-        select(name='paymentMethod')
-          option(value='cash') Cash
-          option(value='mobile') Mobile Money
-          option(value='bank') Bank
-
-      .form-group
-        label Status
-        select(name='status' required)
-          option(value='completed') Completed
-          option(value='pending') Pending
-
-      
-
-      .button-group
-        button.register-btn(type='submit')
-          i.fas.fa-plus
-          |   Register Sale
-  // ================= RECENT SALES =================
-  section.recent-sales
-    h2 Recent Sales
-    table
-      thead
-        tr
-          th Client
-          th Item
-          th quantity
-          th price
-          th T.Fee
-          th P.Method
-          th status
-          th T.Amount
-          th attendant
-          th date
-          if user.role === "salesattendant" || user.role === "admin"
-            th Actions
-      tbody
-        if dbSales && dbSales.length > 0
-          each sale in dbSales
-            tr
-              td #{sale.customerName}
-              td #{sale.productName ? sale.productName.productName : 'Item deleted'}
-              td #{sale.quantity}
-              td #{sale.price ? sale.price.toLocaleString() : '0'}
-              td #{sale.transportFee ? sale.transportFee.toLocaleString() : '0'}
-              td #{sale.paymentMethod}
-              td #{sale.status}
-              td #{sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'}
-              td #{sale.attendant ? sale.attendant.fullname : 'unknown'}
-              td #{new Date(sale.date).toLocaleString()}
-              if user.role === "salesattendant" || user.role === "admin"
-                td
-                  span.action-btns
-                    //- NEW RECEIPT BUTTON
-                    a.btn.btn-sm.btn-outline-primary(href=`/receipt/${sale._id}` title="View Receipt" style="margin-right: 5px;")
-                      i.fas.fa-file-invoice
-                    
-                    //- EDIT BUTTON
-                    a.btn.btn-sm-outline-warning(href=`/sale/edit/${sale._id}`)
-                      i.fas.fa-edit
-                    
-                    //- DELETE BUTTON
-                    form(action=`/delete/${sale._id}` method='post' onsubmit='return confirm("Are you sure you want to delete this sale")' style='display:inline;')
-                      button.btn.btn-sm.btn-outline-danger(type='submit')
-                        i.fas.fa-trash-alt
-        else
-          tr
-            td.text-center(colspan='11') No sales have been recorded yet
-
-  script.
-    document.addEventListener('DOMContentLoaded', () => {
-      const errorMsg = document.getElementById('error-msg');
-      const allInputs = document.querySelectorAll('input, select');
-
-      if (errorMsg) {
-        allInputs.forEach(element => {
-          element.addEventListener('input', () => {
-            errorMsg.style.display = 'none';
-          }, { once: true });
+        form(action='/newsale' method='post')
           
-          element.addEventListener('change', () => {
-            errorMsg.style.display = 'none';
-          }, { once: true });
+          // Customer Details Layer
+          .form-grid
+            .form-group
+              label Customer Name
+              input.form-input(
+                type='text' 
+                name='customerName' 
+                placeholder='Enter client name'
+                required
+              )
+
+            .form-group
+              label Phone Number
+              input.form-input(
+                type='text' 
+                name='phone' 
+                placeholder='07... / +256...'
+                required
+              )
+
+            .form-group
+              label Delivery Option
+              select.form-input(name='deliveryOption' required)
+                option(value='pickup' selected) Pickup
+                option(value='delivery') Delivery
+
+            .form-group
+              label Distance (km)
+              input.form-input(
+                type='number' 
+                name='distance' 
+                placeholder='0'
+                min='0'
+                value='0'
+              )
+
+          hr(style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;")
+
+          // Multi-Item Section Injection Layer
+          .items-section
+            .items-header
+              h3 Sale Items
+              button.add-item-btn(type='button' onclick='addItemRow()')
+                i.fas.fa-plus
+                |   Add Item Row
+
+            .items-container#items-container
+              .item-row
+                .form-group
+                  label Product Name
+                  select.form-input(name='productName' required)
+                    option(value='' disabled selected) Select product
+                    if items && items.length > 0
+                      each product in items
+                        option(value=product._id) #{product.productName} (Qty: #{product.quantity} | #{product.sellingPrice} UGX)
+
+                .form-group
+                  label Quantity
+                  input.form-input(type='number' name='quantity' required min='1' value='1')
+
+                .form-group
+                  label Price (UGX)
+                  input.form-input(type='number' name='price' required placeholder='Enter unit price')
+
+                button.remove-btn(type='button' onclick='removeItemRow(this)')
+                  i.fas.fa-trash-alt
+
+          hr(style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;")
+
+          // Sale Status Conditions
+          .form-grid
+            .form-group
+              label Payment Method
+              select.form-input(name='paymentMethod' required)
+                option(value='cash' selected) Cash
+                option(value='mobile') Mobile Money
+                option(value='bank') Bank
+
+            .form-group
+              label Status
+              select.form-input(name='status' required)
+                option(value='completed' selected) Completed
+                option(value='pending') Pending
+
+          .button-group
+            button.register-btn(type='submit')
+              i.fas.fa-plus
+              |   Register Sale
+
+      // ================= RECENT SALES TABLE CARD =================
+      section.recent-sales-card
+        h2.sales-title Recent Sales
+        table
+          thead
+            tr
+              th Client
+              th Items Summary
+              th Qty
+              th P.Method
+              th Status
+              th T.Fee
+              th T.Amount
+              th Attendant
+              th Date
+              if user && (user.role === "salesattendant" || user.role === "admin")
+                th Actions
+          tbody
+            if dbSales && dbSales.length > 0
+              each sale in dbSales
+                tr
+                  td #{sale.customerName}
+                  
+                  // ================= PRODUCT COLUMN =================
+                  td(style="text-align: left; padding-left: 10px;")
+                    if sale.items && sale.items.length > 0
+                      ul(style="list-style: none; padding: 0; margin: 0; font-size: 12px;")
+                        each subItem in sale.items
+                          li(style="font-weight: 600; text-transform: uppercase; color: #1e293b; margin-bottom: 4px;")
+                            | #{subItem.productName ? subItem.productName.productName : 'Item deleted'}
+                    else
+                      span(style="color: #94a3b8;") No items specified
+                  
+                  // ================= NEW SEPARATE QUANTITY COLUMN =================
+                  td(style="text-align: center;")
+                    if sale.items && sale.items.length > 0
+                      ul(style="list-style: none; padding: 0; margin: 0; font-size: 12px;")
+                        each subItem in sale.items
+                          li(style="font-weight: 600; color: #475569; margin-bottom: 4px;")
+                            | #{subItem.quantity}
+                    else
+                      span(style="color: #94a3b8;") -
+
+                  td #{sale.paymentMethod}
+                  td
+                    span.status-badge(class=sale.status) #{sale.status}
+                  td #{sale.transportFee ? sale.transportFee.toLocaleString() : '0'}
+                  td(style="font-weight: 700;") #{sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'}
+                  td #{sale.attendant ? sale.attendant.fullname : 'unknown'}
+                  td #{new Date(sale.date).toLocaleString()}
+                  
+                  if user && (user.role === "salesattendant" || user.role === "admin")
+                    td
+                      .actions-cell
+                        a.action-btn.receipt-btn(href=`/receipt/${sale._id}` title="View Receipt")
+                          i.fas.fa-file-invoice
+                        
+                        a.action-btn.edit-btn(href=`/sale/edit/${sale._id}` title="Edit Sale")
+                          i.fas.fa-edit
+                        
+                        form(action=`/delete/${sale._id}` method='post' onsubmit='return confirm("Are you sure you want to delete this sale?")' style='display:inline;')
+                          button.action-btn.delete-btn(type='submit' style="background: none; border: none; cursor: pointer;")
+                            i.fas.fa-trash-alt
+            else
+              tr
+                td(colspan=(user && (user.role === "salesattendant" || user.role === "admin") ? '10' : '9')) No sales have been recorded yet
+
+    // ================= CLIENT SIDE INTERACTION ENGINES =================
+    script.
+      // Stringifies stock down cleanly to client context
+      const availableStocks = !{JSON.stringify(items || [])};
+
+      function addItemRow() {
+        const container = document.getElementById('items-container');
+        
+        let optionsHTML = '<option value="" disabled selected>Select product</option>';
+        availableStocks.forEach(product => {
+          optionsHTML += `<option value="${product._id}">${product.productName} (Qty: ${product.quantity} | ${product.sellingPrice} UGX)</option>`;
         });
+
+        const newRow = document.createElement('div');
+        newRow.className = 'item-row';
+        newRow.innerHTML = `
+          <div class="form-group">
+            <label>Product Name</label>
+            <select class="form-input" name="productName" required>
+              ${optionsHTML}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Quantity</label>
+            <input class="form-input" type="number" name="quantity" required min="1" value="1">
+          </div>
+          <div class="form-group">
+            <label>Price (UGX)</label>
+            <input class="form-input" type="number" name="price" required placeholder="Enter unit price">
+          </div>
+          <button class="remove-btn" type="button" onclick="removeItemRow(this)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        `;
+        container.appendChild(newRow);
       }
-    });
+
+      function removeItemRow(buttonElement) {
+        const rows = document.querySelectorAll('.item-row');
+        if (rows.length > 1) {
+          buttonElement.closest('.item-row').remove();
+        } else {
+          alert("A sale transaction must contain at least one row item entry.");
+        }
+      }
+
+      // Erases error message block as soon as the user starts typing to fix an error
+      document.addEventListener('DOMContentLoaded', () => {
+        const errorMsg = document.getElementById('error-msg');
+        if (errorMsg) {
+          const clearError = () => {
+            errorMsg.style.display = 'none';
+          };
+          document.addEventListener('input', clearError, { once: true });
+          document.addEventListener('change', clearError, { once: true });
+        }
+      });

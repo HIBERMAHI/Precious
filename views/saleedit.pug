@@ -1,100 +1,198 @@
 doctype html
-head
-  meta(charset='UTF-8')
-  title Nyondo Sales
-  link(rel='stylesheet' href='/css/newsale.css')
-  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+html
+  head
+    meta(charset='UTF-8')
+    title Edit Sale - Nyondo Hardware
+    link(rel='stylesheet' href='/css/newsale.css')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
 
-// SIDEBAR
-.sidebar
-  .logo
-    |⚒ NYONDO HARDWARE
-  ul
-    li
-      a(href='ssales')
-        i.fas.fa-home
-        |   Dashboard
-    li
-      a(href='newsale')
-        i.fas.fa-cash-register
-        |   Sales
-    li
-      a(href='stockview')
-        i.fas.fa-box
-        |   Stock View
-    li
-      a(href='/receipts')
-        i.fas.fa-receipt
-        |   Credit Sales
-    
-    li
-      a(href='logout')
-        i.fas.fa-sign-out-alt
-        |   Logout
+  body
 
-// MAIN
-.main
-  h1 Sales Edit
+    // ================= SIDEBAR =================
+    .sidebar
+      .logo
+        | ⚒ NYONDO HARDWARE
+      ul
+        li
+          a(href='/ssales')
+            i.fas.fa-home
+            |  Dashboard
+        li
+          a(href='/newsale')
+            i.fas.fa-cash-register
+            |  Sales
+        li
+          a(href='/stockview')
+            i.fas.fa-box
+            |  Stock View
+        li
+          a(href='/logout')
+            i.fas.fa-sign-out-alt
+            |  Logout
 
-  // ================= EDIT SALE =================
-  section.sale-form
-    h2 Edit Sale
+    // ================= MAIN =================
+    .main
+      h1.page-title Sales Edit
 
-    //- Added the error banner here as we discussed
-    if error
-      p#error-msg(style="color: white; background-color: #d9534f; padding: 12px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; text-align: center; border: 1px solid #b94a48;") #{error}
+      section.sale-form-card
+        h2.form-title Edit Sale
 
-    form(action=`/sale/edit/${sale._id}` method='post')
-      .form-group
-        label Customer Name
-        input(type='text' value=sale.customerName name='customerName')
-      .form-group
-        label Phone Number
-        input(type='text' value=sale.phone name='phone' pattern='^(07[0-9]{8}|\\+256[0-9]{9})$' title="Format: 07... or +256...")
-      .form-group
-        label Quantity
-        input(type='number' name='quantity' value=sale.quantity required='' min='1'  )
-      .form-group
-        label Price (UGX)
-        input(type='number' name='price' value=sale.price required='')
-      .form-group
-        label Delivery Option
-        select(name='deliveryOption')
-          option(value='pickup' selected=sale.deliveryOption === 'pickup') Pickup
-          option(value='delivery' selected=sale.deliveryOption === 'delivery') Delivery
-      .form-group
-        label Distance (km)
-        input(type='number' value=sale.distance name='distance')
-      .form-group
-        label Transport Fee
-        input(type='number' value=sale.transportFee name='transportFee' readonly='')
-      .form-group
-        label Total Amount
-        input(type='number' value=sale.totalAmount name='totalAmount' readonly)
-      .button-group
-        button.register-btn(type='submit')
-          i.fas.fa-save
-          |   Update Sale
-        button.receipt-btn(type='button')
-          i.fas.fa-receipt
-          |   Issue Receipt
+        // Error Logic Display Block
+        if error
+          p#error-msg(style="color: white; background-color: #d9534f; padding: 12px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; text-align: center; border: 1px solid #b94a48;") #{error}
 
-  script.
-    document.addEventListener('DOMContentLoaded', () => {
-      const errorMsg = document.getElementById('error-msg');
-      // Select all inputs and the dropdown
-      const allInputs = document.querySelectorAll('input, select');
+        form(action=`/sale/edit/${sale._id}` method='POST')
 
-      if (errorMsg) {
-        allInputs.forEach(element => {
-          // Listen for typing or changing options
-          element.addEventListener('input', () => {
-            errorMsg.style.display = 'none';
-          }, { once: true });
-          
-          element.addEventListener('change', () => {
-            errorMsg.style.display = 'none';
-          }, { once: true });
+          // ================= CUSTOMER DETAILS =================
+          .form-grid
+            .form-group
+              label Customer Name
+              input.form-input(type='text', name='customerName', value=sale.customerName required)
+
+            .form-group
+              label Phone Number
+              input.form-input(
+                type='text'
+                name='phone'
+                value=sale.phone
+                required
+              )
+
+          // ================= ITEMS MULTI-SYSTEM SECTION =================
+          .items-section
+            .items-header
+              h3 Sale Items
+              button.add-item-btn(type='button' onclick='addItem()')
+                i.fas.fa-plus
+                |  Add Item
+
+            #itemsContainer.items-container
+              if sale.items && sale.items.length > 0
+                each saleItem in sale.items
+                  .item-row
+                    .form-group.product-field
+                      label Product
+                      select.form-input(name='productName' required)
+                        option(value='' disabled) Select product
+                        // Loops through stock collection passed via your GET routes
+                        if items && items.length > 0
+                          each product in items
+                            option(
+                              value=product._id
+                              selected=(saleItem.productName && saleItem.productName._id ? saleItem.productName._id.toString() === product._id.toString() : saleItem.productName.toString() === product._id.toString())
+                            ) #{product.productName} (Stock: #{product.quantity} | #{product.sellingPrice} UGX)
+
+                    .form-group.qty-field
+                      label Quantity
+                      input.form-input(
+                        type='number'
+                        name='quantity'
+                        value=saleItem.quantity
+                        min='1'
+                        required
+                      )
+
+                    .form-group.price-field
+                      label Price (UGX)
+                      input.form-input(
+                        type='number'
+                        name='price'
+                        value=saleItem.price
+                        required
+                      )
+
+                    .remove-btn-box
+                      button.remove-btn(type='button' onclick='removeItem(this)')
+                        i.fas.fa-trash
+
+          hr(style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;")
+
+          // ================= LOGISTICS & CONDITIONS =================
+          .form-grid
+            .form-group
+              label Delivery Option
+              select.form-input(name='deliveryOption' required)
+                option(value='pickup' selected=sale.deliveryOption==='pickup') Pickup
+                option(value='delivery' selected=sale.deliveryOption==='delivery') Delivery
+
+            .form-group
+              label Distance (km)
+              input.form-input(type='number', name='distance', value=sale.distance || 0 min='0')
+
+            .form-group
+              label Transport Fee (UGX)
+              input.form-input(type='text', value=(sale.transportFee ? sale.transportFee.toLocaleString() : '0'), readonly style="background-color: #f1f5f9; color: #64748b;")
+
+            .form-group
+              label Total Invoice Amount (UGX)
+              input.form-input(type='text', value=(sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'), readonly style="background-color: #f1f5f9; font-weight: bold; color: #1e293b;")
+
+          // ================= ACTION BUTTONS =================
+          .button-group
+            button.register-btn(type='submit')
+              i.fas.fa-save
+              |  Update Sale
+
+            a.receipt-btn(href=`/receipt/${sale._id}` style="text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center;")
+              i.fas.fa-receipt
+              |  Issue Receipt
+
+    // ================= CLIENT DYNAMICS ENGINE =================
+    script.
+      // Safely pack stock rows into client scope memory
+      const availableStocks = !{JSON.stringify(items || [])};
+
+      function addItem() {
+        const container = document.getElementById('itemsContainer');
+        
+        let optionsHTML = '<option value="" disabled selected>Select product</option>';
+        availableStocks.forEach(product => {
+          optionsHTML += `<option value="${product._id}">${product.productName} (Stock: ${product.quantity} | ${product.sellingPrice} UGX)</option>`;
         });
+
+        const div = document.createElement('div');
+        div.classList.add('item-row');
+        div.innerHTML = `
+          <div class="form-group product-field">
+            <label>Product</label>
+            <select class="form-input" name="productName" required>
+              \${optionsHTML}
+            </select>
+          </div>
+          <div class="form-group qty-field">
+            <label>Quantity</label>
+            <input class="form-input" type="number" name="quantity" min="1" value="1" required>
+          </div>
+          <div class="form-group price-field">
+            <label>Price (UGX)</label>
+            <input class="form-input" type="number" name="price" placeholder="Enter price" required>
+          </div>
+          <div class="remove-btn-box">
+            <button type="button" class="remove-btn" onclick="removeItem(this)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
       }
-    });
+
+      function removeItem(btn) {
+        const rows = document.querySelectorAll('.item-row');
+        if (rows.length <= 1) {
+          alert('A sale transaction layout must contain at least one row entry.');
+          return;
+        }
+        btn.closest('.item-row').remove();
+      }
+
+      // Dynamic Error Clearing Logic
+      document.addEventListener('DOMContentLoaded', () => {
+        const errorMsg = document.getElementById('error-msg');
+        if (errorMsg) {
+          const clearError = () => {
+            errorMsg.style.display = 'none';
+          };
+          document.addEventListener('input', clearError, { once: true });
+          document.addEventListener('change', clearError, { once: true });
+        }
+      });
