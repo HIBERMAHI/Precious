@@ -3,95 +3,246 @@ html
   head
     meta(charset='UTF-8')
     title Register Stock - Nyondo Hardware
-    link(rel='stylesheet' href='/css/ssales.css')
+
+    link(rel='stylesheet' href='/css/addstock.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+
   body
+
     // SIDEBAR
     .sidebar
       .logo
         h2 &#x2692; NYONDO HARDWARE
+
       ul
         li
           a(href='storedash')
             i.fas.fa-home
-            span  Dashboard
+            span Dashboard
+
         li
           a(href='invento')
             i.fas.fa-boxes
-            span  Inventory
+            span Inventory
+
         li
           a(href='storsales')
             i.fas.fa-cash-register
-            span  Sales
+            span Sales
+
         li.active
           a(href='addstock')
             i.fas.fa-plus-circle
-            span  Add Stock
+            span Add Stock
+
         li
           a(href='logout')
             i.fas.fa-sign-out-alt
-            span  Logout
+            span Logout
 
-    // MAIN
+    // MAIN CONTENT
     .main
+
       .header
         h1
           i.fas.fa-plus-circle
           |  Stock Registration
-        p Fill in the details to add new stock to inventory
 
-      //- ERROR MESSAGE BOX
+        p Fill in the details to add stock into inventory
+
+      // ERROR MESSAGE
       if error
-        div(style="background-color: #f8d7da; color: #721c24; padding: 15px; border: 1px solid #f5c6cb; border-radius: 5px; margin-bottom: 20px; font-weight: bold; text-align: center;")
+        .error-message#errorMessage
           i.fas.fa-exclamation-circle
           |  #{error}
 
       // FORM
-      form.stock-form(method='post' action='/addstock' enctype="multipart/form-data")
+      form.stock-form(method='POST' action='/addstock' enctype='multipart/form-data')
+
+        // PRODUCT DETAILS
         h2 Product Details
+
         .grid
+
           .field
             label Product Name
-            input(type='text' name='productName' value=(formData ? formData.productName : ''))
+
+            select(name='productName' required)
+
+              option(value='') Select Product
+
+              option(value='Cement iiN') Cement iiN
+              option(value='Cement iiiN') Cement iiiN
+              option(value='Iron Bars 10mm') Iron Bars 10mm
+              option(value='Iron Bars 12mm') Iron Bars 12mm
+              option(value='Iron Bars 16mm') Iron Bars 16mm
+              option(value='Nails 1 Inch') Nails 1 Inch
+              option(value='Nails 3 Inch') Nails 3 Inch
+              option(value='Nails 4 Inch') Nails 4 Inch
+              option(value='Nails 5 Inch') Nails 5 Inch
+              option(value='Roofing Nails') Roofing Nails
+              option(value='Wheelbarrow') Wheelbarrow
+              option(value='Wire Mesh') Wire Mesh
+              option(value='Barbed Wire High Tensile') Barbed Wire High Tensile
+              option(value='Barbed Wire Low Tensile') Barbed Wire Low Tensile
+              option(value='Iron Sheets') Iron Sheets
+
           .field
             label Category
-            select(name='category' required='')
-              option(value='') Select Category
-              each cat in ['Building', 'Hardware', 'Electrical', 'Roofing', 'Timber']
-                option(value=cat selected=(formData && formData.category === cat)) #{cat}
 
+            select(name='category' required)
+
+              option(value='') Select Category
+              option(value='Building') Building
+              option(value='Hardware') Hardware
+              option(value='Electrical') Electrical
+              option(value='Roofing') Roofing
+              option(value='Timber') Timber
+
+        // STOCK INFO
         h2 Stock Information
+
         .grid
+
           .field
             label Quantity
-            input(type='number' name='quantity' required='' value=(formData ? formData.quantity : ''))
+            input(
+              type='number'
+              name='quantity'
+              min='1'
+              required
+            )
+
           .field
             label Unit
-            select(name='unit')
-              each unit in ['Bags', 'Pieces', 'Boxes', 'Litres']
-                option(value=unit selected=(formData && formData.unit === unit)) #{unit}
 
+            select(name='unit')
+
+              option(value='Bags') Bags
+              option(value='Pieces') Pieces
+              option(value='Boxes') Boxes
+              option(value='Litres') Litres
+              option(value='Rolls') Rolls
+
+        // PRICING
         h2 Pricing
+
         .grid
+
           .field
             label Buying Price
-            input(type='number' name='buyingPrice' required='' value=(formData ? formData.buyingPrice : ''))
+            input(
+              type='number'
+              name='buyingPrice'
+              min='1'
+              required
+            )
+
           .field
             label Selling Price
-            input(type='number' name='sellingPrice' required='' value=(formData ? formData.sellingPrice : ''))
+            input(
+              type='number'
+              name='sellingPrice'
+              min='1'
+              required
+            )
 
-        h2 Supplier Details
+        // PAYMENT DETAILS
+        h2 Payment Information
+
         .grid
+
+          .field
+            label Payment Method
+
+            select(name='paymentMethod')
+
+              option(value='Cash') Cash
+              option(value='Credit') Credit
+
+          .field
+            label Payment Status
+
+            select(name='paymentStatus')
+
+              option(value='Pending') Pending
+              option(value='Partial') Partial
+              option(value='Completed') Completed
+
+          .field
+            label Factory / Supplier Source
+
+            input(
+              type='text'
+              name='factory'
+              placeholder='Enter factory or depot'
+            )
+
+        // SUPPLIER DETAILS
+        h2 Supplier Details
+
+        .grid
+
           .field
             label Supplier Name
-            input(type='text' name='supplierName' value=(formData ? formData.supplierName : ''))
+
+            input(
+              type='text'
+              name='supplierName'
+            )
+
           .field
             label Supplier Contact
-            input(type='number' name='supplierContact' value=(formData ? formData.supplierContact : ''))
-          .field
-            label Image Uploads
-            input(type='file' name='itemImage')
 
+            input(
+              type='text'
+              name='supplierContact'
+              placeholder='07XXXXXXXX or +256XXXXXXXXX'
+              pattern='^(07\\d{8}|\\+256\\d{9})$'
+            )
+          .field
+            label Product Image
+
+            input(
+              type='file'
+              name='itemImage'
+            )
+
+        // BUTTONS
         .buttons
-          button.btn.save(type='submit') Save Stock
-          button.btn.reset(type='reset') Reset
+
+          button.btn.save(type='submit')
+            i.fas.fa-save
+            |  Save Stock
+
+          button.btn.reset(type='reset')
+            i.fas.fa-undo
+            |  Reset
+
+    // SCRIPT TO REMOVE ERROR MESSAGE WHEN USER TYPES
+    script.
+      const inputs = document.querySelectorAll('input, select');
+
+      inputs.forEach(input => {
+
+        input.addEventListener('input', () => {
+
+          const errorBox = document.getElementById('errorMessage');
+
+          if(errorBox){
+            errorBox.style.display = 'none';
+          }
+
+        });
+
+        input.addEventListener('change', () => {
+
+          const errorBox = document.getElementById('errorMessage');
+
+          if(errorBox){
+            errorBox.style.display = 'none';
+          }
+
+        });
+
+      });

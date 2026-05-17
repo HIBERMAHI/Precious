@@ -29,7 +29,7 @@ let upload = multer({ storage: storage });
 // store dashboard
 router.get("/storedash",isstoremanagerOradmin, async (req, res) => {
   try {
-    const dbStock = await Stock.find();
+    const dbStock = await Stock.find().sort({ createdAt: -1 });
     let stats = {
       totalproducts: 0,
       lowStock: 0,
@@ -76,10 +76,10 @@ router.get("/storsales",isstoremanagerOradmin, async (req, res) => {
       [{$group: {_id:null, grandItems: {$sum : '$quantity'}}},]
     );
     stats.itemsSold = itemsAgg.length>0 ?itemsAgg[0].grandItems:0;
-    const dbSales = await Sale.find()
+    const dbSales = await Sale.find().sort({ createdAt: -1 })
       .populate("productName", "productName")
       .populate("attendant", "fullname")
-      .sort({ date: -1 });
+      // .sort({ date: -1 });
     res.render("storsales", { dbSales, stats });
   } catch (error) {
     console.error(error.message);
@@ -89,7 +89,7 @@ router.get("/storsales",isstoremanagerOradmin, async (req, res) => {
 
 router.get("/invento",isstoremanagerOradmin, async (req, res) => {
   try {
-    const dbStock = await Stock.find();
+    const dbStock = await Stock.find().sort({ createdAt: -1 });;
     let stats = {
       totalProducts: 0,
       lowStock: 0,
@@ -141,60 +141,136 @@ router.get("/orders", (req, res) => {
 router.get("/addstock",isstoremanagerOradmin, (req, res) => {
   res.render("addstock");
 });
+// addstock
+router.post(
+  "/addstock",
+  isstoremanagerOradmin,
+  upload.single("itemImage"),
+  async (req, res) => {
+    try {
+      const {
+        productName,
+        category,
+        quantity,
+        unit,
+        buyingPrice,
+        sellingPrice,
+        supplierName,
+        supplierContact,
+        deliveryDate,
+        paymentMethod,
+        paymentStatus,
+        factory,
+      } = req.body;
 
-router.post("/addstock", isstoremanagerOradmin, upload.single("itemImage"), async (req, res) => {
-  try {
-    const {
-      productName,
-      category,
-      quantity,
-      unit,
-      buyingPrice,
-      sellingPrice,
-      supplierName,
-      supplierContact,
-      deliveryDate,
-    } = req.body;
-    const qty = Number(quantity) || 0;
-    const buy = Number(buyingPrice) || 0;
-    const sell = Number(sellingPrice) || 0;
-    if (buy <= 0 || sell <= 0 || qty <= 0) {
+      // =========================
+      // TYPE CONVERSION
+      // =========================
+      const qty = Number(quantity);
+      const buy = Number(buyingPrice);
+      const sell = Number(sellingPrice);
+
+      // =========================
+      // REQUIRED FIELD VALIDATION
+      // =========================
+      if (
+        !productName ||
+        !category ||
+        !quantity ||
+        !buyingPrice ||
+        !sellingPrice
+      ) {
+        return res.render("addstock", {
+          error: "Please fill all required fields",
+        });
+      }
+
+      // =========================
+      // NUMBER VALIDATION
+      // =========================
+      if (isNaN(qty) || isNaN(buy) || isNaN(sell)) {
+        return res.render("addstock", {
+          error: "Quantity and prices must be valid numbers",
+        });
+      }
+
+      if (qty <= 0 || buy <= 0 || sell <= 0) {
+        return res.render("addstock", {
+          error: "Quantity and prices must be greater than zero",
+        });
+      }
+
+      // =========================
+      // BUSINESS RULE
+      // =========================
+      if (sell <= buy) {
+        return res.render("addstock", {
+          error:
+            "Selling price must be greater than buying price",
+        });
+      }
+
+      // =========================
+      // PHONE VALIDATION
+      // =========================
+      if (
+        supplierContact &&
+        !/^(07\d{8}|\+256\d{9})$/.test(supplierContact)
+      ) {
+        return res.render("addstock", {
+          error:
+            "Phone must be 07XXXXXXXX or +256XXXXXXXXX",
+        });
+      }
+
+      // =========================
+      // AUTO CALCULATIONS
+      // =========================
+      const total = qty * buy;
+
+      // =========================
+      // PAYMENT LOGIC (AUTO SAFE)
+      // =========================
+      let finalPaymentMethod = paymentMethod || "Cash";
+      let finalPaymentStatus = paymentStatus || "Pending";
+
+      // =========================
+      // CREATE STOCK
+      // =========================
+      const newStock = new Stock({
+        productName,
+        category,
+        quantity: qty,
+        unit,
+        buyingPrice: buy,
+        sellingPrice: sell,
+        supplierName,
+        supplierContact,
+        deliveryDate,
+        factory,
+        paymentMethod: finalPaymentMethod,
+        paymentStatus: finalPaymentStatus,
+        total,
+        itemImage: req.file ? req.file.path : null,
+      });
+
+      await newStock.save();
+
+      return res.redirect("/invento");
+    } catch (error) {
+      console.error(error.message);
+
       return res.render("addstock", {
-        error: "Prices and quantity must be greater than zero.",
-        formData: req.body,
+        error: "Server error while saving stock",
       });
     }
-    if (sell <= buy) {
-      return res.render("addstock", {
-        error: `selling price (${sell}) cannot be less than buying price (${buy})`,
-        formData: req.body,
-      });
-    }
-    const total = qty * buy;
-    let newItem = new Stock({
-      productName,
-      category,
-      quantity: qty,
-      unit,
-      buyingPrice: buy,
-      sellingPrice: sell,
-      supplierName,
-      supplierContact,
-      deliveryDate,
-      total,
-      itemImage: req.file ? req.file.path : null,
-    });
-
-    await newItem.save();
-    res.redirect("/invento");
-  } catch (error) {
-    console.error(error.message);
-    res.render("addstock", { error: error.message });
   }
-});
+);
+
+
 
 // EDIT STOCK
-router.get("/stock/edit/:id",issalesattendantOradmin, async (req, res) => {
+router.get("/stock/edit/:id",isstoremanagerOradmin, async (req, res) => {
   try {
     const stock = await Stock.findById(req.params.id);
     if (!stock) return res.status(404).send("Stock not found");
@@ -205,9 +281,12 @@ router.get("/stock/edit/:id",issalesattendantOradmin, async (req, res) => {
   }
 });
 
-router.post("/stock/edit/:id",isstoremanagerOradmin, async (req, res) => {
+// edit stock
+router.post("/stock/edit/:id", isstoremanagerOradmin, upload.single("itemImage"), async (req, res) => {
   try {
+
     const {
+      productName,
       category,
       quantity,
       unit,
@@ -215,26 +294,60 @@ router.post("/stock/edit/:id",isstoremanagerOradmin, async (req, res) => {
       sellingPrice,
       supplierName,
       supplierContact,
+      deliveryDate,
+      paymentMethod,
+      paymentStatus,
+      factory,
     } = req.body;
-    const qty = Number(quantity) || 0;
-    const buy = Number(buyingPrice) || 0;
-    const sell = Number(sellingPrice) || 0;
-    const total = qty * buy;
-    if (buy <= 0 || sell <= 0 || qty <= 0) {
-      const stock = await Stock.findById(req.params.id);
+
+    const qty = Number(quantity);
+    const buy = Number(buyingPrice);
+    const sell = Number(sellingPrice);
+
+    const stock = await Stock.findById(req.params.id);
+    if (!stock) return res.status(404).send("Stock not found");
+
+    // ✅ VALIDATION SAFE (NO CRASH)
+    if (!category || !quantity || !buyingPrice || !sellingPrice) {
       return res.render("stockedit", {
-        error: "prices and quantity must be greater than zero.",
-        stock: { ...req.body, _id: req.params.id },
+        error: "Category, quantity and prices are required",
+        stock
       });
     }
+
+    if (isNaN(qty) || isNaN(buy) || isNaN(sell)) {
+      return res.render("stockedit", {
+        error: "Prices and quantity must be numbers",
+        stock
+      });
+    }
+
+    if (qty <= 0 || buy <= 0 || sell <= 0) {
+      return res.render("stockedit", {
+        error: "Values must be greater than zero",
+        stock
+      });
+    }
+
     if (sell <= buy) {
-      const stock = await Stock.findById(req.params.id);
       return res.render("stockedit", {
-        error: `Selling price (${sell}) cannot be less than or equal to buying price (${buy})`,
-        stock: { ...req.body, _id: req.params.id },
+        error: "Selling price must be greater than buying price",
+        stock
       });
     }
-    await Stock.findByIdAndUpdate(req.params.id, {
+
+    // phone validation
+    if (
+      supplierContact &&
+      !/^(07\d{8}|\+256\d{9})$/.test(supplierContact)
+    ) {
+      return res.render("stockedit", {
+        error: "Invalid phone number format",
+        stock
+      });
+    }
+
+    const updatedData = {
       category,
       quantity: qty,
       unit,
@@ -242,15 +355,34 @@ router.post("/stock/edit/:id",isstoremanagerOradmin, async (req, res) => {
       sellingPrice: sell,
       supplierName,
       supplierContact,
-      total,
-    });
+      deliveryDate,
+      paymentMethod,
+      paymentStatus,
+      factory,
+      total: qty * buy,
+    };
 
-    res.redirect("/invento");
+    // ✅ only update image if new one uploaded
+    if (req.file) {
+      updatedData.itemImage = req.file.path;
+    }
+
+    await Stock.findByIdAndUpdate(req.params.id, updatedData);
+
+    return res.redirect("/invento");
+
   } catch (error) {
-    console.error(error.message);
-    res.status(400).send("Error updating stock");
+    console.error(error);
+
+    const stock = await Stock.findById(req.params.id);
+
+    return res.render("stockedit", {
+      error: "Something went wrong while updating stock",
+      stock
+    });
   }
 });
+
 
 // DELETE STOCK 
 router.post("/deleted/:id", isstoremanagerOradmin,async (req, res) => {

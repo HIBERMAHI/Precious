@@ -3,6 +3,7 @@ html
   head
     meta(charset='UTF-8')
     title Inventory - Nyondo Hardware
+
     link(rel='stylesheet' href='/css/invento.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
 
@@ -38,6 +39,7 @@ html
         h1
           i.fas.fa-boxes
           | Inventory Overview
+
         .actions
           a.btn(href='/stock')
             i.fas.fa-plus
@@ -52,16 +54,19 @@ html
           div
             h3 Total Products
             p #{stats.totalProducts.toLocaleString()}
+
         .card.warn
           i.fas.fa-exclamation-triangle
           div
             h3 Low Stock
             p #{stats.lowStock.toLocaleString()}
+
         .card.danger
           i.fas.fa-times-circle
           div
-            h3 Enougth Stock
+            h3 Enough Stock
             p #{stats.enougthStock.toLocaleString()}
+
         .card.success
           i.fas.fa-coins
           div
@@ -82,30 +87,32 @@ html
             tr
               th Product Name
               th Image
-              th Category
+              th Factory
               th Quantity
               th Buying Price
               th Selling Price
               th Supplier Name
               th Supplier Contact
               th Date
-              th Status
+              th Payment Status  
               th Actions
 
           tbody
             if dbStock.length === 0
               tr
-                td(colspan='10') No stock available
+                td(colspan='11') No stock available
 
             each stock in dbStock
               tr
                 td #{stock.productName}
-                td 
+
+                td
                   if stock.itemImage
-                    img(src='/' + stock.itemImage alt='image' width='50px' height='50' )
-                  else 
+                    img(src='/' + stock.itemImage width='50' height='50')
+                  else
                     span no image
-                td #{stock.category}
+
+                td #{stock.factory}
                 td #{stock.quantity}
                 td #{stock.buyingPrice}
                 td #{stock.sellingPrice}
@@ -114,7 +121,8 @@ html
                 td #{new Date(stock.deliveryDate).toLocaleString()}
 
                 td
-                  span.status #{stock.status || 'N/A'}
+                  span.status(class=stock.paymentStatus)
+                    | #{stock.paymentStatus || 'Pending'}
 
                 td
                   .action-btns

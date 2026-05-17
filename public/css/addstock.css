@@ -1,0 +1,207 @@
+
+/* ================= RESET ================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+  display:flex;
+  background:#f1f5f9;
+  color:#1e293b;
+}
+
+/* ================= SIDEBAR (UNCHANGED STYLE) ================= */
+.sidebar{
+  width:270px;
+  background:#02060f;
+  color:white;
+  padding:22px;
+  position:fixed;
+  height:100vh;
+  overflow-y:auto;
+  box-shadow:4px 0 12px rgba(0,0,0,0.25);
+}
+
+.sidebar .logo h2{
+  color:#facc15;
+}
+
+.sidebar ul{
+  list-style:none;
+}
+
+.sidebar ul li{
+  margin:18px 0;
+}
+
+.sidebar ul li a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px;
+  color:#cbd5f5;
+  text-decoration:none;
+  border-radius:10px;
+  transition:0.3s;
+}
+
+.sidebar ul li a:hover{
+  background:rgba(250, 204, 21, 0.12);
+  color:#facc15;
+  transform:translateX(4px);
+}
+
+.sidebar ul li.active a{
+  background:rgba(250, 204, 21, 0.18);
+  color:#facc15;
+}
+
+/* ================= MAIN ================= */
+.main{
+  margin-left:270px;
+  width:calc(100% - 270px);
+  padding:30px;
+}
+
+/* HEADER */
+.header h1{
+  font-size:26px;
+  color:#0f172a;
+}
+
+.header p{
+  color:#64748b;
+  margin-bottom:20px;
+}
+
+/* ERROR */
+.error-message{
+  background:#fee2e2;
+  color:#b91c1c;
+  padding:12px 16px;
+  border-radius:10px;
+  margin-bottom:20px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+/* ================= SINGLE FORM CARD ================= */
+.stock-form{
+  background:white;
+  padding:25px;
+  border-radius:18px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+}
+
+/* TITLE INSIDE FORM */
+.stock-form h2{
+  font-size:16px;
+  color:#0f172a;
+  margin-top:10px;
+}
+
+/* ================= GRID (3 COLUMNS ONLY INSIDE CARD) ================= */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:18px;
+}
+
+/* FIELD */
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.field label{
+  font-size:13px;
+  color:#475569;
+}
+
+/* INPUTS */
+.field input,
+.field select{
+  padding:11px 12px;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  font-size:14px;
+  outline:none;
+  transition:0.2s;
+  background:white;
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* FILE INPUT FIX */
+.field input[type="file"]{
+  padding:8px;
+}
+
+/* ================= BUTTONS ================= */
+.buttons{
+  display:flex;
+  gap:15px;
+  margin-top:10px;
+}
+
+.btn{
+  padding:12px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.btn.save{
+  background:#2563eb;
+  color:white;
+}
+
+.btn.reset{
+  background:#64748b;
+  color:white;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:1100px){
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:700px){
+  body{
+    flex-direction:column;
+  }
+
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+
+  .main{
+    margin-left:0;
+    width:100%;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+}

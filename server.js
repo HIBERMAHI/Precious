@@ -12,6 +12,9 @@ const connectDb = require("./config/db");
 // import user model
 const Registration = require("./models/Registration");
 const Regicredit = require("./models/Regicredit");
+// const Product = require("./models/Product");
+
+// app.use("/", productRoutes);
 // installations
 
 //2 instanciations

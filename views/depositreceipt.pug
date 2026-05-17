@@ -4,70 +4,147 @@ html
     meta(charset='utf-8')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
     title Nyondo Hardware Receipt
-    //- Link to your custom CSS file
+
+    //- Receipt CSS
     link(rel='stylesheet' href='/css/receipt.css')
+
   body
     .receipt-container
+
       .hardware-header
-        //- This space is for your logo or top border design in CSS
-      
+
       .receipt-card
+
         .receipt-body
+
+          //========================
+          // COMPANY HEADER
+          //========================
           .receipt-top-section
+
             h4.company-name NYONDO GENERAL HARDWARE
-            p.company-address Nansana, Wakiso District - Katooke Road
-            p.company-contact Tel: 0721-234567 | 0772-987654
+
+            p.company-address
+              | Nansana, Wakiso District - Katooke Road
+
+            p.company-contact
+              | Tel: 0721-234567 | 0772-987654
+
             .receipt-meta
-              span.receipt-date Date: #{new Date(deposit.date).toLocaleString()}
+
+              span.receipt-date
+                | Date: #{new Date(deposit.date).toLocaleString()}
+
               br
-              span.receipt-number Receipt #: #{deposit.receiptNumber}
-          
+
+              span.receipt-number
+                | Receipt #: #{deposit.receiptNumber}
+
           hr.thick-line
-          
+
+          //========================
+          // CUSTOMER DETAILS
+          //========================
+          .customer-section
+
+            h3.customer-heading Customer Information
+
+            .customer-card
+
+              .customer-row
+
+                span.customer-label Customer Name :
+
+                span.customer-value
+                  | #{deposit.customer.fullName}
+
+          hr.thick-line
+
+          //========================
+          // DESCRIPTION TITLE
+          //========================
           .receipt-description-header
+
             span.label-bold Description
-          
+
           hr.thin-line
 
+          //========================
+          // ITEM DETAILS
+          //========================
           .info-row
+
             span.label Item Name :
-            span.value #{deposit.productType} 
-          
+
+            span.value
+              | #{deposit.productType}
+
           hr.thin-line
 
           .info-row
+
             span.label Qty :
-            span.value #{deposit.quantity} (units)
-          
+
+            span.value
+              | #{deposit.quantity} (units)
+
           .info-row
+
             span.label Transport Charge :
-            span.value #{deposit.transportFee.toLocaleString()} UGX 
-          
+
+            span.value
+              | #{deposit.transportFee.toLocaleString()} UGX
+
           hr.thin-line
 
           .info-row
+
             span.label Total Cost (Products) :
-            span.value #{deposit.totalAmount.toLocaleString()} UGX
-          
+
+            span.value
+              | #{deposit.totalAmount.toLocaleString()} UGX
+
           hr.thin-line
 
           .info-row.highlight-success
+
             span.label-bold Initial Deposit Paid :
-            span.value-bold #{deposit.initialDeposit.toLocaleString()} UGX
-          
+
+            span.value-bold
+              | #{deposit.initialDeposit.toLocaleString()} UGX
+
           hr.thick-line
 
           .info-row.highlight-danger
+
             span.label-bold Balance Remaining :
-            span.value-bold #{deposit.balance.toLocaleString()} UGX
-          
+
+            span.value-bold
+              | #{deposit.balance.toLocaleString()} UGX
+
           hr.thick-line
 
+          //========================
+          // FOOTER
+          //========================
           .receipt-footer
-            p.served-by Served by: Nyondo Admin
-            p.thank-you Thanks For Shopping With Nyondo
-            p.disclaimer Goods once sold are not returnable 
-      
+
+            p.served-by
+              | Served by: Nyondo Admin
+
+            p.thank-you
+              | Thanks For Shopping With Nyondo
+
+            p.disclaimer
+              | Goods once sold are not returnable
+
+      //========================
+      // ACTION BUTTONS
+      //========================
       .receipt-actions
-        button.btn-print(onclick='window.print()') Print Receipt 
-        a.btn-back(href='/deposit') View Deposits
+
+        button.btn-print(onclick='window.print()')
+          | Print Receipt
+
+        a.btn-back(href='/deposit')
+          | View Deposits

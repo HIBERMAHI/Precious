@@ -194,7 +194,7 @@ router.get("/deposit", async (req, res) => {
     const stockItems = await Stock.find({
       productName: {
         $regex:
-          /cem iiN|cem iiiN|ironbars 10mm|ironbars 12mm|ironbars 16mm|iron sheets/i,
+          /cement iiN|cement iiiN|Ironbars 10mm|Iron Bars 12mm|Iron Bars 16mm|Iron sheets/i,
       },
     });
 

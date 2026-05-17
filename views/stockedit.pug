@@ -1,91 +1,159 @@
 doctype html
-head
-  meta(charset='UTF-8')
-  title Register Stock - Nyondo Hardware
-  link(rel='stylesheet' href='/css/ssales.css')
-  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
-// SIDEBAR
-.sidebar
-  .logo
-    h2 &#x2692; NYONDO HARDWARE
-  ul
-    li
-      a(href='storedash')
-        i.fas.fa-home
-        |  Dashboard
-    li
-      a(href='invento')
-        i.fas.fa-boxes
-        |  Inventory
-    li
-      a(href='storsales')
-        i.fas.fa-cash-register
-        |  Sales
-    li.active
-      a(href='addstock')
-        i.fas.fa-plus-circle
-        |  Add Stock
-    li
-      a(href='logout')
-        i.fas.fa-sign-out-alt
-        |  Reports
-// MAIN
-.main
-  .header
-    h1
-      i.fas.fa-plus-circle
-      |  Stock Registration
-    p Fill in the details to add new stock to inventory
-  // FORM
-  form.stock-form(method='post' action=`/stock/edit/${stock._id}` )
-    // PRODUCT DETAILS
-    h2 Product Details
-    .grid
-      .field
-        label Category
-        select(name='category' required='')
-          option(value='') Select Category
-          option(selected=stock.category==='Building') Building
-          option(selected=stock.category==='Hardware') Hardware
-          option(selected=stock.category==='Electrical') Electrical
-          option(selected=stock.category==='Roofing') Roofing
-          option(selected=stock.category==='Timber') Timber
-    h2 Stock Information
-    .grid
-      .field
-        label Quantity
-        input(type='number' name='quantity' value=stock.quantity)
-      .field
-        label Unit
-        select(name='unit')
-          option(selected=stock.unit==='Bags') Bags
-          option(selected=stock.unit==='Pieces') Pieces
-          option(selected=stock.unit==='Boxes') Boxes
-          option(selected=stock.unit==='Litres') Litres
-    // PRICING
-    h2 Pricing
-    .grid
-      .field
-        label Buying Price
-        input(type='number' value=stock.buyingPrice  name='buyingPrice' required='')
-      .field
-        label Selling Price
-        input(type='number' value=stock.sellingPrice  name='sellingPrice' required='')
-      //- .field
-      //-   label Total
-      //-   input(type='number' value=stock.total  name='total' readonly)
-    // SUPPLIER
-    h2 Supplier Details
-    .grid
-      .field
-        label Supplier Name
-        input(type='text' value=stock.supplierName  name='supplierName')
-      .field
-        label Supplier Contact
-        input(type='number' value=stock.supplierContact  name='supplierContact')
-      
-    .grid
-    // BUTTONS
-    .buttons
-      button.btn.save(type='submit') Save Stock
-      button.btn.reset(type='reset') Reset
+html
+  head
+    meta(charset='UTF-8')
+    title Edit Stock - Nyondo Hardware
+
+    link(rel='stylesheet' href='/css/addstock.css')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+
+  body
+
+    // SIDEBAR
+    .sidebar
+      .logo
+        h2 ⚒ NYONDO HARDWARE
+
+      ul
+        li
+          a(href='/storedash')
+            i.fas.fa-home
+            | Dashboard
+
+        li
+          a(href='/invento')
+            i.fas.fa-boxes
+            | Inventory
+
+        li
+          a(href='/storsales')
+            i.fas.fa-cash-register
+            | Sales
+
+        li.active
+          a(href='/invento')
+            i.fas.fa-edit
+            | Edit Stock
+
+    .main
+
+      .header
+        h1
+          i.fas.fa-edit
+          | Edit Stock
+
+        p Update stock details (product name cannot be changed)
+
+      // ERROR
+      if error
+        .error-message#errorMessage
+          i.fas.fa-exclamation-circle
+          | #{error}
+
+      form.stock-form(
+        method='POST'
+        action=`/stock/edit/${stock._id}`
+        enctype='multipart/form-data'
+      )
+
+        h2 Product Info
+
+        .grid
+          .field
+            label Product Name (locked)
+            input(type='text' name='productName' value=stock.productName readonly)
+
+          .field
+            label Category
+            select(name='category' required)
+              option(value='Building' selected=stock.category==='Building') Building
+              option(value='Hardware' selected=stock.category==='Hardware') Hardware
+              option(value='Electrical' selected=stock.category==='Electrical') Electrical
+              option(value='Roofing' selected=stock.category==='Roofing') Roofing
+              option(value='Timber' selected=stock.category==='Timber') Timber
+
+        h2 Stock Info
+
+        .grid
+          .field
+            label Quantity
+            input(type='number' name='quantity' value=stock.quantity min='1' required)
+
+          .field
+            label Unit
+            select(name='unit')
+              option(value='Bags' selected=stock.unit==='Bags') Bags
+              option(value='Pieces' selected=stock.unit==='Pieces') Pieces
+              option(value='Boxes' selected=stock.unit==='Boxes') Boxes
+              option(value='Litres' selected=stock.unit==='Litres') Litres
+              option(value='Rolls' selected=stock.unit==='Rolls') Rolls
+
+        h2 Pricing
+
+        .grid
+          .field
+            label Buying Price
+            input(type='number' name='buyingPrice' value=stock.buyingPrice min='1' required)
+
+          .field
+            label Selling Price
+            input(type='number' name='sellingPrice' value=stock.sellingPrice min='1' required)
+
+        h2 Supplier
+
+        .grid
+          .field
+            label Supplier Name
+            input(type='text' name='supplierName' value=stock.supplierName)
+
+          .field
+            label Supplier Contact
+            input(type='text' name='supplierContact' value=stock.supplierContact pattern='^(07\\d{8}|\\+256\\d{9})$')
+
+        h2 Payment
+
+        .grid
+          .field
+            label Payment Method
+            select(name='paymentMethod')
+              option(value='Cash' selected=stock.paymentMethod==='Cash') Cash
+              option(value='Credit' selected=stock.paymentMethod==='Credit') Credit
+
+          .field
+            label Payment Status
+            select(name='paymentStatus')
+              option(value='Pending' selected=stock.paymentStatus==='Pending') Pending
+              option(value='Partial' selected=stock.paymentStatus==='Partial') Partial
+              option(value='Completed' selected=stock.paymentStatus==='Completed') Completed
+
+        h2 Image
+
+        .grid
+          .field
+            label Current Image
+            if stock.itemImage
+              img(src='/' + stock.itemImage width='70')
+            else
+              span No image
+
+          .field
+            label Replace Image
+            input(type='file' name='itemImage')
+
+        .buttons
+          button.btn.save(type='submit')
+            i.fas.fa-save
+            | Save Changes
+
+          button.btn.reset(type='reset')
+            i.fas.fa-undo
+            | Reset
+
+    script.
+      const inputs = document.querySelectorAll('input, select');
+      inputs.forEach(i => {
+        i.addEventListener('input', () => {
+          const e = document.getElementById('errorMessage');
+          if (e) e.style.display = 'none';
+        });
+      });
