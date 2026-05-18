@@ -1,0 +1,208 @@
+/* ================= RESET ================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter","Segoe UI",sans-serif;
+}
+
+body{
+  display:flex;
+  background:#f1f5f9;
+  color:#1e293b;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+  width:250px;
+  background:#020617;
+  position:fixed;
+  top:0;
+  left:0;
+  bottom:0;
+  padding:25px 18px;
+  overflow-y:auto;
+  box-shadow:4px 0 20px rgba(0,0,0,0.08);
+  z-index:100;
+}
+
+.sidebar .logo{
+  font-size:22px;
+  font-weight:800;
+  color:#f8fafc;
+  margin-bottom:35px;
+}
+
+.sidebar ul{ list-style:none; }
+
+.sidebar ul li{ margin-bottom:12px; }
+
+.sidebar ul li a{
+  display:flex;
+  gap:12px;
+  padding:14px 16px;
+  border-radius:14px;
+  color:#cbd5e1;
+  text-decoration:none;
+  transition:0.3s;
+}
+
+.sidebar ul li a:hover{
+  background:#1e293b;
+  color:#fff;
+  transform:translateX(5px);
+}
+
+.sidebar ul li.active a{
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:#fff;
+}
+
+/* ================= MAIN ================= */
+.main{
+  margin-left:250px;
+  width:calc(100% - 250px);
+  padding:30px;
+}
+
+.main h1{
+  font-size:32px;
+  font-weight:800;
+  margin-bottom:25px;
+}
+
+/* ================= CARD ================= */
+.sale-form{
+  background:white;
+  border-radius:24px;
+  padding:30px;
+  box-shadow:0 10px 30px rgba(15,23,42,0.06);
+}
+
+/* ================= FORM GROUP ================= */
+.form-group{
+  display:flex;
+  flex-direction:column;
+  margin-bottom:18px;
+}
+
+.form-group label{
+  font-weight:700;
+  font-size:14px;
+  margin-bottom:6px;
+}
+
+.form-group input{
+  height:52px;
+  border-radius:14px;
+  border:1px solid #cbd5e1;
+  padding:0 14px;
+  background:#f8fafc;
+}
+
+/* ================= CART ================= */
+.cart-item-row{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:18px;
+  padding:18px;
+  background:#f8fafc;
+  border-radius:18px;
+  margin-bottom:15px;
+}
+
+/* =========================================================
+   🔥 FIX: LAST 3 INPUTS MUST STAY IN ONE ROW
+   ========================================================= */
+
+.form-inline-footer-group{
+  display:grid !important;
+  grid-template-columns:repeat(3, 1fr);
+  gap:18px;
+  margin-top:20px;
+  align-items:stretch;
+}
+
+/* 🚨 IMPORTANT: remove hr from breaking layout */
+.form-inline-footer-group hr{
+  display:none !important;
+}
+
+/* each box */
+.footer-paid-box,
+.footer-balance-box,
+.footer-topup-box{
+  background:white;
+  border:1px solid #e2e8f0;
+  border-radius:18px;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+/* labels */
+.footer-paid-box label,
+.footer-balance-box label,
+.footer-topup-box label{
+  font-weight:700;
+  font-size:14px;
+  margin-bottom:8px;
+}
+
+/* inputs */
+.footer-paid-box input,
+.footer-balance-box input,
+.footer-topup-box input{
+  height:52px;
+  border-radius:12px;
+  border:1px solid #cbd5e1;
+  padding:0 12px;
+  background:#f8fafc;
+  width:100%;
+}
+
+/* 🔥 UNIQUE TOP-UP INPUT COLOR */
+.footer-topup-box input{
+  background:linear-gradient(135deg,#fff7ed,#ffedd5);
+  border:2px solid #fb923c;
+  font-weight:700;
+}
+
+/* helper text */
+.text-muted{
+  font-size:12px;
+  margin-top:6px;
+  color:#64748b;
+}
+
+/* ================= BUTTON ================= */
+.register-btn{
+  width:100%;
+  margin-top:25px;
+  background:linear-gradient(135deg,#16a34a,#15803d);
+  color:white;
+  border:none;
+  padding:16px;
+  border-radius:16px;
+  font-weight:800;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+  .form-inline-footer-group{
+    grid-template-columns:1fr;
+  }
+
+  .main{
+    margin-left:0;
+    width:100%;
+  }
+
+  .sidebar{
+    position:relative;
+    width:100%;
+  }
+}

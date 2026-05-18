@@ -4,86 +4,120 @@ html
     meta(charset='utf-8')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
     title Nyondo Hardware Receipt
+
     link(rel='stylesheet' href='/css/receipt.css')
-    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css')
 
   body
     .receipt-container
-      .card.shadow.border-0.rounded-0.receipt-card
-        .card-body.p-4 
-          .text-center.mb-4.receipt-header
-            h4.fw-bold.mb-1 NYONDO GENERAL HARDWARE
-            p.address Nansana, Wakiso District - Katooke Road
-            p.contact Tel: 0721-234567 | 0772-987654
-            .meta-info
-              small.date Date: #{new Date(sale.date).toLocaleString()}
-              br
-              small.receipt-no Receipts #: #{sale._id.toString().slice(-6).toUpperCase()}
-          
-          hr.border-dark.border-2.opacity-100
-          
-          // ================= MULTI-ITEM PRODUCTS TABLE =================
-          .table-responsive.mb-3
-            table.table.table-sm.table-borderless.align-middle(style="font-size: 14px;")
-              thead.border-bottom.border-dark
-                tr
-                  th.fw-bold(scope="col" style="padding-bottom: 8px;") Description
-                  th.fw-bold.text-center(scope="col" style="padding-bottom: 8px;") Qty
-                  th.fw-bold.text-end(scope="col" style="padding-bottom: 8px;") Amount
-              tbody
-                if sale.items && sale.items.length > 0
-                  each item in sale.items
-                    tr.item-row
-                      td.label(style="padding: 6px 0;")
-                        span.text-uppercase.fw-bold #{item.productName ? item.productName.productName : 'Item Deleted'}
-                      td.value.text-center(style="padding: 6px 0;") #{item.quantity}
-                      td.value.text-end(style="padding: 6px 0;") #{item.total ? item.total.toLocaleString() : '0'} UGX
-                else
+
+      // ================= RECEIPT CARD =================
+      .receipt-card
+
+        // ================= HEADER (Styled to Align Content Left) =================
+        .receipt-header
+          h2 NYONDO GENERAL HARDWARE
+          p.address Nansana, Wakiso District - Katooke Road
+          p.contact Tel: 0721-234567 | 0772-987654
+
+          .meta-info
+            small
+              i.fas.fa-calendar-alt
+              |   Date: #{new Date(sale.date).toLocaleString()}
+            br
+            small
+              i.fas.fa-receipt
+              |   Receipt #: #{sale._id.toString().slice(-6).toUpperCase()}
+
+        hr.divider
+
+        // ================= ITEMS =================
+        .items-section
+          table.items-table
+            thead
+              tr
+                th Description
+                th Qty
+                th.right Amount
+
+            tbody
+              if sale.items && sale.items.length > 0
+                each item in sale.items
                   tr
-                    td.text-center.text-muted(colspan="3" style="padding: 15px 0;") No items listed on this transaction.
-          
-          hr.border-dark.opacity-100
-          
-          // ================= LOGISTICS & TOTALS =================
-          .logistics-summary.mb-2
-            .d-flex.justify-content-between.mb-1.delivery-row
-              span.label Delivery Option :
-              span.value.text-uppercase #{sale.deliveryOption || 'pickup'}
-            
-            if sale.deliveryOption === 'delivery'
-              .d-flex.justify-content-between.mb-1.distance-row
-                span.label Distance :
-                span.value #{sale.distance || 0} km
+                    td
+                      span.item-name
+                        i.fas.fa-box
+                        |   #{item.productName ? item.productName.productName : 'Item Deleted'}
 
-            .d-flex.justify-content-between.mb-1.transport-row
-              span.label Transport Charge :
-              //- Explicit condition check so '0' doesn't cause a falsy crash
-              span.value #{sale.transportFee !== undefined && sale.transportFee !== null ? sale.transportFee.toLocaleString() : '0'} UGX 
-          
-          hr.border-dark.opacity-100
-          
-          .d-flex.justify-content-between.mb-1.subtotal-row
-            span.label Total Cost (Products) :
-            //- UPDATED: Now displays totalAmount cleanly since the route saved it items-only
+                    td.center #{item.quantity}
+
+                    td.right #{item.total ? item.total.toLocaleString() : '0'} UGX
+
+              else
+                tr
+                  td.center(colspan="3")
+                    | No items listed on this transaction.
+
+        hr.divider
+
+        // ================= LOGISTICS =================
+        .logistics
+
+          .row
+            span.label Delivery Option:
+            span.value.delivery-highlight #{sale.deliveryOption || 'pickup'}
+
+          if sale.deliveryOption === 'delivery'
+            .row
+              span.label Distance:
+              span.value #{sale.distance || 0} km
+
+          .row
+            span.label Transport Charge:
+            span.value
+              | #{sale.transportFee !== undefined && sale.transportFee !== null ? sale.transportFee.toLocaleString() : '0'} UGX
+
+        hr.divider
+
+        // ================= TOTALS =================
+        .totals
+
+          .row
+            span.label Total Cost (Products):
             span.value #{sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'} UGX
-          
-          hr.border-dark.opacity-100
-          
-          .d-flex.justify-content-between.mb-1.grand-total-row
-            span.label.fw-bold Total Charge :
-            //- FIXED: Dynamically calculates the final cumulative price on-the-fly right here
-            span.value.fw-bold.total-price #{sale.totalAmount ? (sale.totalAmount + (sale.transportFee || 0)).toLocaleString() : '0'} UGX
-          
-          hr.border-dark.border-2.opacity-100
-          
-          .text-center.mt-4.receipt-footer
-            p.mb-0.small Served by: #{sale.attendant ? sale.attendant.fullname : 'System Operator'}
-            p.mb-0.fw-bold Thanks For Shopping With Us
-            p.mb-0.small.text-muted.disclaimer Goods once sold are not returnable 
 
-      .text-center.mt-4.d-print-none 
-        button.btn.btn-primary.me-2(onclick='window.print()')
-          i.fas.fa-print.me-1 
-          | Print Receipt 
-        a.btn.btn-outline-secondary(href='/newsale') View Sales
+        hr.divider
+
+        .grand-total
+          .row
+            span.label Total Charge:
+            span.value.total-price
+              | #{sale.totalAmount ? (sale.totalAmount + (sale.transportFee || 0)).toLocaleString() : '0'} UGX
+
+        hr.divider.bold
+
+        // ================= FOOTER =================
+        .footer
+          p
+            i.fas.fa-user
+            |   Served by: #{sale.attendant ? sale.attendant.fullname : 'System Operator'}
+
+          p.thanks
+            i.fas.fa-heart
+            |   Thanks For Shopping With Us
+
+          p.disclaimer Goods once sold are not returnable
+
+          // ================= TRANSPORT NOTE =================
+          p.transport-note
+            | Transport charges are calculated based on delivery distance and are added to the total product cost to form the final payable amount.
+
+    // ================= ACTION BUTTONS =================
+    .actions.d-print-none
+      button.print-btn(onclick='window.print()')
+        i.fas.fa-print
+        |   Print Receipt
+
+      a.back-btn(href='/newsale')
+        i.fas.fa-arrow-left
+        |   View Sales

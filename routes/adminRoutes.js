@@ -9,6 +9,8 @@ const { isadmin } = require("../middleware/auth");
 
 // ==========================================
 // 1. Dashboard Stats Route (CORRECTED)
+// ==========================================
+// 1. Dashboard Stats Route (UPGRADED FOR MULTI-ITEM)
 router.get("/admindash", async (req, res) => {
   try {
     const dbusers = await Registration.find();
@@ -18,41 +20,44 @@ router.get("/admindash", async (req, res) => {
       depositsCollected: 0,
       pendingBalance: 0,
     };
-    // calc total sales reve
+
+    // 1. Calculate total sales revenue (Adds totalAmount and transportFee together for each sale)
     const salesAgg = await Sale.aggregate([
       {
         $group: {
           _id: null,
-          // This tells MongoDB to add totalAmount and transportFee together for each sale,
-          // and then calculate the grand sum of all sales.
           grandTotal: { $sum: { $add: ["$totalAmount", "$transportFee"] } },
         },
       },
     ]);
     stats.salesRevenue = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
-    // calculate inventory value
+
+    // 2. Calculate inventory value (Sum of total item investment cost)
     const inventoryAgg = await Stock.aggregate([
       { $group: { _id: null, grandExpenditure: { $sum: "$total" } } },
     ]);
     stats.inventoryValue =
       inventoryAgg.length > 0 ? inventoryAgg[0].grandExpenditure : 0;
-    //   calc deposits
+
+    // 3. Calculate total deposit payments collected today
     const depositsCollectedAgg = await Deposit.aggregate([
       { $group: { _id: null, deposits: { $sum: "$initialDeposit" } } },
     ]);
     stats.depositsCollected =
       depositsCollectedAgg.length > 0 ? depositsCollectedAgg[0].deposits : 0;
 
-    //   balances
+    // 4. Calculate total outstanding pending balances owed by salary earners
     const pendingBalanceAgg = await Deposit.aggregate([
       { $group: { _id: null, balance: { $sum: "$balance" } } },
     ]);
     stats.pendingBalance =
       pendingBalanceAgg.length > 0 ? pendingBalanceAgg[0].balance : 0;
+
+    // 5. Render to your admin interface template file
     res.render("admindash", { stats, dbusers });
   } catch (error) {
-    console.error(error.message);
-    res.status(404).send("Ooops stats not found");
+    console.error("Dashboard Stats Error:", error.message);
+    res.status(500).send("Ooops stats not found");
   }
 });
 
@@ -199,146 +204,315 @@ router.post("/credit/delete/:id", async (req, res) => {
 });
 
 // 4. Deposit Page
+// 4. Deposit Page (GET)
 router.get("/deposit", async (req, res) => {
   try {
+    // 1. Fetch stock items matching your specific material rules
     const stockItems = await Stock.find({
       productName: {
         $regex:
-          /cement iiN|cement iiiN|Ironbars 10mm|Iron Bars 12mm|Iron Bars 16mm|Iron sheets/i,
+          /cement iiN|cement iiiN|Iron Bars 10mm|Iron Bars 12mm|Iron Bars 16mm|Iron sheets/i,
       },
     });
 
+    // 2. Fetch all registered credit customers for the dropdown menu
     const customers = await Regicredit.find();
 
+    // 3. Fetch deposit history records
+    // CHANGED: Added nested population for 'items.productName' so we can see what materials were bought
     const deposits = await Deposit.find()
       .populate("customer")
+      .populate("items.productName")
       .sort({ date: -1 });
 
+    // 4. Render the page with all necessary data arrays
     res.render("deposit", { stockItems, customers, deposits });
   } catch (error) {
     res.status(500).send("Error loading deposit page: " + error.message);
   }
 });
-
 // 5. Process Deposit (POST)
 router.post("/deposit", async (req, res) => {
   try {
-    const { customerId, itemId, initialDeposit, quantity } = req.body;
+    const { customerId, itemId, quantity, initialDeposit } = req.body;
 
+    // 1. Fetch the customer from the database to look up their pre-registered distance
     const customer = await Regicredit.findById(customerId);
-    const item = await Stock.findById(itemId);
-    const qtyWanted = Number(quantity);
-
-    if (item.quantity < qtyWanted) {
+    if (!customer) {
       return res
-        .status(400)
-        .send(`Insufficient Stock! Only ${item.quantity} available.`);
+        .status(404)
+        .send("Error: Registered customer profile not found.");
     }
-    if (item.sellingPrice <= item.buyingPrice) {
-      return res
-        .status(400)
-        .send("Error: Selling price must be higher than buying price.");
+    const customerDistance = customer.distanceFromStore;
+
+    // 2. Normalize the form inputs into standard arrays (handles 1 item or many items seamlessly)
+    const itemsArray = Array.isArray(itemId) ? itemId : [itemId];
+    const quantitiesArray = Array.isArray(quantity) ? quantity : [quantity];
+
+    let materialsSubtotal = 0;
+    const compiledCartItems = [];
+
+    // 3. The Validation Loop: Check stock and prices for every single item in the cart
+    for (let i = 0; i < itemsArray.length; i++) {
+      const stockItem = await Stock.findById(itemsArray[i]);
+
+      if (!stockItem) {
+        return res
+          .status(400)
+          .send(`Error: Product not found in inventory database.`);
+      }
+
+      const qtyWanted = Number(quantitiesArray[i]);
+
+      // Guard A: Ensure quantity is a valid positive integer
+      if (!qtyWanted || qtyWanted <= 0) {
+        return res
+          .status(400)
+          .send("Error: Quantity wanted must be greater than 0.");
+      }
+
+      // Guard B: Inventory stock exhaustion check
+      if (stockItem.quantity < qtyWanted) {
+        return res
+          .status(400)
+          .send(
+            `Insufficient Stock! ${stockItem.productName} only has ${stockItem.quantity} units available.`,
+          );
+      }
+
+      // Guard C: Profit margin validation rule (Selling price must be strictly higher than buying price)
+      if (stockItem.sellingPrice <= stockItem.buyingPrice) {
+        return res
+          .status(400)
+          .send(
+            `Error: Selling price for ${stockItem.productName} (${stockItem.sellingPrice.toLocaleString()} UGX) must be higher than its buying price (${stockItem.buyingPrice.toLocaleString()} UGX) to prevent financial losses.`,
+          );
+      }
+
+      // Calculate costs for this row if all checks pass
+      const itemCost = stockItem.sellingPrice * qtyWanted;
+      materialsSubtotal += itemCost;
+
+      // Push into the array layout matching your upgraded schema structure
+      compiledCartItems.push({
+        productName: stockItem._id,
+        quantity: qtyWanted,
+        price: stockItem.sellingPrice,
+        total: itemCost,
+      });
     }
 
-    const itemsTotalValue = item.sellingPrice * qtyWanted;
+    // =====================================================
+    // 4. AUTOMATED NYONDO TRANSPORT FEE ENGINE
+    // =====================================================
+    let transportFee = 30000; // Default standard charge
 
-    let transportFee = 30000;
-    if (customer.distanceFromStore <= 10 && itemsTotalValue >= 500000) {
-      transportFee = 0;
+    // Check if cumulative materials value is 500,000+ Shs AND registered distance is within 10km
+    if (customerDistance <= 10 && materialsSubtotal >= 500000) {
+      transportFee = 0; // Qualifies for the free transport tier
     }
 
-    const totalCost = itemsTotalValue + transportFee;
-    const amountPaid = Number(initialDeposit);
-    const remainingBalance = totalCost - amountPaid;
+    // =====================================================
+    // 5. INVOICE CALCULATIONS & RECEIPT NUMBER GENERATION
+    // =====================================================
+    const amountPaid = Number(initialDeposit) || 0;
+    const overallInvoiceGrandTotal = materialsSubtotal + transportFee;
+    const remainingBalance = overallInvoiceGrandTotal - amountPaid;
 
-    item.quantity -= qtyWanted;
-    await item.save();
+    // Generate unique tracking code matching your system format
+    const generatedReceiptNumber =
+      "DPST-" + Math.floor(1000 + Math.random() * 9000);
 
+    // =====================================================
+    // 6. SAVE COMPREHENSIVE RECORD TO MONGODB
+    // =====================================================
     const newDeposit = new Deposit({
       customer: customerId,
-      productType: item.productName,
-      quantity: qtyWanted,
-      totalAmount: totalCost,
+      items: compiledCartItems, // Saves the entire cart list array structure
+      totalAmount: overallInvoiceGrandTotal,
       initialDeposit: amountPaid,
       balance: remainingBalance,
       transportFee,
-      receiptNumber: "DPST-" + Math.floor(1000 + Math.random() * 9000),
+      receiptNumber: generatedReceiptNumber,
+      date: new Date(),
     });
 
     await newDeposit.save();
+
+    // =====================================================
+    // 7. DEDUCT PHYSICAL WAREHOUSE INVENTORY STOCK LEVEL
+    // =====================================================
+    for (const element of compiledCartItems) {
+      await Stock.findByIdAndUpdate(element.productName, {
+        $inc: { quantity: -element.quantity },
+      });
+    }
+
+    // Redirect smoothly back to the deposit page view table layout
     res.redirect("/deposit");
   } catch (error) {
-    res.status(400).send("Processing Error: " + error.message);
+    console.error("Multi-item Deposit Error:", error.message);
+    res.status(500).send("Processing Error: " + error.message);
   }
 });
 
 // 6. Receipt (GET)
+// 6. Receipt (GET)
 router.get("/deposit/receipt/:id", async (req, res) => {
   try {
-    const deposit = await Deposit.findById(req.params.id).populate("customer");
-    if (!deposit) return res.status(404).send("Receipt not found");
+    // FETCH & POPULATE: Step inside the items array to extract real product details (like names) from Stock
+    const deposit = await Deposit.findById(req.params.id)
+      .populate("customer")
+      .populate("items.productName");
+
+    if (!deposit) {
+      return res.status(404).send("Receipt not found");
+    }
+
+    // Render the receipt print layout template file
     res.render("depositReceipt", { deposit });
   } catch (error) {
-    res.status(500).send("Error: " + error.message);
+    res.status(500).send("Error generating receipt layout: " + error.message);
   }
 });
-
 // 7. Edit Deposit (GET)
 router.get("/deposit/edit/:id", async (req, res) => {
   try {
-    const deposit = await Deposit.findById(req.params.id).populate("customer");
+    // FIX: Chain another .populate() to deeply load the item details from Stock
+    const deposit = await Deposit.findById(req.params.id)
+      .populate("customer")
+      .populate({
+        path: "items.productName",
+        model: "Stock", // This forces Mongoose to look into your Stock model
+      });
+
     if (!deposit) return res.status(404).send("Record not found");
-    res.render("editDeposit", { d: deposit });
+
+    // Render with the fully loaded items data
+    res.render("editDeposit", { d: deposit, error: null });
   } catch (error) {
     res.status(500).send("Error: " + error.message);
   }
 });
 
 // 8. Update Deposit (POST)
+// 8. Update Deposit Ledger & Balance Owed (POST)
 router.post("/deposit/edit/:id", async (req, res) => {
   try {
     const { newPayment, quantity } = req.body;
+
+    // 1. Fetch the original transaction document
     const deposit = await Deposit.findById(req.params.id).populate("customer");
+    if (!deposit) return res.status(404).send("Deposit record not found");
 
-    const goodsValueOnly = deposit.totalAmount - deposit.transportFee;
-    const unitPrice = goodsValueOnly / deposit.quantity;
+    // Convert inputs into standard arrays to handle single or multiple items uniformly
+    const quantitiesInputArray = Array.isArray(quantity)
+      ? quantity
+      : [quantity];
+    let recomputedMaterialsSubtotal = 0;
+    const updatedCartItems = [];
 
-    const updatedQuantity = Number(quantity);
-    const newGoodsTotal = unitPrice * updatedQuantity;
+    // 2. THE PROCESSING LOOP: Re-evaluate every product line item in the cart
+    for (let i = 0; i < deposit.items.length; i++) {
+      const originalItem = deposit.items[i];
+      const targetStockItem = await Stock.findById(originalItem.productName);
 
-    let transportFee = 30000;
-    if (deposit.customer.distanceFromStore <= 10 && newGoodsTotal >= 500000) {
-      transportFee = 0;
+      const freshQtyWanted = Number(quantitiesInputArray[i]);
+      if (!freshQtyWanted || freshQtyWanted <= 0) {
+        return res
+          .status(400)
+          .send("Error: Product quantity must be 1 or higher.");
+      }
+
+      // Calculate the difference between the old quantity and the new quantity
+      // Example: Changing from 5 bags to 7 bags = +2 (Deduct 2 more from stock)
+      // Example: Changing from 5 bags to 3 bags = -2 (Return 2 back to stock)
+      const stockDifference = freshQtyWanted - originalItem.quantity;
+
+      // Guard: Verify warehouse inventory capacity before allowing an increase
+      if (stockDifference > 0 && targetStockItem.quantity < stockDifference) {
+        return res
+          .status(400)
+          .send(
+            `Insufficient Stock! ${targetStockItem.productName} cannot cover the requested increase.`,
+          );
+      }
+
+      // Adjust physical warehouse inventory dynamically using the difference
+      await Stock.findByIdAndUpdate(originalItem.productName, {
+        $inc: { quantity: -stockDifference },
+      });
+
+      // Compute costs based on the lock-in price saved during the initial deposit
+      const lineTotalCost = originalItem.price * freshQtyWanted;
+      recomputedMaterialsSubtotal += lineTotalCost;
+
+      // Construct updated sub-document item structure
+      updatedCartItems.push({
+        productName: originalItem.productName,
+        quantity: freshQtyWanted,
+        price: originalItem.price,
+        total: lineTotalCost,
+      });
     }
 
-    const updatedTotalPaid = deposit.initialDeposit + Number(newPayment);
-    const finalTotalCost = newGoodsTotal + transportFee;
-    const newBalance = finalTotalCost - updatedTotalPaid;
+    // =====================================================
+    // 3. RE-APPLY AUTOMATED NYONDO TRANSPORT ENGINE RULES
+    // =====================================================
+    let transportFee = 30000; // Reset to standard default charge
 
+    // Re-check if the updated materials value is 500k+ AND distance is within 10km
+    if (
+      deposit.customer.distanceFromStore <= 10 &&
+      recomputedMaterialsSubtotal >= 500000
+    ) {
+      transportFee = 0; // Qualifies for free transport tier
+    }
+
+    // =====================================================
+    // 4. LEDGER RE-BALANCING & PAYMENT CALCULATIONS
+    // =====================================================
+    // Accumulate the original deposit with the newly provided top-up payment amount
+    const upgradedTotalPaymentsCollected =
+      deposit.initialDeposit + (Number(newPayment) || 0);
+
+    // Calculate the new grand total invoice price (Updated Goods Value + Re-evaluated Transport Fee)
+    const revisedGrandInvoiceCost = recomputedMaterialsSubtotal + transportFee;
+
+    // Calculate the remaining balance
+    const computedOutstandingBalance =
+      revisedGrandInvoiceCost - upgradedTotalPaymentsCollected;
+
+    // =====================================================
+    // 5. COMMIT MODIFICATIONS PERMANENTLY TO MONGODB
+    // =====================================================
     await Deposit.findByIdAndUpdate(req.params.id, {
-      quantity: updatedQuantity,
-      initialDeposit: updatedTotalPaid,
-      totalAmount: finalTotalCost,
+      items: updatedCartItems,
+      initialDeposit: upgradedTotalPaymentsCollected,
+      totalAmount: revisedGrandInvoiceCost,
       transportFee: transportFee,
-      balance: newBalance > 0 ? newBalance : 0,
+      balance: computedOutstandingBalance > 0 ? computedOutstandingBalance : 0,
     });
 
     res.redirect("/deposit");
   } catch (error) {
-    res.status(400).send("Update Error: " + error.message);
+    res.status(400).send("Update Processing Failure: " + error.message);
   }
 });
 
 // 9. Delete Deposit (POST)
+// 9. Delete Deposit (FIXED FOR MULTI-ITEM ARRAY HOOKS)
 router.post("/deposit/delete/:id", async (req, res) => {
   try {
     const deposit = await Deposit.findById(req.params.id);
     if (!deposit) return res.status(404).send("Record not found");
 
-    await Stock.findOneAndUpdate(
-      { productName: deposit.productType },
-      { $inc: { quantity: deposit.quantity } },
-    );
+    // Loop through every item inside the multi-item array structure to restore warehouse stock levels
+    for (const element of deposit.items) {
+      await Stock.findByIdAndUpdate(element.productName, {
+        $inc: { quantity: element.quantity }, // Adds physical items back to storage
+      });
+    }
 
     await Deposit.findByIdAndDelete(req.params.id);
     res.redirect("/deposit");

@@ -3,7 +3,7 @@ html
   head
     meta(charset='UTF-8')
     title Update Deposit - Nyondo Hardware
-    link(rel='stylesheet' href='/css/deposit.css')
+    link(rel='stylesheet' href='/css/editdeposit.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
   body
     .sidebar
@@ -16,32 +16,84 @@ html
       h1 Update Payment for Receipt #{d.receiptNumber}
 
       section.sale-form
-        h2 Customer: #{d.customer.fullName}
-        form(action=`/deposit/edit/${d._id}` method='POST')
+        h2 Customer: #{d.customer ? d.customer.fullName : 'Deleted Customer'}
+        
+        //- ERROR ALERT BOX
+        if error
+          #errorBox.error-message
+            i.fas.fa-circle-exclamation
+            span #{error}
+
+        form(action=`/deposit/edit/${d._id}` method='POST' id='editDepositForm')
           
-          .form-group
-            label Item being purchased (Read Only)
-            input(type="text" value=d.productType readonly style="background:#eee")
+          h3.cart-section-title Items in this Order
+          
+          //- DYNAMIC CART ARRAY ITEMS ITERATION
+          #cartContainer
+            if d.items && d.items.length > 0
+              each item in d.items
+                .cart-item-row
+                  .form-group.product-selection-group
+                    label Item Profile (Read Only)
+                    //- FIX: Hidden input field guarantees array element matching on form processing
+                    input(type="hidden" name="itemId" value=(item.productName ? item.productName._id : ''))
+                    input.readonly-input(type="text" value=(item.productName ? `${item.productName.productName} (Locked Price: ${item.price.toLocaleString()} UGX)` : 'Item Deleted') readonly)
 
-          .form-group
-            label Quantity Wanted
-            input(type='number' name='quantity' value=d.quantity min="1" required)
+                  .form-group.quantity-selection-group
+                    label Quantity Wanted
+                    input.quantity-input(type='number' name='quantity' value=item.quantity min="1" required)
+            else
+              //- Fallback layer for single legacy records
+              .cart-item-row
+                .form-group.product-selection-group
+                  label Item Profile (Read Only)
+                  input.readonly-input(type="text" value=d.productType readonly)
+                .form-group.quantity-selection-group
+                  label Quantity Wanted
+                  input.quantity-input(type='number' name='quantity' value=d.quantity min="1" required)
 
-          .form-group
-            label Current Amount Paid (UGX)
-            input(type="text" value=d.initialDeposit.toLocaleString() readonly style="background:#eee")
+          //- NEW INLINE CONTAINER FOR THE LAST THREE ELEMENTS
+          .form-inline-footer-group
+            hr.thin-divider
 
-          .form-group
-            label Current Balance Due
-            input(type="text" value=d.balance.toLocaleString() + " UGX" readonly style="color:red; font-weight:bold; background:#fff3f3")
+            //- 1. PREVIOUS LEDGER STATS: TOTAL PAID
+            .form-group.footer-paid-box
+              label Current Total Amount Paid (UGX)
+              input.readonly-input(type="text" value=d.initialDeposit.toLocaleString() readonly)
 
-          hr
+            //- 2. PREVIOUS LEDGER STATS: BALANCE DUE
+            .form-group.footer-balance-box
+              label Current Balance Due
+              input.readonly-balance-input(type="text" value=`${d.balance.toLocaleString()} UGX` readonly)
 
-          .form-group
-            label(style="color: green; font-weight: bold;") Enter New Money Deposited Today (UGX)
-            input(type='number' name='newPayment' placeholder="e.g. 50000" required)
-            small.text-muted This amount will be added to the total paid.
+            hr.thick-divider
 
-          button.register-btn(type='submit' style="background: #27ae60;") 
+            //- 3. THE TRANSACTION ENTRY TOP-UP FIELD
+            .form-group.footer-topup-box
+              label.highlight-label Enter New Money Deposited Today (UGX)
+              input(type='number' name='newPayment' value="0" min="0" placeholder="e.g. 50000" required)
+              small.text-muted This amount will automatically be added to previous payments, reducing the balance due.
+
+          button.register-btn.btn-update-ledger(type='submit') 
             i.fas.fa-hand-holding-usd
             |  Update Balance
+
+    //- JAVASCRIPT VALIDATION & INTERACTIVE STATE HOOKS
+    script.
+      document.addEventListener('DOMContentLoaded', () => {
+        const errorBox = document.getElementById('errorBox');
+        
+        // Auto-hide the error banner when the operator adjusts any entry field
+        if (errorBox) {
+          const formInputs = document.querySelectorAll('input');
+          formInputs.forEach(input => {
+            input.addEventListener('input', () => {
+              errorBox.classList.add('hidden');
+            }, { once: true });
+            
+            input.addEventListener('change', () => {
+              errorBox.classList.add('hidden');
+            }, { once: true });
+          });
+        }
+      });

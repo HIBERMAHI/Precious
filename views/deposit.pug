@@ -5,14 +5,15 @@ html
     title Deposit Scheme - Nyondo Hardware
     link(rel='stylesheet' href='/css/deposit.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+
   body
     .sidebar
       .logo ⚒ NYONDO HARDWARE
       ul
-        li: a(href='admindash'): i.fas.fa-home Dashboard
-        li.active: a(href='deposit'): i.fas.fa-piggy-bank Deposit Scheme
-        li: a(href='regicredit'): i.fas.fa-user-plus Register Customer
-        li: a(href='logout'): i.fas.fa-sign-out-alt Logout
+        li: a(href='/admindash'): i.fas.fa-home Dashboard
+        li.active: a(href='/deposit'): i.fas.fa-piggy-bank Deposit Scheme
+        li: a(href='/regicredit'): i.fas.fa-user-plus Register Customer
+        li: a(href='/logout'): i.fas.fa-sign-out-alt Logout
 
     .main
       h1 Salary Earner Deposit Scheme
@@ -20,37 +21,65 @@ html
       //- NEW DEPOSIT ENTRY FORM
       section.sale-form
         h2 Record New Transaction
-        form(action='/deposit' method='POST')
-          .form-group
-            label Select Registered Customer
-            select(name='customerId' required)
-              option(value='' disabled selected) -- Choose Customer --
-              each c in customers
-                option(value=c._id) #{c.fullName} (#{c.address})
+        
+        if error
+          #errorBox.error-message
+            i.fas.fa-circle-exclamation
+            span #{error}
+
+        form(action='/deposit' method='POST' id='depositForm')
           
-          .form-group
-            label Select Item (Displays Stock & Price)
-            select(name='itemId' required)
-              option(value='' disabled selected) -- Select Product --
-              each item in stockItems
-                if item.quantity > 0
-                  option(value=item._id) #{item.productName} (Stock: #{item.quantity} | Price: #{item.sellingPrice.toLocaleString()} UGX)
-                else
-                  option(value=item._id disabled) #{item.productName} (OUT OF STOCK)
-
-          .form-group
-            label Quantity Wanted
-            input(type='number' name='quantity' value="1" min="1" required)
-
-          .form-group
-            label Initial Deposit Amount (UGX)
-            input(type='number' name='initialDeposit' required placeholder="Enter amount paid today")
+          //- GROUPED HIGHER HEADER ELEMENTS (Aligned inside a single row via CSS layout controls)
+          .form-inline-header-group
+            .form-group.customer-selection-box
+              label Select Registered Customer
+              select(name='customerId' required)
+                option(value='' disabled selected) -- Choose Customer --
+                each c in customers
+                  option(value=c._id) #{c.fullName} ({c.address} - #{c.distanceFromStore} KM)
             
+            .form-group.deposit-payment-box
+              label Initial Deposit Amount (UGX)
+              input(type='number' name='initialDeposit' required placeholder="Enter amount paid today" min="0")
+
+            .form-group.live-calculation-box
+              label.summary-label Estimated Materials Value
+              .total-summary-box
+                span.summary-amount#overallOrderTotal 0
+                span.summary-currency  UGX
+          
+          h3.cart-section-title Selected Cart Items
+          
+          //- THE MULTI-ITEM CART CONTAINER
+          #cartContainer
+            .cart-item-row
+              .form-group.product-selection-group
+                label Select Item (Displays Stock & Price)
+                select.product-select(name='itemId' required)
+                  option(value='' disabled selected) -- Select Product --
+                  each item in stockItems
+                    if item.quantity > 0
+                      option(value=item._id data-price=item.sellingPrice) #{item.productName} (Stock: #{item.quantity} | Price: #{item.sellingPrice.toLocaleString()} UGX)
+                    else
+                      option(value=item._id disabled) #{item.productName} (OUT OF STOCK)
+              
+              .form-group.quantity-selection-group
+                label Quantity Wanted
+                input.quantity-input(type='number' name='quantity' value="1" min="1" required)
+              
+              button.remove-item-btn(type='button')
+                i.fas.fa-trash-alt
+
+          .add-more-container
+            button.btn-add-item(type='button' id='addItemBtn')
+              i.fas.fa-plus-circle
+              |  Add Another Item
+
           button.register-btn(type='submit') 
             i.fas.fa-file-invoice-dollar
             |  Process & Save Transaction
 
-      //- DATABASE RETRIEVAL TABLE
+      //- RETRIEVAL TABLE
       section.recent-sales
         h2 Deposit Records & Balance Tracking
         table
@@ -58,40 +87,142 @@ html
             tr
               th Receipt #
               th Customer
-              th Item (Qty)
+              th Distance (KM)
+              th Material Name
+              th Quantity
               th Total Price
               th Amt Paid
               th Status / Balance
               th Action
           tbody
-            each d in deposits
-              tr
-                td(style="font-weight:bold") #{d.receiptNumber}
-                td #{d.customer ? d.customer.fullName : 'Deleted'}
-                td #{d.productType} (x#{d.quantity})
-                td #{d.totalAmount.toLocaleString()}
-                td(style="color: green;") #{d.initialDeposit.toLocaleString()}
-                
-                //- STATUS & BALANCE FIELD
-                td
-                  if d.balance > 0
-                    span(style="color: #e67e22; font-weight: bold;") PENDING: #{d.balance.toLocaleString()} UGX
-                  else
-                    span(style="color: #27ae60; font-weight: bold;") COMPLETED (0 UGX)
+            if deposits && deposits.length > 0
+              each d in deposits
+                tr
+                  td.receipt-cell #{d.receiptNumber}
+                  td.customer-cell #{d.customer ? d.customer.fullName : 'Deleted'}
+                  
+                  //- DISTANCE CELL OUTPUT RIGHT AFTER CUSTOMER PROFILE
+                  td.distance-cell 
+                    if d.customer
+                      | #{d.customer.distanceFromStore} Km
+                    else
+                      | N/A
 
-                //- ACTION FIELD
-                td(style="display: flex; gap: 10px; align-items: center;")
-                  a(href=`/deposit/receipt/${d._id}` target="_blank" style="color: #3498db;")
-                    i.fas.fa-print
+                  td.items-list-cell
+                    if d.items && d.items.length > 0
+                      each entry in d.items
+                        .cart-item-name-display
+                          | #{entry.productName ? entry.productName.productName : 'Item Deleted'}
+                    else
+                      .cart-item-name-display
+                        | #{d.productType || 'N/A'}
                   
-                  if d.balance > 0
-                    a(href=`/deposit/edit/${d._id}` style="color: #f39c12; text-decoration: none; font-weight: bold;")
+                  td.quantity-list-cell
+                    if d.items && d.items.length > 0
+                      each entry in d.items
+                        .cart-qty-display
+                          | #{entry.quantity} units
+                    else
+                      .cart-qty-display
+                        | #{d.quantity || 0} units
+                  
+                  td.total-cell #{d.totalAmount.toLocaleString()}
+                  td.paid-cell #{d.initialDeposit.toLocaleString()}
+                  
+                  td.status-cell
+                    if d.balance > 0
+                      span.status-pending PENDING: #{d.balance.toLocaleString()} UGX
+                    else
+                      span.status-completed COMPLETED (0 UGX)
+
+                  td.actions-cell
+                    a.action-btn-print(href=`/deposit/receipt/${d._id}` target="_blank" title="Print Receipt")
+                      i.fas.fa-print
+                    
+                    a.action-btn-edit(href=`/deposit/edit/${d._id}` title="Edit Ledger / Pay Balance")
                       i.fas.fa-edit
-                  
-                  //- DELETE BUTTON FOR MISTAKES
-                  form(action=`/deposit/delete/${d._id}` method="POST" style="display:inline;" onsubmit="return confirm('CORRECTION: Delete this record and return items to stock?')")
-                    button(type="submit" style="background:none; border:none; color:#e74c3c; cursor:pointer; padding:0;")
-                      i.fas.fa-trash-alt
+                    
+                    form(action=`/deposit/delete/${d._id}` method="POST" onsubmit="return confirm('CORRECTION: Delete this entire transaction record and return all items back to stock inventory?')")
+                      button.action-btn-delete(type="submit" title="Delete Record")
+                        i.fas.fa-trash-alt
             else
               tr
-                td(colspan="7" style="text-align:center") No deposits recorded yet.
+                //- Adjusted colspan to 9 to cleanly match the structural row count balance
+                td.empty-table-cell(colspan="9") No deposits recorded yet.
+
+    script.
+      document.addEventListener('DOMContentLoaded', () => {
+        const cartContainer = document.getElementById('cartContainer');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const overallOrderTotalText = document.getElementById('overallOrderTotal');
+        const errorBox = document.getElementById('errorBox');
+
+        if (errorBox) {
+          document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('input', () => errorBox.classList.add('hidden'), { once: true });
+            element.addEventListener('change', () => errorBox.classList.add('hidden'), { once: true });
+          });
+        }
+
+        function calculateCartTotals() {
+          let grandSum = 0;
+          const rows = cartContainer.querySelectorAll('.cart-item-row');
+          
+          rows.forEach(row => {
+            const select = row.querySelector('.product-select');
+            const qtyInput = row.querySelector('.quantity-input');
+            
+            const selectedOption = select.options[select.selectedIndex];
+            if (selectedOption && selectedOption.value) {
+              const unitPrice = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+              const qty = parseInt(qtyInput.value) || 0;
+              grandSum += (unitPrice * qty);
+            }
+          });
+          overallOrderTotalText.textContent = grandSum.toLocaleString();
+        }
+
+        cartContainer.addEventListener('change', (e) => {
+          if (e.target.classList.contains('product-select') || e.target.classList.contains('quantity-input')) {
+            calculateCartTotals();
+          }
+        });
+
+        cartContainer.addEventListener('input', (e) => {
+          if (e.target.classList.contains('quantity-input')) {
+            calculateCartTotals();
+          }
+        });
+
+        addItemBtn.addEventListener('click', () => {
+          const baseRow = cartContainer.querySelector('.cart-item-row');
+          const clonedRow = baseRow.cloneNode(true);
+          
+          const newSelect = clonedRow.querySelector('.product-select');
+          const newQtyInput = clonedRow.querySelector('.quantity-input');
+          const removeBtn = clonedRow.querySelector('.remove-item-btn');
+          
+          newSelect.selectedIndex = 0;
+          newQtyInput.value = 1;
+          
+          removeBtn.addEventListener('click', () => {
+            clonedRow.remove();
+            calculateCartTotals();
+          });
+
+          cartContainer.appendChild(clonedRow);
+          calculateCartTotals();
+        });
+
+        cartContainer.querySelectorAll('.cart-item-row').forEach(row => {
+          const removeBtn = row.querySelector('.remove-item-btn');
+          removeBtn.addEventListener('click', () => {
+            if (cartContainer.querySelectorAll('.cart-item-row').length > 1) {
+              row.remove();
+              calculateCartTotals();
+            } else {
+              alert("Your cart must contain at least one item to proceed.");
+            }
+          });
+        });
+      });
