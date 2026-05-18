@@ -3,7 +3,7 @@ html
   head
     meta(charset='UTF-8')
     title Sales Page - Nyondo Hardware
-    link(rel='stylesheet' href='/css/storedash.css')
+    link(rel='stylesheet' href='/css/storsales.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
 
   body
@@ -90,23 +90,29 @@ html
               th Total (UGX)
               th Attendant
 
-              if user.role === 'salesattendant' || user.role === 'admin'
-                th Actions
-
           tbody
             each sale in dbSales
               tr
                 td #{new Date(sale.date).toLocaleString()}
 
+                // Reach inside multi-item array for Product Name
                 td
-                  #{sale.productName ? sale.productName.productName : 'Item deleted'}
+                  each item in sale.items
+                    div #{item.productName ? item.productName.productName : 'Item deleted'}
 
-                td #{sale.quantity}
+                // Reach inside multi-item array for Quantities
+                td
+                  each item in sale.items
+                    div #{item.quantity}
 
-                td #{sale.price}
+                // Reach inside multi-item array for Price values
+                td
+                  each item in sale.items
+                    div #{item.price ? item.price.toLocaleString() : '0'}
 
-                td #{sale.totalAmount}
+                // Accurate complete collection money (Products + Transport)
+                td #{(sale.totalAmount + (sale.transportFee || 0)).toLocaleString()}
+                
                 td #{sale.attendant ? sale.attendant.fullname : 'unknown'}
 
-                if user.role === 'salesattendant' || user.role === 'admin'
-                  td
+                

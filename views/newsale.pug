@@ -142,9 +142,8 @@ html
               th Items Summary
               th Qty
               th P.Method
-              th Status
               th T.Fee
-              th T.Amount
+              th Distance
               th Attendant
               th Date
               if user && (user.role === "salesattendant" || user.role === "admin")
@@ -176,10 +175,9 @@ html
                       span(style="color: #94a3b8;") -
 
                   td #{sale.paymentMethod}
-                  td
-                    span.status-badge(class=sale.status) #{sale.status}
+                  
                   td #{sale.transportFee ? sale.transportFee.toLocaleString() : '0'}
-                  td(style="font-weight: 700;") #{sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'}
+                  td(style="font-weight: 700;") #{sale.distance ? sale.distance.toLocaleString() : '0'}
                   td #{sale.attendant ? sale.attendant.fullname : 'unknown'}
                   td #{new Date(sale.date).toLocaleString()}
                   

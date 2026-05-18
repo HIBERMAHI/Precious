@@ -77,14 +77,16 @@ router.get("/ssales", issalesattendantOradmin, async (req, res) => {
     // =====================================================
     // 5. SALES REVENUE (TOTAL AMOUNT)
     // =====================================================
-    const salesAgg = await Sale.aggregate([
-      {
-        $group: {
-          _id: null,
-          grandTotal: { $sum: "$totalAmount" },
-        },
-      },
-    ]);
+   const salesAgg = await Sale.aggregate([
+  {
+    $group: {
+      _id: null,
+      // This tells MongoDB to add totalAmount and transportFee together for each sale, 
+      // and then calculate the grand sum of all sales.
+      grandTotal: { $sum: { $add: ["$totalAmount", "$transportFee"] } },
+    },
+  },
+]);
 
     stats.salesRevenue = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
 
@@ -118,13 +120,7 @@ router.get("/newsale", issalesattendantOradmin, async (req, res) => {
     res.status(500).send("Unable to pick sales from the data base");
   }
 });
-// making a sale
-// =====================================================
-// POST REGISTER NEW SALE (MULTI-ITEM WORKFLOW)
-// =====================================================
-// =====================================================
-// POST REGISTER NEW SALE (MULTI-ITEM WORKFLOW)
-// =====================================================
+// making a sale  post route
 router.post("/newsale", issalesattendantOradmin, async (req, res) => {
   try {
     const {
@@ -140,12 +136,12 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
       date,
     } = req.body;
 
-    // Force inputs into parallel arrays to support both single and multi-item rows safely
+    // 1. Force inputs into parallel arrays to support both single and multi-item rows safely
     const products = Array.isArray(productName) ? productName : [productName];
     const quantities = Array.isArray(quantity) ? quantity : [quantity];
     const prices = Array.isArray(price) ? price : [price];
 
-    // 1. Phone Format Validation Check
+    // Phone Format Validation Check
     const phoneRegex = /^(07[0-9]{8}|\+256[0-9]{9})$/;
     if (!phoneRegex.test(phone)) {
       const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
@@ -167,14 +163,12 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
     for (let i = 0; i < products.length; i++) {
       const stockItem = await Stock.findById(products[i]);
 
-      // Check if product exists in database
       if (!stockItem) {
         const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
         const dbSales = await Sale.find()
           .populate("items.productName")
           .populate("attendant", "fullname")
           .sort({ date: -1 });
-
         return res.render("newsale", {
           error: "Product not found in stock",
           items: activeStocks,
@@ -185,14 +179,12 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
       const qty = parseInt(quantities[i]);
       const pr = parseFloat(prices[i]);
 
-      // Quantity value check
       if (!qty || qty <= 0) {
         const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
         const dbSales = await Sale.find()
           .populate("items.productName")
           .populate("attendant", "fullname")
           .sort({ date: -1 });
-
         return res.render("newsale", {
           error: "Quantity must be greater than 0",
           items: activeStocks,
@@ -200,14 +192,12 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
         });
       }
 
-      // Inventory availability verification check
       if (stockItem.quantity < qty) {
         const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
         const dbSales = await Sale.find()
           .populate("items.productName")
           .populate("attendant", "fullname")
           .sort({ date: -1 });
-
         return res.render("newsale", {
           error: `Not enough stock for ${stockItem.productName}. Available: ${stockItem.quantity}`,
           items: activeStocks,
@@ -215,14 +205,12 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
         });
       }
 
-      // Financial margin protection validation check
       if (pr <= stockItem.buyingPrice) {
         const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
         const dbSales = await Sale.find()
           .populate("items.productName")
           .populate("attendant", "fullname")
           .sort({ date: -1 });
-
         return res.render("newsale", {
           error: `Selling price for ${stockItem.productName} must be greater than its buying price (${stockItem.buyingPrice} UXG).`,
           items: activeStocks,
@@ -230,7 +218,6 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
         });
       }
 
-      // Push mapped sub-document to compiling array list
       compiledItems.push({
         productName: stockItem._id,
         quantity: qty,
@@ -239,40 +226,54 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
       });
     }
 
-    // 3. Process Products Value & Transport Fees
-    // Calculates the combined sum total of all items ordered safely
-    const productTotalSum = compiledItems.reduce((sum, item) => sum + item.total, 0);
-    const dist = parseInt(distance) || 0;
+    // =====================================================
+    // 3. FIXED TRANSPORT ENGINE (FORCED CHARGE LOGIC)
+    // =====================================================
+    const productTotalSum = compiledItems.reduce(
+      (sum, item) => sum + item.total,
+      0,
+    );
+    const cleanDistance =
+      distance === "" || distance === undefined ? 0 : parseInt(distance);
 
     let transportFee = 0;
+
+    // FIRST LEVEL CHECK: Are they asking for Delivery?
     if (deliveryOption && deliveryOption.toLowerCase() === "delivery") {
-      // Free delivery tier: distance <= 10km AND products base sum total >= 500,000 UGX
-      transportFee = dist <= 10 && productTotalSum >= 500000 ? 0 : 30000;
+      // SECOND LEVEL CHECK: Do they qualify for the free tier?
+      if (cleanDistance <= 10 && productTotalSum >= 500000) {
+        transportFee = 0; // Within 10km AND >= 500k -> FREE
+      } else {
+        transportFee = 30000; // ELSE -> Force the 30,000 shs charge!
+      }
     } else {
+      // If it's a Pickup order, transport is ALWAYS 0 shs regardless of distance/amount
       transportFee = 0;
     }
 
-    // Grand final total calculated from items summary and delivery options
-    const totalAmount = productTotalSum + transportFee;
+    // Keep totalAmount strictly for product costs so Pug can add them cleanly
+    const totalAmount = productTotalSum;
 
-    // 4. Create and Save the Master Sale Record
+    // =====================================================
+    // 4. CREATE AND SAVE THE RECORD
+    // =====================================================
     const newsale = new Sale({
       customerName,
       phone,
       items: compiledItems,
-      deliveryOption,
-      distance: dist,
+      deliveryOption: deliveryOption || "pickup",
+      distance: deliveryOption === "delivery" ? cleanDistance : 0,
       paymentMethod,
       status: status || "completed",
-      transportFee,
-      totalAmount,
+      transportFee, // Saves 0 or 30000 based on the rule check above
+      totalAmount, // Raw item cost subtotal
       date,
       attendant: req.user._id,
     });
 
     await newsale.save();
 
-    // 5. Deduct Stock Levels across inventory collections safely
+    // 5. Deduct Stock Levels safely
     for (const item of compiledItems) {
       await Stock.findByIdAndUpdate(item.productName, {
         $inc: { quantity: -item.quantity },
@@ -287,25 +288,13 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
       .populate("items.productName")
       .populate("attendant", "fullname")
       .sort({ date: -1 });
-
     return res.status(500).render("newsale", {
-      error: "Something went wrong while processing the sale",
+      error: "Something went wrong processing the sale",
       items: activeStocks,
       dbSales,
     });
   }
 });
-
-
-// =====================================================
-// POST REGISTER NEW SALE (MULTI-ITEM WORKFLOW)
-// =====================================================
-
-// making a sale
-
-// =====================================================
-// POST REGISTER NEW SALE (MULTI-ITEM WORKFLOW)
-// =====================================================
 
 // deleting sale
 router.post("/delete/:id", issalesattendantOradmin, async (req, res) => {
@@ -368,12 +357,6 @@ router.get("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
 });
 
 // updating sale (POST)
-// =====================================================
-// POST UPDATE SALE DATA (FIXED MULTI-ITEM STOCK ENGINE)
-
-// =====================================================
-// POST UPDATE SALE DATA (FIXED MULTI-ITEM STOCK ENGINE)
-// =====================================================
 router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
   try {
     const {
@@ -418,7 +401,12 @@ router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
       const stockItem = await Stock.findById(products[i]);
 
       if (!stockItem) {
-        await rollbackStockEdits(sale.items);
+        // Simple mock function check / direct array fallback inline to keep code running
+        for (const oldItem of sale.items) {
+          await Stock.findByIdAndUpdate(oldItem.productName, {
+            $inc: { quantity: -oldItem.quantity },
+          });
+        }
         return res.render("saleedit", {
           sale,
           error: "Product not found in stock database",
@@ -429,25 +417,35 @@ router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
       const pr = parseFloat(prices[i]);
 
       if (!qty || qty <= 0) {
-        await rollbackStockEdits(sale.items);
+        for (const oldItem of sale.items) {
+          await Stock.findByIdAndUpdate(oldItem.productName, {
+            $inc: { quantity: -oldItem.quantity },
+          });
+        }
         return res.render("saleedit", {
           sale,
           error: "Quantity must be greater than 0",
         });
       }
 
-      // Check current item availability
       if (stockItem.quantity < qty) {
-        await rollbackStockEdits(sale.items);
+        for (const oldItem of sale.items) {
+          await Stock.findByIdAndUpdate(oldItem.productName, {
+            $inc: { quantity: -oldItem.quantity },
+          });
+        }
         return res.render("saleedit", {
           sale,
           error: `Not enough stock for ${stockItem.productName}. Max available with current invoice: ${stockItem.quantity}`,
         });
       }
 
-      // Financial profit check (selling price vs buying price)
       if (pr <= stockItem.buyingPrice) {
-        await rollbackStockEdits(sale.items);
+        for (const oldItem of sale.items) {
+          await Stock.findByIdAndUpdate(oldItem.productName, {
+            $inc: { quantity: -oldItem.quantity },
+          });
+        }
         return res.render("saleedit", {
           sale,
           error: `Selling price for ${stockItem.productName} must be higher than its buying price (${stockItem.buyingPrice} UGX).`,
@@ -469,33 +467,41 @@ router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
       });
     }
 
-    // Re-calculate Subtotals and Transport Fees
+    // =====================================================
+    // THE EXACT FIXED TRANSPORT LOGIC ENGINE
+    // =====================================================
     const subTotal = updatedCompiledItems.reduce((sum, i) => sum + i.total, 0);
-    const dist = parseInt(distance) || 0;
+    const cleanDistance =
+      distance === "" || distance === undefined ? 0 : parseInt(distance);
 
-    // Evaluate deliveryOption string values correctly
     let transportFee = 0;
+
+    // Check delivery type selection
     if (deliveryOption && deliveryOption.toLowerCase() === "delivery") {
-      // Free delivery tier: distance <= 10km AND items value >= 500,000 UGX
-      transportFee = dist <= 10 && subTotal >= 500000 ? 0 : 30000;
+      // Evaluate strict free eligibility threshold
+      if (cleanDistance <= 10 && subTotal >= 500000) {
+        transportFee = 0; // Free Tier criteria achieved
+      } else {
+        transportFee = 30000; // Condition unfulfilled -> Force standard 30,000 UGX
+      }
     } else {
-      // Automatic zero charge if pickup or undefined
-      transportFee = 0;
+      transportFee = 0; // Baseline zero charge fallback for self-pickups
     }
 
-    // Grand total configuration
-    const totalAmount = subTotal + transportFee;
+    // CRITICAL CORRECTION: totalAmount is now kept strictly as Product Costs Only.
+    // It no longer blends subTotal + transportFee together here!
+    const totalAmount = subTotal;
 
-    // STEP 4: Update the Sale collection record with clean totals
+    // STEP 4: Update the Sale collection record with clean split variables
     await Sale.findByIdAndUpdate(req.params.id, {
       customerName,
       phone,
       items: updatedCompiledItems,
-      deliveryOption,
-      distance: dist,
-      subTotal, // Saved cleanly to handle split fields on frontend view engines
-      transportFee,
-      totalAmount,
+      deliveryOption: deliveryOption || "pickup",
+      distance: deliveryOption === "delivery" ? cleanDistance : 0,
+      subTotal,
+      transportFee, // 0 or 30000
+      totalAmount, // Products Only Total
     });
 
     return res.redirect("/newsale");
@@ -506,15 +512,6 @@ router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
     });
   }
 });
-// =====================================================
-// POST UPDATE SALE DATA (FIXED MULTI-ITEM STOCK ENGINE)
-// =====================================================
-
-// receipt
-
-// =====================================================
-// GET PRINT INVOICE RECEIPT (MULTI-ITEM POPULATE)
-// =====================================================
 router.get("/receipt/:id", issalesattendantOradmin, async (req, res) => {
   try {
     // CHANGE: Reconfigured population syntax to extract properties inside the deep sub-document array layout

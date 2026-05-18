@@ -62,27 +62,62 @@ router.get("/storedash",isstoremanagerOradmin, async (req, res) => {
   }
 });
 
-router.get("/storsales",isstoremanagerOradmin, async (req, res) => {
+// storesales
+router.get("/storsales", isstoremanagerOradmin, async (req, res) => {
   try {
     let stats = {
-      salesRevenue:0,
-      itemsSold:0,
+      salesRevenue: 0,
+      itemsSold: 0,
     };
-    const salesAgg= await Sale.aggregate(
-      [{$group: {_id:null, grandTotal: {$sum:'$totalAmount'}}},]
-    );
-    stats.salesRevenue = salesAgg.length > 0? salesAgg[0].grandTotal:0;
-    const itemsAgg = await Sale.aggregate(
-      [{$group: {_id:null, grandItems: {$sum : '$quantity'}}},]
-    );
-    stats.itemsSold = itemsAgg.length>0 ?itemsAgg[0].grandItems:0;
-    const dbSales = await Sale.find().sort({ createdAt: -1 })
-      .populate("productName", "productName")
+
+    // =====================================================
+    // 1. REVENUE CALCULATOR (MULTI-ITEM LOGIC ENGINE)
+    // Adds totalAmount and transportFee together to count all money
+    // =====================================================
+    const salesAgg = await Sale.aggregate([
+      {
+        $group: {
+          _id: null,
+          grandTotal: { $sum: { $add: ["$totalAmount", "$transportFee"] } },
+        },
+      },
+    ]);
+    stats.salesRevenue = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
+
+    // =====================================================
+    // 2. ITEMS SOLD CALCULATOR (MULTI-ITEM LOGIC ENGINE)
+    // Unwinds the items array sub-document rows to accurately count quantities
+    // =====================================================
+    const itemsAgg = await Sale.aggregate([
+      { $unwind: "$items" },
+      {
+        $group: {
+          _id: null,
+          grandItems: { $sum: "$items.quantity" },
+        },
+      },
+    ]);
+    stats.itemsSold = itemsAgg.length > 0 ? itemsAgg[0].grandItems : 0;
+
+    // =====================================================
+    // 3. FETCH SALES DATABASE COLLECTION & POPULATION
+    // deep populates items array and links attendant object fields
+    // =====================================================
+    const dbSales = await Sale.find()
+      .populate({
+        path: "items.productName",
+        select: "productName",
+      })
       .populate("attendant", "fullname")
-      // .sort({ date: -1 });
+      .sort({ date: -1 }); // Keeping sorting unified with your historical logs field
+
+    // =====================================================
+    // 4. RENDER VIEW TARGET ENGINE
+    // =====================================================
     res.render("storsales", { dbSales, stats });
   } catch (error) {
-    console.error(error.message);
+    // Prints technical system crash traces to your developer console terminal window
+    console.error("STORSALES ROUTE EXCEPTION:", error.message);
     res.status(404).send("Unable to pick sales from data base");
   }
 });

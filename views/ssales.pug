@@ -98,9 +98,10 @@ html
             thead
               tr
                 th Customer
-                th Items Detailed Summary
+                th Item Name
+                th Quantity
                 th Payment Method
-                th Status
+                th Distance
                 th Attendant
                 th Total Amount
                 th Date
@@ -111,25 +112,38 @@ html
                   tr.table-row
                     td.customer-cell #{sale.customerName}
 
-                    // ================= UNIFIED MULTI-ITEM CELL =================
+                    // ================= DEDICATED ITEM NAME COLUMN (No Quantities / No Prices) =================
                     td.summary-cell
                       if sale.items && sale.items.length > 0
                         .item-summary-card
                           each item in sale.items
-                            .item-detail-row
-                              span.item-name #{item.productName ? item.productName.productName : 'Item deleted'}
-                              span.item-qty-badge [x#{item.quantity}]
-                              span.item-unit-price #{item.price ? item.price.toLocaleString() : '0'} UGX
+                            .item-detail-row(style="margin-bottom: 4px;")
+                              span.item-name(style="display: block; font-weight: 600; text-transform: uppercase;") 
+                                | #{item.productName ? item.productName.productName : 'Item deleted'}
                       else
                         span.no-items-fallback No items listed
 
+                    // ================= INDEPENDENT QUANTITY COLUMN =================
+                    td.quantity-cell(style="text-align: center;")
+                      if sale.items && sale.items.length > 0
+                        .item-qty-card
+                          each item in sale.items
+                            .item-qty-row(style="margin-bottom: 4px;")
+                              span.item-qty-display(style="font-weight: bold; color: #2563eb;") 
+                                | #{item.quantity}
+                      else
+                        span(style="color: #94a3b8;") -
+
                     td.payment-cell #{sale.paymentMethod || 'N/A'}
-                    td.status-cell
-                      span.status-badge(class=sale.status) #{sale.status || 'completed'}
+                    
+                    td.distance-cell #{sale.distance}
+                    
                     td.attendant-cell #{sale.attendant ? sale.attendant.fullname : 'Unknown'}
-                    td.amount-cell #{sale.totalAmount.toLocaleString()} UGX
+                    
+                    td.amount-cell(style="font-weight: 700;") #{sale.totalAmount.toLocaleString()} UGX
+                    
                     td.date-cell #{new Date(sale.date).toLocaleString()}
 
               else
                 tr.empty-table-row
-                  td.text-center-fallback(colspan='7') No sales have been recorded yet
+                  td.text-center-fallback(colspan='8') No sales have been recorded yet

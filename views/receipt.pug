@@ -58,20 +58,22 @@ html
 
             .d-flex.justify-content-between.mb-1.transport-row
               span.label Transport Charge :
-              span.value #{sale.transportFee ? sale.transportFee.toLocaleString() : '0'} UGX 
+              //- Explicit condition check so '0' doesn't cause a falsy crash
+              span.value #{sale.transportFee !== undefined && sale.transportFee !== null ? sale.transportFee.toLocaleString() : '0'} UGX 
           
           hr.border-dark.opacity-100
           
           .d-flex.justify-content-between.mb-1.subtotal-row
             span.label Total Cost (Products) :
-            //- FIXED: Subtracts the transport fee from the total amount to accurately isolate product-only costs
-            span.value #{sale.totalAmount ? (sale.totalAmount - (sale.transportFee || 0)).toLocaleString() : '0'} UGX
+            //- UPDATED: Now displays totalAmount cleanly since the route saved it items-only
+            span.value #{sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'} UGX
           
           hr.border-dark.opacity-100
           
           .d-flex.justify-content-between.mb-1.grand-total-row
             span.label.fw-bold Total Charge :
-            span.value.fw-bold.total-price #{sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'} UGX
+            //- FIXED: Dynamically calculates the final cumulative price on-the-fly right here
+            span.value.fw-bold.total-price #{sale.totalAmount ? (sale.totalAmount + (sale.transportFee || 0)).toLocaleString() : '0'} UGX
           
           hr.border-dark.border-2.opacity-100
           

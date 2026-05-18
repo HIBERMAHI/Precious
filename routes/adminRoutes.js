@@ -20,7 +20,14 @@ router.get("/admindash", async (req, res) => {
     };
     // calc total sales reve
     const salesAgg = await Sale.aggregate([
-      { $group: { _id: null, grandTotal: { $sum: "$totalAmount" } } },
+      {
+        $group: {
+          _id: null,
+          // This tells MongoDB to add totalAmount and transportFee together for each sale,
+          // and then calculate the grand sum of all sales.
+          grandTotal: { $sum: { $add: ["$totalAmount", "$transportFee"] } },
+        },
+      },
     ]);
     stats.salesRevenue = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
     // calculate inventory value
@@ -52,7 +59,7 @@ router.get("/admindash", async (req, res) => {
 // 2. Credit Customer Registration (GET)
 router.get("/regicredit", isadmin, async (req, res) => {
   try {
-    const customers = await Regicredit.find().sort({ _id: -1 });;
+    const customers = await Regicredit.find().sort({ _id: -1 });
     res.render("regicredit", { customers });
   } catch (error) {
     console.error(error.mesage);
@@ -155,37 +162,40 @@ router.get("/credit/edit/:id", async (req, res) => {
   }
 });
 
-router.post('/credit/update/:id', async (req, res) => {
-    try {
-        const { fullName, phoneNumber, address, distanceFromStore, password } = req.body;
+router.post("/credit/update/:id", async (req, res) => {
+  try {
+    const { fullName, phoneNumber, address, distanceFromStore, password } =
+      req.body;
 
-        // Validation: Ensure password length matches your rules
-        if (password.length < 6 || password.length > 14) {
-            return res.redirect(`/credit/edit/${req.params.id}?error=Password+must+be+6-14+characters`);
-        }
-
-        await Regicredit.findByIdAndUpdate(req.params.id, {
-            fullName,
-            phoneNumber,
-            address,
-            distanceFromStore
-        });
-
-        res.redirect('/regicredit'); // Return to table after success
-    } catch (err) {
-        res.redirect(`/credit/edit/${req.params.id}?error=Update+failed`);
+    // Validation: Ensure password length matches your rules
+    if (password.length < 6 || password.length > 14) {
+      return res.redirect(
+        `/credit/edit/${req.params.id}?error=Password+must+be+6-14+characters`,
+      );
     }
+
+    await Regicredit.findByIdAndUpdate(req.params.id, {
+      fullName,
+      phoneNumber,
+      address,
+      distanceFromStore,
+    });
+
+    res.redirect("/regicredit"); // Return to table after success
+  } catch (err) {
+    res.redirect(`/credit/edit/${req.params.id}?error=Update+failed`);
+  }
 });
 
 // --- 3. DELETE THE CUSTOMER ---
 // Triggered by the form inside your main table
-router.post('/credit/delete/:id', async (req, res) => {
-    try {
-        await Regicredit.findByIdAndDelete(req.params.id);
-        res.redirect('/regicredit');
-    } catch (err) {
-        res.redirect('/regicredit?error=Could+not+delete+customer');
-    }
+router.post("/credit/delete/:id", async (req, res) => {
+  try {
+    await Regicredit.findByIdAndDelete(req.params.id);
+    res.redirect("/regicredit");
+  } catch (err) {
+    res.redirect("/regicredit?error=Could+not+delete+customer");
+  }
 });
 
 // 4. Deposit Page

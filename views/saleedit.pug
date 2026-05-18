@@ -18,7 +18,7 @@ html
             i.fas.fa-home
             |  Dashboard
         li
-          a(href='/newsale')
+          a(href='/newsale').active
             i.fas.fa-cash-register
             |  Sales
         li
@@ -32,7 +32,7 @@ html
 
     // ================= MAIN =================
     .main
-      h1.page-title Sales Edit
+      h1 Sales Edit
 
       section.sale-form-card
         h2.form-title Edit Sale
@@ -47,7 +47,12 @@ html
           .form-grid
             .form-group
               label Customer Name
-              input.form-input(type='text', name='customerName', value=sale.customerName required)
+              input.form-input(
+                type='text',
+                name='customerName',
+                value=sale.customerName
+                required
+              )
 
             .form-group
               label Phone Number
@@ -58,6 +63,8 @@ html
                 required
               )
 
+          hr(style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;")
+
           // ================= ITEMS MULTI-SYSTEM SECTION =================
           .items-section
             .items-header
@@ -66,23 +73,22 @@ html
                 i.fas.fa-plus
                 |  Add Item
 
-            #itemsContainer.items-container
+            .items-container#itemsContainer
               if sale.items && sale.items.length > 0
                 each saleItem in sale.items
                   .item-row
-                    .form-group.product-field
-                      label Product
+                    .form-group
+                      label Product Name
                       select.form-input(name='productName' required)
                         option(value='' disabled) Select product
-                        // Loops through stock collection passed via your GET routes
                         if items && items.length > 0
                           each product in items
                             option(
                               value=product._id
                               selected=(saleItem.productName && saleItem.productName._id ? saleItem.productName._id.toString() === product._id.toString() : saleItem.productName.toString() === product._id.toString())
-                            ) #{product.productName} (Stock: #{product.quantity} | #{product.sellingPrice} UGX)
+                            ) #{product.productName} (Qty: #{product.quantity} | #{product.sellingPrice} UGX)
 
-                    .form-group.qty-field
+                    .form-group
                       label Quantity
                       input.form-input(
                         type='number'
@@ -92,7 +98,7 @@ html
                         required
                       )
 
-                    .form-group.price-field
+                    .form-group
                       label Price (UGX)
                       input.form-input(
                         type='number'
@@ -101,9 +107,8 @@ html
                         required
                       )
 
-                    .remove-btn-box
-                      button.remove-btn(type='button' onclick='removeItem(this)')
-                        i.fas.fa-trash
+                    button.remove-btn(type='button' onclick='removeItem(this)')
+                      i.fas.fa-trash-alt
 
           hr(style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;")
 
@@ -117,15 +122,12 @@ html
 
             .form-group
               label Distance (km)
-              input.form-input(type='number', name='distance', value=sale.distance || 0 min='0')
-
-            .form-group
-              label Transport Fee (UGX)
-              input.form-input(type='text', value=(sale.transportFee ? sale.transportFee.toLocaleString() : '0'), readonly style="background-color: #f1f5f9; color: #64748b;")
-
-            .form-group
-              label Total Invoice Amount (UGX)
-              input.form-input(type='text', value=(sale.totalAmount ? sale.totalAmount.toLocaleString() : '0'), readonly style="background-color: #f1f5f9; font-weight: bold; color: #1e293b;")
+              input.form-input(
+                type='number',
+                name='distance',
+                value=sale.distance || 0
+                min='0'
+              )
 
           // ================= ACTION BUTTONS =================
           .button-group
@@ -133,7 +135,10 @@ html
               i.fas.fa-save
               |  Update Sale
 
-            a.receipt-btn(href=`/receipt/${sale._id}` style="text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center;")
+            a.register-btn(
+              href=`/receipt/${sale._id}`
+              style="text-decoration:none; margin-top:12px; display:flex; justify-content:center; align-items:center; gap:10px;"
+            )
               i.fas.fa-receipt
               |  Issue Receipt
 
@@ -147,51 +152,58 @@ html
         
         let optionsHTML = '<option value="" disabled selected>Select product</option>';
         availableStocks.forEach(product => {
-          optionsHTML += `<option value="${product._id}">${product.productName} (Stock: ${product.quantity} | ${product.sellingPrice} UGX)</option>`;
+          optionsHTML += `<option value="${product._id}">${product.productName} (Qty: ${product.quantity} | ${product.sellingPrice} UGX)</option>`;
         });
 
         const div = document.createElement('div');
         div.classList.add('item-row');
+
         div.innerHTML = `
-          <div class="form-group product-field">
-            <label>Product</label>
+          <div class="form-group">
+            <label>Product Name</label>
             <select class="form-input" name="productName" required>
-              \${optionsHTML}
+              ${optionsHTML}
             </select>
           </div>
-          <div class="form-group qty-field">
+
+          <div class="form-group">
             <label>Quantity</label>
             <input class="form-input" type="number" name="quantity" min="1" value="1" required>
           </div>
-          <div class="form-group price-field">
+
+          <div class="form-group">
             <label>Price (UGX)</label>
-            <input class="form-input" type="number" name="price" placeholder="Enter price" required>
+            <input class="form-input" type="number" name="price" placeholder="Enter unit price" required>
           </div>
-          <div class="remove-btn-box">
-            <button type="button" class="remove-btn" onclick="removeItem(this)">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
+
+          <button type="button" class="remove-btn" onclick="removeItem(this)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
         `;
+
         container.appendChild(div);
       }
 
       function removeItem(btn) {
         const rows = document.querySelectorAll('.item-row');
+
         if (rows.length <= 1) {
-          alert('A sale transaction layout must contain at least one row entry.');
+          alert('A sale transaction must contain at least one row item entry.');
           return;
         }
+
         btn.closest('.item-row').remove();
       }
 
       // Dynamic Error Clearing Logic
       document.addEventListener('DOMContentLoaded', () => {
         const errorMsg = document.getElementById('error-msg');
+
         if (errorMsg) {
           const clearError = () => {
             errorMsg.style.display = 'none';
           };
+
           document.addEventListener('input', clearError, { once: true });
           document.addEventListener('change', clearError, { once: true });
         }

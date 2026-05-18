@@ -1,67 +1,77 @@
 doctype html
-head
-  meta(charset='UTF-8')
-  title Nyondo Hardware - Stock View
-  link(rel='stylesheet' href='/css/stockview.css')
-  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
-// ================= SIDEBAR =================
-.sidebar
-  .logo
-    h2 &#x2692; NYONDO HARDWARE
-    p Sales Attendant System
-  ul
-    li
-      a(href='ssales')
-        i.fas.fa-home
-        |  Dashboard
-    li
-      a(href='newsale')
-        i.fas.fa-cart-shopping
-        |  New Sales
-    li.active
-      a(href='stockview')
-        i.fas.fa-boxes
-        |  Stock View
-    li
-      a(href='storsales')
-        i.fas.fa-clock-rotate-left
-        |  Sales History
-    li
-      a(href='logout')
-        i.fas.fa-sign-out-alt
-        |  Logout
-// ================= MAIN =================
-.main
-  // TOPBAR
-  .topbar
-    h2
-      i.fas.fa-boxes
-      |  Stock Availability Check
-    p Check stock before making sales
-    // SEARCH SECTION (NEW)
-    .search-box
-      input(type='text' placeholder='Search item (cement, nails, paint...)')
-      button
-        i.fas.fa-search
-  table
-    thead
-      tr
-        th ProductName
-        th Image
-        th Buying Price
-        th Selling Price
-        th Quantity
-    tbody
-    if dbStock.length === 0
-      tr
-        td(colspan='5') No stock available
-    each stock in dbStock   
-        td #{stock.productName}
-        td 
-          if stock.itemImage 
-            img(src='/' + stock.itemImage alt='image'  width='50px' height='50px')
-          else 
-            span no image
-        td #{stock.buyingPrice}
-        td #{stock.sellingPrice}
-        td #{stock.quantity}
+html
+  head
+    meta(charset='UTF-8')
+    title Nyondo Hardware - Stock View
+    link(rel='stylesheet' href='/css/stockview.css')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+
+  body
+    // ================= SIDEBAR =================
+    .sidebar
+      .logo
+        h2 &#x2692; NYONDO HARDWARE
+        p Sales Attendant System
+      ul
+        li
+          a(href='ssales')
+            i.fas.fa-home
+            |  Dashboard
+        li
+          a(href='newsale')
+            i.fas.fa-cart-shopping
+            |  New Sales
+        li.active
+          a(href='stockview')
+            i.fas.fa-boxes
+            |  Stock View
+        li
+          a(href='storsales')
+            i.fas.fa-clock-rotate-left
+            |  Sales History
+        li
+          a(href='logout')
+            i.fas.fa-sign-out-alt
+            |  Logout
+
+    // ================= MAIN =================
+    .main
+      // TOPBAR
+      .topbar
+        h2
+          i.fas.fa-boxes
+          |  Stock Availability Check
+        p Check stock before making sales
+        
+        // SEARCH SECTION (NEW)
+        .search-box
+          input(type='text' placeholder='Search item (cement, nails, paint...)')
+          button
+            i.fas.fa-search
+
+      table
+        thead
+          tr
+            th ProductName
+            th Image
+            th Buying Price
+            th Selling Price
+            th Quantity
+        
+        tbody
+          if !dbStock || dbStock.length === 0
+            tr
+              td(colspan='5' style="text-align: center;") No stock available
+          else
+            each stock in dbStock   
+              //- FIXED: Added the tr wrapper here to break items into clean, individual vertical rows
+              tr
+                td #{stock.productName}
+                td 
+                  if stock.itemImage 
+                    img(src='/' + stock.itemImage alt='image' width='50px' height='50px')
+                  else 
+                    span no image
+                td UGX:#{stock.buyingPrice ? stock.buyingPrice.toLocaleString() : 0} 
+                td UGX:#{stock.sellingPrice ? stock.sellingPrice.toLocaleString() : 0} 
+                td #{stock.quantity} 
