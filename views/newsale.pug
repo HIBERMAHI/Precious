@@ -103,9 +103,7 @@ html
                   label Quantity
                   input.form-input(type='number' name='quantity' required min='1' value='1')
 
-                .form-group
-                  label Price (UGX)
-                  input.form-input(type='number' name='price' required placeholder='Enter unit price')
+                input(type='hidden' name='price')
 
                 button.remove-btn(type='button' onclick='removeItemRow(this)')
                   i.fas.fa-trash-alt
@@ -199,12 +197,33 @@ html
 
     // ================= CLIENT SIDE INTERACTION ENGINES =================
     script.
-      // Stringifies stock down cleanly to client context
       const availableStocks = !{JSON.stringify(items || [])};
+
+      function updateRowPrice(rowElement) {
+        const productSelect = rowElement.querySelector('select[name="productName"]');
+        const quantityInput = rowElement.querySelector('input[name="quantity"]');
+        const priceInput = rowElement.querySelector('input[name="price"]');
+        const selectedProductId = productSelect.value;
+        const quantity = parseInt(quantityInput.value) || 1;
+        const matchedProduct = availableStocks.find(product => product._id === selectedProductId);
+        if (matchedProduct) {
+          const totalPrice = matchedProduct.sellingPrice * quantity;
+          priceInput.value = totalPrice;
+        } else {
+          priceInput.value = '';
+        }
+      }
+
+      document.getElementById('items-container').addEventListener('input', (event) => {
+        const target = event.target;
+        if (target.name === 'productName' || target.name === 'quantity') {
+          const row = target.closest('.item-row');
+          updateRowPrice(row);
+        }
+      });
 
       function addItemRow() {
         const container = document.getElementById('items-container');
-        
         let optionsHTML = '<option value="" disabled selected>Select product</option>';
         availableStocks.forEach(product => {
           optionsHTML += `<option value="${product._id}">${product.productName} (Qty: ${product.quantity} | ${product.sellingPrice} UGX)</option>`;
@@ -223,10 +242,7 @@ html
             <label>Quantity</label>
             <input class="form-input" type="number" name="quantity" required min="1" value="1">
           </div>
-          <div class="form-group">
-            <label>Price (UGX)</label>
-            <input class="form-input" type="number" name="price" required placeholder="Enter unit price">
-          </div>
+          <input type="hidden" name="price">
           <button class="remove-btn" type="button" onclick="removeItemRow(this)">
             <i class="fas fa-trash-alt"></i>
           </button>
@@ -243,13 +259,10 @@ html
         }
       }
 
-      // Erases error message block as soon as the user starts typing to fix an error
       document.addEventListener('DOMContentLoaded', () => {
         const errorMsg = document.getElementById('error-msg');
         if (errorMsg) {
-          const clearError = () => {
-            errorMsg.style.display = 'none';
-          };
+          const clearError = () => { errorMsg.style.display = 'none'; };
           document.addEventListener('input', clearError, { once: true });
           document.addEventListener('change', clearError, { once: true });
         }

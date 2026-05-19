@@ -16,19 +16,19 @@ html
         li
           a(href='/ssales')
             i.fas.fa-home
-            |  Dashboard
+            |   Dashboard
         li
           a(href='/newsale').active
             i.fas.fa-cash-register
-            |  Sales
+            |   Sales
         li
           a(href='/stockview')
             i.fas.fa-box
-            |  Stock View
+            |   Stock View
         li
           a(href='/logout')
             i.fas.fa-sign-out-alt
-            |  Logout
+            |   Logout
 
     // ================= MAIN =================
     .main
@@ -48,8 +48,8 @@ html
             .form-group
               label Customer Name
               input.form-input(
-                type='text',
-                name='customerName',
+                type='text'
+                name='customerName'
                 value=sale.customerName
                 required
               )
@@ -71,7 +71,7 @@ html
               h3 Sale Items
               button.add-item-btn(type='button' onclick='addItem()')
                 i.fas.fa-plus
-                |  Add Item
+                |   Add Item
 
             .items-container#itemsContainer
               if sale.items && sale.items.length > 0
@@ -104,6 +104,7 @@ html
                         type='number'
                         name='price'
                         value=saleItem.price
+                        readonly
                         required
                       )
 
@@ -123,8 +124,8 @@ html
             .form-group
               label Distance (km)
               input.form-input(
-                type='number',
-                name='distance',
+                type='number'
+                name='distance'
                 value=sale.distance || 0
                 min='0'
               )
@@ -133,19 +134,55 @@ html
           .button-group
             button.register-btn(type='submit')
               i.fas.fa-save
-              |  Update Sale
+              |   Update Sale
 
             a.register-btn(
               href=`/receipt/${sale._id}`
               style="text-decoration:none; margin-top:12px; display:flex; justify-content:center; align-items:center; gap:10px;"
             )
               i.fas.fa-receipt
-              |  Issue Receipt
+              |   Issue Receipt
 
     // ================= CLIENT DYNAMICS ENGINE =================
     script.
       // Safely pack stock rows into client scope memory
       const availableStocks = !{JSON.stringify(items || [])};
+
+      // Recalculates total row price based on selected product and quantity entry
+      function updateRowPrice(rowElement) {
+        const productSelect = rowElement.querySelector('select[name="productName"]');
+        const quantityInput = rowElement.querySelector('input[name="quantity"]');
+        const priceInput = rowElement.querySelector('input[name="price"]');
+
+        if (!productSelect || !quantityInput || !priceInput) return;
+
+        const selectedProductId = productSelect.value;
+        const quantity = parseInt(quantityInput.value) || 1;
+
+        const matchedProduct = availableStocks.find(product => product._id === selectedProductId);
+
+        if (matchedProduct) {
+          const totalPrice = matchedProduct.sellingPrice * quantity;
+          priceInput.value = totalPrice;
+        } else {
+          priceInput.value = '';
+        }
+      }
+
+      // Monitors changes to products or quantities via event delegation
+      const itemsContainer = document.getElementById('itemsContainer');
+      
+      itemsContainer.addEventListener('input', (event) => {
+        if (event.target.name === 'productName' || event.target.name === 'quantity') {
+          updateRowPrice(event.target.closest('.item-row'));
+        }
+      });
+
+      itemsContainer.addEventListener('change', (event) => {
+        if (event.target.name === 'productName') {
+          updateRowPrice(event.target.closest('.item-row'));
+        }
+      });
 
       function addItem() {
         const container = document.getElementById('itemsContainer');
@@ -162,7 +199,7 @@ html
           <div class="form-group">
             <label>Product Name</label>
             <select class="form-input" name="productName" required>
-              ${optionsHTML}
+              \${optionsHTML}
             </select>
           </div>
 
@@ -173,7 +210,7 @@ html
 
           <div class="form-group">
             <label>Price (UGX)</label>
-            <input class="form-input" type="number" name="price" placeholder="Enter unit price" required>
+            <input class="form-input" type="number" name="price" placeholder="Auto-calculated" readonly required>
           </div>
 
           <button type="button" class="remove-btn" onclick="removeItem(this)">
@@ -195,7 +232,7 @@ html
         btn.closest('.item-row').remove();
       }
 
-      // Dynamic Error Clearing Logic
+      // Dynamic Error Clearing
       document.addEventListener('DOMContentLoaded', () => {
         const errorMsg = document.getElementById('error-msg');
 

@@ -1,0 +1,84 @@
+doctype html
+html
+  head
+    title Supplier Dashboard
+    link(rel='stylesheet' href='/css/suppliers.css') 
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+  body
+    // ================= SIDEBAR =================
+    .sidebar
+      .logo
+        | ⚒ NYONDO HARDWARE
+      ul
+        li
+          a(href='ssales')
+            i.fas.fa-home
+            |  Dashboard
+        li
+          a(href='newsale')
+            i.fas.fa-cash-register
+            |  New Sale
+        li
+          a(href='stockview')
+            i.fas.fa-box
+            |  Stock View
+        li
+          a(href='suppliers').active
+            i.fas.fa-truck-loading
+            |  Suppliers
+        li
+          a(href='logout')
+            i.fas.fa-sign-out-alt
+            |  Logout
+
+    // ================= MAIN CONTENT =================
+    .main
+      h1 Supplier Credit Management
+      
+      // ================= SUMMARY CARDS =================
+      .dashboard-stats
+        .card.stat-qty
+          h3 Pending Quantities
+          p.stat-value #{stats.totalPendingQty}
+        
+        .card.stat-items
+          h3 Items on Credit
+          p.stat-value #{stats.totalPendingItems}
+        
+        .card.stat-debt
+          h3 Total Debt (UGX)
+          p.stat-value #{stats.totalPendingDebt.toLocaleString()}
+
+      // ================= SUPPLIER TABLE =================
+      table.supplier-table
+        thead
+          tr
+            th Supplier Name
+            th Contact
+            th Items Supplied
+            th Total Debt (UGX)
+            th Actions
+        tbody
+          if supplierDebts && supplierDebts.length > 0
+            each sup in supplierDebts
+              tr
+                td #{sup._id}
+                td #{sup.contact}
+                td 
+                  // Displaying the array of unique product names
+                  ul(style="list-style: none; padding: 0; margin: 0;")
+                    each prod in sup.productsSupplied
+                      li(style="font-size: 0.85em; color: #444;") • #{prod}
+                td #{sup.totalDebt.toLocaleString()}
+                td.actions
+                  form(action=`/pay-supplier/${sup._id}`, method="POST" style="display:inline;")
+                    button.btn-action.btn-pay(type="submit" onclick='return confirm("Confirm payment for ' + sup._id + '?")')
+                      i.fas.fa-check-circle
+                      |  Pay
+                  
+                  a.btn-action.btn-evidence(href=`evidence/${sup._id}`, target="_blank")
+                    i.fas.fa-file-alt
+                    |  Evidence
+          else
+            tr
+              td(colspan='5' style="text-align:center;") No outstanding credit balances.

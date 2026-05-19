@@ -121,7 +121,6 @@ html
             else
               each stock in dbStock
                 tr
-
                   td #{stock.productName}
 
                   td
@@ -135,16 +134,20 @@ html
                     else
                       span no image
 
-                  td #{stock.buyingPrice}
+                  td #{stock.buyingPrice.toLocaleString()}
 
-                  td #{stock.sellingPrice}
+                  td #{stock.sellingPrice.toLocaleString()}
 
+                  // This Quantity will reduce automatically as sales are made
                   td #{stock.quantity}
 
-                  td #{new Date(stock.deliveryDate).toLocaleString()}
+                  td #{new Date(stock.createdAt).toLocaleDateString()}
 
                   td
-                    if stock.quantity <= 10
+                    // Dynamic Status based on the route mapping
+                    if stock.status === 'Out of Stock'
+                      span.status.out Out of Stock
+                    else if stock.status === 'Low Stock'
                       span.status.low Low Stock
                     else
                       span.status.good Enough Stock

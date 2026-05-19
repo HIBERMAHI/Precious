@@ -3,66 +3,39 @@ html
   head
     meta(charset='UTF-8')
     title Edit Stock - Nyondo Hardware
-
     link(rel='stylesheet' href='/css/addstock.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
 
   body
-
-    // SIDEBAR
     .sidebar
       .logo
         h2 ⚒ NYONDO HARDWARE
-
       ul
-        li
-          a(href='/storedash')
-            i.fas.fa-home
-            | Dashboard
-
-        li
-          a(href='/invento')
-            i.fas.fa-boxes
-            | Inventory
-
-        li
-          a(href='/storsales')
-            i.fas.fa-cash-register
-            | Sales
-
-        li.active
-          a(href='/invento')
-            i.fas.fa-edit
-            | Edit Stock
+        li: a(href='/storedash'): i.fas.fa-home: span Dashboard
+        li: a(href='/invento'): i.fas.fa-boxes: span Inventory
+        li: a(href='/storsales'): i.fas.fa-cash-register: span Sales
+        li.active: a(href='/invento'): i.fas.fa-edit: span Edit Stock
+        li: a(href='/logout'): i.fas.fa-sign-out-alt: span Logout
 
     .main
-
       .header
         h1
           i.fas.fa-edit
-          | Edit Stock
+          |  Edit Stock & Restock
+        p Update stock details or add new arrivals.
 
-        p Update stock details (product name cannot be changed)
-
-      // ERROR
       if error
         .error-message#errorMessage
           i.fas.fa-exclamation-circle
-          | #{error}
+          |  #{error}
 
-      form.stock-form(
-        method='POST'
-        action=`/stock/edit/${stock._id}`
-        enctype='multipart/form-data'
-      )
-
-        h2 Product Info
-
-        .grid
+      form.stock-form(method='POST' action=`/stock/edit/${stock._id}` enctype='multipart/form-data')
+        
+        h2 Product & Stock Details
+        .form-grid-3x3
           .field
-            label Product Name (locked)
+            label Product Name (Locked)
             input(type='text' name='productName' value=stock.productName readonly)
-
           .field
             label Category
             select(name='category' required)
@@ -71,14 +44,12 @@ html
               option(value='Electrical' selected=stock.category==='Electrical') Electrical
               option(value='Roofing' selected=stock.category==='Roofing') Roofing
               option(value='Timber' selected=stock.category==='Timber') Timber
-
-        h2 Stock Info
-
-        .grid
           .field
-            label Quantity
-            input(type='number' name='quantity' value=stock.quantity min='1' required)
-
+            label Factory / Depot
+            input(type='text' name='factory' value=stock.factory)
+          .field
+            label Add Quantity (New Arrival)
+            input(type='number' name='quantity' value='0' min='0' required)
           .field
             label Unit
             select(name='unit')
@@ -87,55 +58,38 @@ html
               option(value='Boxes' selected=stock.unit==='Boxes') Boxes
               option(value='Litres' selected=stock.unit==='Litres') Litres
               option(value='Rolls' selected=stock.unit==='Rolls') Rolls
-
-        h2 Pricing
-
-        .grid
           .field
             label Buying Price
-            input(type='number' name='buyingPrice' value=stock.buyingPrice min='1' required)
-
+            input(type='number' name='buyingPrice' value=stock.buyingPrice min='0' step='0.01' required)
           .field
             label Selling Price
-            input(type='number' name='sellingPrice' value=stock.sellingPrice min='1' required)
-
-        h2 Supplier
-
-        .grid
-          .field
-            label Supplier Name
-            input(type='text' name='supplierName' value=stock.supplierName)
-
-          .field
-            label Supplier Contact
-            input(type='text' name='supplierContact' value=stock.supplierContact pattern='^(07\\d{8}|\\+256\\d{9})$')
-
-        h2 Payment
-
-        .grid
+            input(type='number' name='sellingPrice' value=stock.sellingPrice min='0' step='0.01' required)
           .field
             label Payment Method
             select(name='paymentMethod')
               option(value='Cash' selected=stock.paymentMethod==='Cash') Cash
               option(value='Credit' selected=stock.paymentMethod==='Credit') Credit
-
           .field
             label Payment Status
             select(name='paymentStatus')
-              option(value='Pending' selected=stock.paymentStatus==='Pending') Pending
-              option(value='Partial' selected=stock.paymentStatus==='Partial') Partial
-              option(value='Completed' selected=stock.paymentStatus==='Completed') Completed
+              option(value='Not paid' selected=stock.paymentStatus==='Not paid') Not paid
+              option(value='paid' selected=stock.paymentStatus==='paid') Paid
 
-        h2 Image
-
-        .grid
+        h2 Supplier Information
+        .form-grid-3x3
+          .field
+            label Supplier Name
+            input(type='text' name='supplierName' value=stock.supplierName required)
+          .field
+            label Supplier Contact
+            input(type='text' name='supplierContact' value=stock.supplierContact pattern='^(07\\d{8}|\\+256\\d{9})$' required)
           .field
             label Current Image
-            if stock.itemImage
-              img(src='/' + stock.itemImage width='70')
-            else
-              span No image
-
+            div
+              if stock.itemImage
+                img(src='/' + stock.itemImage width='50')
+              else
+                span No image
           .field
             label Replace Image
             input(type='file' name='itemImage')
@@ -143,11 +97,10 @@ html
         .buttons
           button.btn.save(type='submit')
             i.fas.fa-save
-            | Save Changes
-
+            |  Save Changes
           button.btn.reset(type='reset')
             i.fas.fa-undo
-            | Reset
+            |  Reset
 
     script.
       const inputs = document.querySelectorAll('input, select');

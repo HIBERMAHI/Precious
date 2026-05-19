@@ -14,7 +14,6 @@ const {
 } = require("../middleware/auth");
 const { transformAuthInfo } = require("passport");
 
-
 // imge uploads
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -27,38 +26,60 @@ let storage = multer.diskStorage({
 let upload = multer({ storage: storage });
 
 // store dashboard
-router.get("/storedash",isstoremanagerOradmin, async (req, res) => {
+router.get("/storedash", isstoremanagerOradmin, async (req, res) => {
   try {
     const dbStock = await Stock.find().sort({ createdAt: -1 });
+
     let stats = {
       totalproducts: 0,
       lowStock: 0,
       EnougthStock: 0,
       inventoryValue: 0,
     };
+
+    // 1. ADD STATUS LOGIC
+    // We map over the dbStock to attach a status label to each item for the view
+    const stockWithStatus = dbStock.map((item) => {
+      let status = "Healthy";
+      if (item.quantity <= 0) status = "Out of Stock";
+      else if (item.quantity <= 10) status = "Low Stock";
+
+      return {
+        ...item.toObject(),
+        status: status,
+      };
+    });
+
+    // 2. CALCULATE METRICS (These use the live "quantity" field which reduces on sale)
     const totalAgg = await Stock.aggregate([
       { $group: { _id: null, grandProducts: { $sum: "$quantity" } } },
     ]);
     stats.totalproducts = totalAgg.length > 0 ? totalAgg[0].grandProducts : 0;
-    const lowstock = 10;
-    dbStock.forEach((item) => {
-      if (item.quantity <= lowstock && item.quantity > 0) {
-        stats.lowStock++;
-      }
-      if (item.quantity > lowstock) {
-        stats.EnougthStock++;
-      }
-    });
+
     const inventotryAgg = await Stock.aggregate([
-      { $group: { _id: null, grandExpenditure: { $sum: "$total" } } },
+      {
+        $group: {
+          _id: null,
+          grandExpenditure: {
+            $sum: { $multiply: ["$quantity", "$buyingPrice"] },
+          },
+        },
+      },
     ]);
     stats.inventoryValue =
       inventotryAgg.length > 0 ? inventotryAgg[0].grandExpenditure : 0;
-    // displaying content on storedash cards
-    res.render("storedash", { dbStock, stats });
+
+    // 3. COUNT THRESHOLDS
+    stockWithStatus.forEach((item) => {
+      if (item.quantity <= 10 && item.quantity > 0) stats.lowStock++;
+      if (item.quantity > 10) stats.EnougthStock++;
+    });
+
+    // We pass 'stockWithStatus' instead of 'dbStock' to the view
+    res.render("storedash", { dbStock: stockWithStatus, stats });
   } catch (error) {
     console.error(error.message);
-    res.status(500).send("Unable to pick stock from the data base");
+    res.status(500).send("Unable to pick stock from the database");
   }
 });
 
@@ -121,38 +142,51 @@ router.get("/storsales", isstoremanagerOradmin, async (req, res) => {
     res.status(404).send("Unable to pick sales from data base");
   }
 });
-
-router.get("/invento",isstoremanagerOradmin, async (req, res) => {
+// invento
+// Updated INVENTO Route
+router.get("/invento", isstoremanagerOradmin, async (req, res) => {
   try {
-    const dbStock = await Stock.find().sort({ createdAt: -1 });;
+    const dbStock = await Stock.find().sort({ createdAt: -1 });
+
+    // Initializing stats without the 'outOfStock' variable
     let stats = {
       totalProducts: 0,
       lowStock: 0,
       enougthStock: 0,
       inventoryValue: 0,
     };
+
+    // 1. Calculate Inventory Value
+    const inventoryAgg = await Stock.aggregate([
+      {
+        $project: {
+          currentValue: { $multiply: ["$quantity", "$buyingPrice"] },
+        },
+      },
+      { $group: { _id: null, grandExpenditure: { $sum: "$currentValue" } } },
+    ]);
+    stats.inventoryValue =
+      inventoryAgg.length > 0 ? inventoryAgg[0].grandExpenditure : 0;
+
+    // 2. Calculate Total Quantity
     const totalAgg = await Stock.aggregate([
       { $group: { _id: null, grandProducts: { $sum: "$quantity" } } },
     ]);
     stats.totalProducts = totalAgg.length > 0 ? totalAgg[0].grandProducts : 0;
-    const lowStock = 10;
+
+    // 3. Logic: 10 and below = Low Stock, else Enough Stock
     dbStock.forEach((item) => {
-      if (item.quantity <= lowStock && item.quantity > 0) {
+      if (item.quantity <= 10) {
         stats.lowStock++;
-      }
-      if (item.quantity > lowStock) {
+      } else {
         stats.enougthStock++;
       }
     });
-    const inventoryAgg = await Stock.aggregate([
-      { $group: { _id: null, grandExpenditure: { $sum: "$total" } } },
-    ]);
-    stats.inventoryValue =
-      inventoryAgg.length > 0 ? inventoryAgg[0].grandExpenditure : 0;
+
     res.render("invento", { dbStock, stats });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Unable to pick stock from the database");
+    console.error("INVENTO ROUTE ERROR:", error.message);
+    res.status(500).send("Unable to load inventory data");
   }
 });
 
@@ -172,11 +206,14 @@ router.get("/orders", (req, res) => {
   res.render("orders");
 });
 
-//  ADD STOCK 
-router.get("/addstock",isstoremanagerOradmin, (req, res) => {
+//  ADD STOCK
+router.get("/addstock", isstoremanagerOradmin, (req, res) => {
   res.render("addstock");
 });
 // addstock
+// =========================================================
+// POST ROUTE: Processes the product-only stock entry form
+// =========================================================
 router.post(
   "/addstock",
   isstoremanagerOradmin,
@@ -190,244 +227,304 @@ router.post(
         unit,
         buyingPrice,
         sellingPrice,
+        paymentMethod,
+        paymentStatus, // This comes from your Pug form
+        factory,
         supplierName,
         supplierContact,
-        deliveryDate,
-        paymentMethod,
-        paymentStatus,
-        factory,
       } = req.body;
 
-      // =========================
-      // TYPE CONVERSION
-      // =========================
+      // Type Conversions
       const qty = Number(quantity);
       const buy = Number(buyingPrice);
       const sell = Number(sellingPrice);
 
-      // =========================
-      // REQUIRED FIELD VALIDATION
-      // =========================
+      // Validation: Ensure all fields are filled
       if (
         !productName ||
         !category ||
         !quantity ||
         !buyingPrice ||
-        !sellingPrice
+        !sellingPrice ||
+        !supplierName ||
+        !supplierContact
       ) {
         return res.render("addstock", {
-          error: "Please fill all required fields",
+          error:
+            "Please fill all required fields, including Supplier Name and Contact.",
         });
       }
 
-      // =========================
-      // NUMBER VALIDATION
-      // =========================
-      if (isNaN(qty) || isNaN(buy) || isNaN(sell)) {
+      // Validation: Ensure numbers are valid
+      if (
+        isNaN(qty) ||
+        isNaN(buy) ||
+        isNaN(sell) ||
+        qty <= 0 ||
+        buy <= 0 ||
+        sell <= 0
+      ) {
         return res.render("addstock", {
-          error: "Quantity and prices must be valid numbers",
+          error:
+            "Quantities and prices must be valid numbers greater than zero.",
         });
       }
 
-      if (qty <= 0 || buy <= 0 || sell <= 0) {
-        return res.render("addstock", {
-          error: "Quantity and prices must be greater than zero",
-        });
-      }
-
-      // =========================
-      // BUSINESS RULE
-      // =========================
+      // Business Rule Validation
       if (sell <= buy) {
         return res.render("addstock", {
-          error:
-            "Selling price must be greater than buying price",
+          error: "Selling price must be greater than the buying price.",
         });
       }
 
-      // =========================
-      // PHONE VALIDATION
-      // =========================
-      if (
-        supplierContact &&
-        !/^(07\d{8}|\+256\d{9})$/.test(supplierContact)
-      ) {
-        return res.render("addstock", {
-          error:
-            "Phone must be 07XXXXXXXX or +256XXXXXXXXX",
-        });
-      }
-
-      // =========================
-      // AUTO CALCULATIONS
-      // =========================
       const total = qty * buy;
-
-      // =========================
-      // PAYMENT LOGIC (AUTO SAFE)
-      // =========================
       let finalPaymentMethod = paymentMethod || "Cash";
-      let finalPaymentStatus = paymentStatus || "Pending";
 
-      // =========================
-      // CREATE STOCK
-      // =========================
+      // =========================================================
+      // DATA SANITIZATION (The Fix for your Error)
+      // Force the value to match your Schema ["Paid", "Pending"]
+      // =========================================================
+      let finalPaymentStatus = "Pending"; // Default
+      if (paymentStatus === "Paid") {
+        finalPaymentStatus = "Paid";
+      } else {
+        finalPaymentStatus = "Pending"; // Captures "Not paid" and turns it into "Pending"
+      }
+
+      // Save to Database
       const newStock = new Stock({
         productName,
         category,
+        initialQuantity: qty,
         quantity: qty,
         unit,
         buyingPrice: buy,
         sellingPrice: sell,
+        paymentMethod: finalPaymentMethod,
+        paymentStatus: finalPaymentStatus, // Using the sanitized variable
+        factory,
         supplierName,
         supplierContact,
-        deliveryDate,
-        factory,
-        paymentMethod: finalPaymentMethod,
-        paymentStatus: finalPaymentStatus,
         total,
         itemImage: req.file ? req.file.path : null,
       });
 
       await newStock.save();
-
       return res.redirect("/invento");
     } catch (error) {
-      console.error(error.message);
-
+      console.error("ADDSTOCK ROUTE ERROR:", error.message);
       return res.render("addstock", {
-        error: "Server error while saving stock",
+        error: "Server error occurred: " + error.message,
       });
     }
-  }
+  },
 );
 
-
-
 // EDIT STOCK
-router.get("/stock/edit/:id",isstoremanagerOradmin, async (req, res) => {
+// =========================================================
+// 3. GET ROUTE: Fetches stock data to display in the edit form
+// =========================================================
+router.get("/stock/edit/:id", isstoremanagerOradmin, async (req, res) => {
   try {
+    // Look up the specific item using the unique ID passed in the URL
     const stock = await Stock.findById(req.params.id);
-    if (!stock) return res.status(404).send("Stock not found");
+
+    // If no record matches that ID, return a 404 error
+    if (!stock) return res.status(404).send("Stock record not found");
+
+    // Render your 'stockedit' Pug file and pass the stock data into it
     res.render("stockedit", { stock });
   } catch (error) {
-    console.error(error.message);
-    res.status(404).send("Unable to find stock");
+    console.error("GET EDIT ROUTE ERROR:", error.message);
+    res.status(404).send("Unable to locate specified stock element record");
   }
 });
-
 // edit stock
-router.post("/stock/edit/:id", isstoremanagerOradmin, upload.single("itemImage"), async (req, res) => {
-  try {
+// EDIT STOCK POST ROUTE
+router.post(
+  "/stock/edit/:id",
+  isstoremanagerOradmin,
+  upload.single("itemImage"),
+  async (req, res) => {
+    try {
+      const {
+        productName,
+        category,
+        quantity,
+        unit,
+        buyingPrice,
+        sellingPrice,
+        paymentMethod,
+        factory,
+        supplierName, // Added
+        supplierContact, // Added
+      } = req.body;
 
-    const {
-      productName,
-      category,
-      quantity,
-      unit,
-      buyingPrice,
-      sellingPrice,
-      supplierName,
-      supplierContact,
-      deliveryDate,
-      paymentMethod,
-      paymentStatus,
-      factory,
-    } = req.body;
+      const qty = Number(quantity);
+      const buy = Number(buyingPrice);
+      const sell = Number(sellingPrice);
 
-    const qty = Number(quantity);
-    const buy = Number(buyingPrice);
-    const sell = Number(sellingPrice);
+      const stock = await Stock.findById(req.params.id);
+      if (!stock) return res.status(404).send("Stock record not found");
 
-    const stock = await Stock.findById(req.params.id);
-    if (!stock) return res.status(404).send("Stock not found");
+      // Validate including new supplier fields
+      if (
+        !productName ||
+        !category ||
+        !quantity ||
+        !buyingPrice ||
+        !sellingPrice ||
+        !supplierName ||
+        !supplierContact
+      ) {
+        return res.render("stockedit", {
+          error: "All fields including Supplier Name and Contact are required.",
+          stock,
+        });
+      }
 
-    // ✅ VALIDATION SAFE (NO CRASH)
-    if (!category || !quantity || !buyingPrice || !sellingPrice) {
+      // Logic: Update quantity and lifetime (Initial) total
+      const updatedData = {
+        productName,
+        category,
+        quantity: stock.quantity + qty,
+        initialQuantity: stock.initialQuantity + qty, // Keeps lifetime audit
+        unit,
+        buyingPrice: buy,
+        sellingPrice: sell,
+        paymentMethod,
+        factory,
+        supplierName, // Added
+        supplierContact, // Added
+        total: (stock.quantity + qty) * buy,
+      };
+
+      if (req.file) {
+        updatedData.itemImage = req.file.path;
+      }
+
+      await Stock.findByIdAndUpdate(req.params.id, updatedData);
+      return res.redirect("/invento");
+    } catch (error) {
+      console.error("POST EDIT ROUTE ERROR:", error);
+      const stock = await Stock.findById(req.params.id);
       return res.render("stockedit", {
-        error: "Category, quantity and prices are required",
-        stock
+        error: "Something went wrong while updating.",
+        stock,
       });
     }
-
-    if (isNaN(qty) || isNaN(buy) || isNaN(sell)) {
-      return res.render("stockedit", {
-        error: "Prices and quantity must be numbers",
-        stock
-      });
-    }
-
-    if (qty <= 0 || buy <= 0 || sell <= 0) {
-      return res.render("stockedit", {
-        error: "Values must be greater than zero",
-        stock
-      });
-    }
-
-    if (sell <= buy) {
-      return res.render("stockedit", {
-        error: "Selling price must be greater than buying price",
-        stock
-      });
-    }
-
-    // phone validation
-    if (
-      supplierContact &&
-      !/^(07\d{8}|\+256\d{9})$/.test(supplierContact)
-    ) {
-      return res.render("stockedit", {
-        error: "Invalid phone number format",
-        stock
-      });
-    }
-
-    const updatedData = {
-      category,
-      quantity: qty,
-      unit,
-      buyingPrice: buy,
-      sellingPrice: sell,
-      supplierName,
-      supplierContact,
-      deliveryDate,
-      paymentMethod,
-      paymentStatus,
-      factory,
-      total: qty * buy,
-    };
-
-    // ✅ only update image if new one uploaded
-    if (req.file) {
-      updatedData.itemImage = req.file.path;
-    }
-
-    await Stock.findByIdAndUpdate(req.params.id, updatedData);
-
-    return res.redirect("/invento");
-
-  } catch (error) {
-    console.error(error);
-
-    const stock = await Stock.findById(req.params.id);
-
-    return res.render("stockedit", {
-      error: "Something went wrong while updating stock",
-      stock
-    });
-  }
-});
-
-
-// DELETE STOCK 
-router.post("/deleted/:id", isstoremanagerOradmin,async (req, res) => {
+  },
+);
+// 5. DELETE ROUTE: Safely removes an item from stock records
+// =========================================================
+router.post("/deleted/:id", isstoremanagerOradmin, async (req, res) => {
   try {
     await Stock.findByIdAndDelete(req.params.id);
     res.redirect("/invento");
   } catch (error) {
-    console.error(error.message);
-    res.status(400).send("Error deleting stock");
+    console.error("DELETE ROUTE ERROR:", error.message);
+    res.status(400).send("Error deleting stock item");
   }
 });
+
+// supplier
+// GET: List all suppliers and their total debt + summary stats
+router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
+  try {
+    // 1. Initialize stats object
+    let stats = {
+      totalPendingDebt: 0,
+      totalPendingQty: 0,
+      totalPendingItems: 0,
+    };
+
+    // 2. Fetch Supplier Table Data (The list for your table)
+    const supplierDebts = await Stock.aggregate([
+      { $match: { paymentStatus: "Pending" } },
+      {
+        $group: {
+          _id: "$supplierName",
+          totalDebt: { $sum: "$total" },
+          itemsCount: { $sum: 1 },
+          contact: { $first: "$supplierContact" },
+          // Added product list logic
+          productsSupplied: { $addToSet: "$productName" },
+        },
+      },
+      { $sort: { totalDebt: -1 } },
+    ]);
+
+    // 3. Populate Stats: Total Debt (Grand Total)
+    const debtAgg = await Stock.aggregate([
+      { $match: { paymentStatus: "Pending" } },
+      { $group: { _id: null, grandTotal: { $sum: "$total" } } },
+    ]);
+    stats.totalPendingDebt = debtAgg.length > 0 ? debtAgg[0].grandTotal : 0;
+
+    // 4. Populate Stats: Total Quantity (Grand Total)
+    const qtyAgg = await Stock.aggregate([
+      { $match: { paymentStatus: "Pending" } },
+      { $group: { _id: null, grandQty: { $sum: "$quantity" } } },
+    ]);
+    stats.totalPendingQty = qtyAgg.length > 0 ? qtyAgg[0].grandQty : 0;
+
+    // 5. Populate Stats: Total Pending Items (Count)
+    const itemsAgg = await Stock.aggregate([
+      { $match: { paymentStatus: "Pending" } },
+      { $count: "totalCount" },
+    ]);
+    stats.totalPendingItems = itemsAgg.length > 0 ? itemsAgg[0].totalCount : 0;
+
+    // 6. Render the view with both the table data and the card stats
+    res.render("suppliers", { supplierDebts, stats });
+  } catch (error) {
+    console.error("SUPPLIER ROUTE ERROR:", error.message);
+    res.status(500).send("Unable to load supplier dashboard");
+  }
+});
+
+// POST: Complete Payment for a specific supplier
+router.post(
+  "/pay-supplier/:supplierName",
+  isstoremanagerOradmin,
+  async (req, res) => {
+    try {
+      const supplierName = req.params.supplierName;
+
+      // Updates all "Pending" items for this supplier to "Paid"
+      await Stock.updateMany(
+        { supplierName: supplierName, paymentStatus: "Pending" },
+        { $set: { paymentStatus: "Paid" } },
+      );
+
+      // Redirect back to the dashboard to see the changes
+      res.redirect("/suppliers");
+    } catch (error) {
+      console.error("PAYMENT ERROR:", error.message);
+      res.status(500).send("Error updating payment status");
+    }
+  },
+);
+// GET: Generate the Evidence/Voucher
+router.get(
+  "/evidence/:supplierName",
+  isstoremanagerOradmin,
+  async (req, res) => {
+    try {
+      const items = await Stock.find({
+        supplierName: req.params.supplierName,
+        paymentStatus: "Paid",
+      }).sort({ updatedAt: -1 });
+
+      res.render("evidence", {
+        supplierName: req.params.supplierName,
+        items,
+      });
+    } catch (error) {
+      console.error("EVIDENCE ERROR:", error.message);
+      res.status(500).send("Unable to generate evidence");
+    }
+  },
+);
 
 module.exports = router;

@@ -3,83 +3,49 @@ html
   head
     meta(charset='UTF-8')
     title Inventory - Nyondo Hardware
-
     link(rel='stylesheet' href='/css/invento.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
 
   body
-    // SIDEBAR
     .sidebar
       .logo
-        h2 &#x2692; NYONDO HARDWARE
+        h2 ⚒ NYONDO HARDWARE
       ul
-        li
-          a(href='storedash')
-            i.fas.fa-home
-            | Dashboard
-        li.active
-          a(href='invento')
-            i.fas.fa-boxes
-            | Inventory
-        li
-          a(href='storsales')
-            i.fas.fa-cash-register
-            | Sales
-        li
-          a(href='addstock')
-            i.fas.fa-plus-circle
-            | Add Stock
-        li
-          a(href='logout')
-            i.fas.fa-sign-out-alt
-            | Logout
+        li: a(href='storedash'): i.fas.fa-home | Dashboard
+        li.active: a(href='invento'): i.fas.fa-boxes | Inventory
+        li: a(href='storsales'): i.fas.fa-cash-register | Sales
+        li: a(href='addstock'): i.fas.fa-plus-circle | Add Stock
+        li: a(href='logout'): i.fas.fa-sign-out-alt | Logout
 
     .main
       .header
         h1
           i.fas.fa-boxes
-          | Inventory Overview
-
+          |  Inventory Overview
         .actions
-          a.btn(href='/stock')
+          a.btn(href='addstock')
             i.fas.fa-plus
-            | Add Stock
-          button.btn.secondary
-            i.fas.fa-file-export
-            | Export
+            |  Add Stock
 
       .cards
         .card
           i.fas.fa-cubes
           div
-            h3 Total Products
+            h3 Total Items Added (Lifetime)
             p #{stats.totalProducts.toLocaleString()}
-
         .card.warn
           i.fas.fa-exclamation-triangle
           div
             h3 Low Stock
             p #{stats.lowStock.toLocaleString()}
-
-        .card.danger
-          i.fas.fa-times-circle
-          div
-            h3 Enough Stock
-            p #{stats.enougthStock.toLocaleString()}
-
         .card.success
           i.fas.fa-coins
           div
-            h3 Total Value
+            h3 Total Value (Shelf)
             p #{stats.inventoryValue.toLocaleString()} UGX
 
       .search-bar
         input(type='text' placeholder='Search product...')
-        select
-          option All
-          option Low Stock
-          option Out of Stock
-          option In Stock
 
       .table-section
         table
@@ -87,48 +53,38 @@ html
             tr
               th Product Name
               th Image
-              th Factory
-              th Quantity
+              th Factory / Depot
+              th Date Added
+              th Lifetime Total Added
+              th Current Shelf Qty
               th Buying Price
               th Selling Price
-              th Supplier Name
-              th Supplier Contact
-              th Date
-              th Payment Status  
               th Actions
-
           tbody
             if dbStock.length === 0
               tr
-                td(colspan='11') No stock available
-
+                td(colspan='9') No stock records found.
             each stock in dbStock
               tr
                 td #{stock.productName}
-
                 td
                   if stock.itemImage
                     img(src='/' + stock.itemImage width='50' height='50')
                   else
-                    span no image
-
+                    span --
                 td #{stock.factory}
+                td #{new Date(stock.createdAt).toLocaleDateString()}
+                //- Lifetime total added (grows with every edit)
+                td 
+                  strong #{stock.initialQuantity}
+                //- Current shelf quantity (reduces with sales)
                 td #{stock.quantity}
-                td #{stock.buyingPrice}
-                td #{stock.sellingPrice}
-                td #{stock.supplierName}
-                td #{stock.supplierContact}
-                td #{new Date(stock.deliveryDate).toLocaleString()}
-
-                td
-                  span.status(class=stock.paymentStatus)
-                    | #{stock.paymentStatus || 'Pending'}
-
+                td #{stock.buyingPrice.toLocaleString()}
+                td #{stock.sellingPrice.toLocaleString()}
                 td
                   .action-btns
                     a.btn.btn-sm.btn-outline-warning(href=`/stock/edit/${stock._id}`)
                       i.fas.fa-edit
-
-                    form(action=`/deleted/${stock._id}` method='post' onsubmit='return confirm("Are you sure you want to delete stock?")')
+                    form(action=`/deleted/${stock._id}` method='post' onsubmit='return confirm("Delete this record?")')
                       button.btn.btn-sm.btn-outline-danger(type='submit')
                         i.fas.fa-trash-alt

@@ -1,0 +1,261 @@
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  display: flex;
+  background: #f1f5f9;
+  color: #1e293b;
+  min-height: 100vh;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: 250px;
+  background: linear-gradient(to bottom, #0f172a, #1e293b);
+  color: white;
+  padding: 25px 0;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.logo {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 35px;
+  color: #facc15;
+  letter-spacing: 1px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  margin: 8px 15px;
+}
+
+.sidebar ul li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #e2e8f0;
+  padding: 14px 18px;
+  border-radius: 12px;
+  transition: 0.3s ease;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.sidebar ul li a:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(4px);
+}
+
+.sidebar ul li a.active {
+  background: #2563eb;
+  color: white;
+}
+
+.sidebar ul li a i {
+  font-size: 16px;
+}
+
+/* ================= MAIN CONTENT ================= */
+.main {
+  margin-left: 250px;
+  padding: 35px;
+  width: calc(100% - 250px);
+}
+
+.main h1 {
+  font-size: 30px;
+  margin-bottom: 30px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* ================= DASHBOARD CARDS ================= */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 22px;
+  margin-bottom: 35px;
+}
+
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card h3 {
+  font-size: 17px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: bold;
+  color: #0f172a;
+}
+
+/* CARD COLORS */
+.stat-qty {
+  border-left: 6px solid #f59e0b;
+}
+
+.stat-items {
+  border-left: 6px solid #3b82f6;
+}
+
+.stat-debt {
+  border-left: 6px solid #ef4444;
+}
+
+/* ================= TABLE ================= */
+.supplier-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+}
+
+.supplier-table thead {
+  background: #1e293b;
+  color: white;
+}
+
+.supplier-table th {
+  padding: 18px 20px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.supplier-table td {
+  padding: 18px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 15px;
+}
+
+.supplier-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.supplier-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+/* PAY BUTTON */
+.btn-pay {
+  background: #22c55e;
+  color: white;
+}
+
+.btn-pay:hover {
+  background: #16a34a;
+  transform: scale(1.03);
+}
+
+/* EVIDENCE BUTTON */
+.btn-evidence {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-evidence:hover {
+  background: #1d4ed8;
+  transform: scale(1.03);
+}
+
+/* ================= EMPTY STATE ================= */
+.supplier-table td[colspan] {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .sidebar {
+    width: 220px;
+  }
+
+  .main {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+    padding: 20px;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  body {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .supplier-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

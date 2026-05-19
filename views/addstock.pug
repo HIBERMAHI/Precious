@@ -3,74 +3,40 @@ html
   head
     meta(charset='UTF-8')
     title Register Stock - Nyondo Hardware
-
     link(rel='stylesheet' href='/css/addstock.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
 
   body
-
-    // SIDEBAR
     .sidebar
       .logo
-        h2 &#x2692; NYONDO HARDWARE
-
+        h2 ⚒ NYONDO HARDWARE
       ul
-        li
-          a(href='storedash')
-            i.fas.fa-home
-            span Dashboard
+        li: a(href='storedash'): i.fas.fa-home: span Dashboard
+        li: a(href='invento'): i.fas.fa-boxes: span Inventory
+        li: a(href='storsales'): i.fas.fa-cash-register: span Sales
+        li.active: a(href='addstock'): i.fas.fa-plus-circle: span Add Stock
+        li: a(href='logout'): i.fas.fa-sign-out-alt: span Logout
 
-        li
-          a(href='invento')
-            i.fas.fa-boxes
-            span Inventory
-
-        li
-          a(href='storsales')
-            i.fas.fa-cash-register
-            span Sales
-
-        li.active
-          a(href='addstock')
-            i.fas.fa-plus-circle
-            span Add Stock
-
-        li
-          a(href='logout')
-            i.fas.fa-sign-out-alt
-            span Logout
-
-    // MAIN CONTENT
     .main
-
       .header
         h1
           i.fas.fa-plus-circle
-          |  Stock Registration
+          |  Full Stock Registration
+        p Fill in all the details to register new stock items.
 
-        p Fill in the details to add stock into inventory
-
-      // ERROR MESSAGE
       if error
         .error-message#errorMessage
           i.fas.fa-exclamation-circle
           |  #{error}
 
-      // FORM
       form.stock-form(method='POST' action='/addstock' enctype='multipart/form-data')
-
-        // PRODUCT DETAILS
-        h2 Product Details
-
-        .grid
-
+        
+        h2 Product & Stock Details
+        .form-grid-3x3
           .field
             label Product Name
-
             select(name='productName' required)
-
               option(value='') Select Product
-
               option(value='Cement iiN') Cement iiN
               option(value='Cement iiiN') Cement iiiN
               option(value='Iron Bars 10mm') Iron Bars 10mm
@@ -86,163 +52,71 @@ html
               option(value='Barbed Wire High Tensile') Barbed Wire High Tensile
               option(value='Barbed Wire Low Tensile') Barbed Wire Low Tensile
               option(value='Iron Sheets') Iron Sheets
-
           .field
             label Category
-
             select(name='category' required)
-
               option(value='') Select Category
               option(value='Building') Building
               option(value='Hardware') Hardware
               option(value='Electrical') Electrical
               option(value='Roofing') Roofing
               option(value='Timber') Timber
-
-        // STOCK INFO
-        h2 Stock Information
-
-        .grid
-
           .field
             label Quantity
-            input(
-              type='number'
-              name='quantity'
-              min='1'
-              required
-            )
-
+            input(type='number' name='quantity' min='1' required)
           .field
             label Unit
-
             select(name='unit')
-
               option(value='Bags') Bags
               option(value='Pieces') Pieces
               option(value='Boxes') Boxes
               option(value='Litres') Litres
               option(value='Rolls') Rolls
-
-        // PRICING
-        h2 Pricing
-
-        .grid
-
           .field
             label Buying Price
-            input(
-              type='number'
-              name='buyingPrice'
-              min='1'
-              required
-            )
-
+            input(type='number' name='buyingPrice' min='1' required)
           .field
             label Selling Price
-            input(
-              type='number'
-              name='sellingPrice'
-              min='1'
-              required
-            )
-
-        // PAYMENT DETAILS
-        h2 Payment Information
-
-        .grid
-
+            input(type='number' name='sellingPrice' min='1' required)
           .field
             label Payment Method
-
             select(name='paymentMethod')
-
               option(value='Cash') Cash
               option(value='Credit') Credit
-
           .field
             label Payment Status
-
             select(name='paymentStatus')
-
-              option(value='Pending') Pending
-              option(value='Partial') Partial
-              option(value='Completed') Completed
-
-          .field
-            label Factory / Supplier Source
-
-            input(
-              type='text'
-              name='factory'
-              placeholder='Enter factory or depot'
-            )
-
-        // SUPPLIER DETAILS
-        h2 Supplier Details
-
-        .grid
-
+              option(value='Pending') Not paid
+              option(value='Paid') Paid
           .field
             label Supplier Name
+            input(type='text' name='supplierName' required)
 
-            input(
-              type='text'
-              name='supplierName'
-            )
-
+        h2 Additional Details
+        .form-grid-3x3
           .field
             label Supplier Contact
-
-            input(
-              type='text'
-              name='supplierContact'
-              placeholder='07XXXXXXXX or +256XXXXXXXXX'
-              pattern='^(07\\d{8}|\\+256\\d{9})$'
-            )
+            input(type='text' name='supplierContact' placeholder='07XXXXXXXX' pattern='^(07\\d{8}|\\+256\\d{9})$' required)
+          .field
+            label Factory / Depot
+            input(type='text' name='factory')
           .field
             label Product Image
+            input(type='file' name='itemImage')
 
-            input(
-              type='file'
-              name='itemImage'
-            )
-
-        // BUTTONS
         .buttons
-
-          button.btn.save(type='submit')
+          button.btn.save(type='submit') 
             i.fas.fa-save
-            |  Save Stock
-
-          button.btn.reset(type='reset')
+            |  Save All Details
+          button.btn.reset(type='reset') 
             i.fas.fa-undo
             |  Reset
 
-    // SCRIPT TO REMOVE ERROR MESSAGE WHEN USER TYPES
     script.
       const inputs = document.querySelectorAll('input, select');
-
       inputs.forEach(input => {
-
         input.addEventListener('input', () => {
-
           const errorBox = document.getElementById('errorMessage');
-
-          if(errorBox){
-            errorBox.style.display = 'none';
-          }
-
+          if(errorBox) errorBox.style.display = 'none';
         });
-
-        input.addEventListener('change', () => {
-
-          const errorBox = document.getElementById('errorMessage');
-
-          if(errorBox){
-            errorBox.style.display = 'none';
-          }
-
-        });
-
       });
