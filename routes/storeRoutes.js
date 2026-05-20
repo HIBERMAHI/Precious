@@ -26,60 +26,54 @@ let storage = multer.diskStorage({
 let upload = multer({ storage: storage });
 
 // store dashboard
+
 router.get("/storedash", isstoremanagerOradmin, async (req, res) => {
   try {
     const dbStock = await Stock.find().sort({ createdAt: -1 });
 
+    // Use these exact keys.
+    // Check your Pug file to ensure it matches: #{stats.lowStock} and #{stats.enougthStock}
     let stats = {
-      totalproducts: 0,
+      totalProducts: 0,
       lowStock: 0,
-      EnougthStock: 0,
+      enougthStock: 0,
       inventoryValue: 0,
     };
 
-    // 1. ADD STATUS LOGIC
-    // We map over the dbStock to attach a status label to each item for the view
-    const stockWithStatus = dbStock.map((item) => {
-      let status = "Healthy";
-      if (item.quantity <= 0) status = "Out of Stock";
-      else if (item.quantity <= 10) status = "Low Stock";
+    // Calculate metrics
+    const inventoryAgg = await Stock.aggregate([
+      {
+        $project: {
+          currentValue: { $multiply: ["$quantity", "$buyingPrice"] },
+        },
+      },
+      { $group: { _id: null, grandExpenditure: { $sum: "$currentValue" } } },
+    ]);
+    stats.inventoryValue =
+      inventoryAgg.length > 0 ? inventoryAgg[0].grandExpenditure : 0;
 
-      return {
-        ...item.toObject(),
-        status: status,
-      };
-    });
-
-    // 2. CALCULATE METRICS (These use the live "quantity" field which reduces on sale)
     const totalAgg = await Stock.aggregate([
       { $group: { _id: null, grandProducts: { $sum: "$quantity" } } },
     ]);
-    stats.totalproducts = totalAgg.length > 0 ? totalAgg[0].grandProducts : 0;
+    stats.totalProducts = totalAgg.length > 0 ? totalAgg[0].grandProducts : 0;
 
-    const inventotryAgg = await Stock.aggregate([
-      {
-        $group: {
-          _id: null,
-          grandExpenditure: {
-            $sum: { $multiply: ["$quantity", "$buyingPrice"] },
-          },
-        },
-      },
-    ]);
-    stats.inventoryValue =
-      inventotryAgg.length > 0 ? inventotryAgg[0].grandExpenditure : 0;
+    // THE LOGIC:
+    dbStock.forEach((item) => {
+      // Ensure we treat the quantity as a number
+      const qty = Number(item.quantity);
 
-    // 3. COUNT THRESHOLDS
-    stockWithStatus.forEach((item) => {
-      if (item.quantity <= 10 && item.quantity > 0) stats.lowStock++;
-      if (item.quantity > 10) stats.EnougthStock++;
+      if (qty <= 10) {
+        stats.lowStock++;
+      } else {
+        stats.enougthStock++;
+      }
     });
 
-    // We pass 'stockWithStatus' instead of 'dbStock' to the view
-    res.render("storedash", { dbStock: stockWithStatus, stats });
+    // Send data to the view
+    res.render("storedash", { dbStock, stats });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Unable to pick stock from the database");
+    console.error("STOREDASH ERROR:", error.message);
+    res.status(500).send("Unable to load data");
   }
 });
 
@@ -90,11 +84,6 @@ router.get("/storsales", isstoremanagerOradmin, async (req, res) => {
       salesRevenue: 0,
       itemsSold: 0,
     };
-
-    // =====================================================
-    // 1. REVENUE CALCULATOR (MULTI-ITEM LOGIC ENGINE)
-    // Adds totalAmount and transportFee together to count all money
-    // =====================================================
     const salesAgg = await Sale.aggregate([
       {
         $group: {
@@ -104,11 +93,6 @@ router.get("/storsales", isstoremanagerOradmin, async (req, res) => {
       },
     ]);
     stats.salesRevenue = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
-
-    // =====================================================
-    // 2. ITEMS SOLD CALCULATOR (MULTI-ITEM LOGIC ENGINE)
-    // Unwinds the items array sub-document rows to accurately count quantities
-    // =====================================================
     const itemsAgg = await Sale.aggregate([
       { $unwind: "$items" },
       {
@@ -119,11 +103,6 @@ router.get("/storsales", isstoremanagerOradmin, async (req, res) => {
       },
     ]);
     stats.itemsSold = itemsAgg.length > 0 ? itemsAgg[0].grandItems : 0;
-
-    // =====================================================
-    // 3. FETCH SALES DATABASE COLLECTION & POPULATION
-    // deep populates items array and links attendant object fields
-    // =====================================================
     const dbSales = await Sale.find()
       .populate({
         path: "items.productName",
@@ -131,10 +110,6 @@ router.get("/storsales", isstoremanagerOradmin, async (req, res) => {
       })
       .populate("attendant", "fullname")
       .sort({ date: -1 }); // Keeping sorting unified with your historical logs field
-
-    // =====================================================
-    // 4. RENDER VIEW TARGET ENGINE
-    // =====================================================
     res.render("storsales", { dbSales, stats });
   } catch (error) {
     // Prints technical system crash traces to your developer console terminal window
@@ -211,9 +186,7 @@ router.get("/addstock", isstoremanagerOradmin, (req, res) => {
   res.render("addstock");
 });
 // addstock
-// =========================================================
-// POST ROUTE: Processes the product-only stock entry form
-// =========================================================
+
 router.post(
   "/addstock",
   isstoremanagerOradmin,
@@ -228,18 +201,18 @@ router.post(
         buyingPrice,
         sellingPrice,
         paymentMethod,
-        paymentStatus, // This comes from your Pug form
+        paymentStatus,
         factory,
         supplierName,
         supplierContact,
       } = req.body;
 
-      // Type Conversions
+      // 1. TYPE CONVERSIONS
       const qty = Number(quantity);
       const buy = Number(buyingPrice);
       const sell = Number(sellingPrice);
 
-      // Validation: Ensure all fields are filled
+      // 2. REQUIRED FIELDS VALIDATION
       if (
         !productName ||
         !category ||
@@ -255,7 +228,7 @@ router.post(
         });
       }
 
-      // Validation: Ensure numbers are valid
+      // 3. NUMBER VALIDATION
       if (
         isNaN(qty) ||
         isNaN(buy) ||
@@ -270,7 +243,7 @@ router.post(
         });
       }
 
-      // Business Rule Validation
+      // 4. BUSINESS LOGIC VALIDATION
       if (sell <= buy) {
         return res.render("addstock", {
           error: "Selling price must be greater than the buying price.",
@@ -278,20 +251,10 @@ router.post(
       }
 
       const total = qty * buy;
-      let finalPaymentMethod = paymentMethod || "Cash";
+      const finalPaymentMethod = paymentMethod || "Cash";
+      const finalPaymentStatus = paymentStatus === "Paid" ? "Paid" : "Pending";
 
-      // =========================================================
-      // DATA SANITIZATION (The Fix for your Error)
-      // Force the value to match your Schema ["Paid", "Pending"]
-      // =========================================================
-      let finalPaymentStatus = "Pending"; // Default
-      if (paymentStatus === "Paid") {
-        finalPaymentStatus = "Paid";
-      } else {
-        finalPaymentStatus = "Pending"; // Captures "Not paid" and turns it into "Pending"
-      }
-
-      // Save to Database
+      // 5. SAVE TO DATABASE
       const newStock = new Stock({
         productName,
         category,
@@ -301,7 +264,8 @@ router.post(
         buyingPrice: buy,
         sellingPrice: sell,
         paymentMethod: finalPaymentMethod,
-        paymentStatus: finalPaymentStatus, // Using the sanitized variable
+        paymentStatus: finalPaymentStatus,
+        paymentBatchId: null, // Ensures new stock isn't attached to old payments
         factory,
         supplierName,
         supplierContact,
@@ -321,9 +285,6 @@ router.post(
 );
 
 // EDIT STOCK
-// =========================================================
-// 3. GET ROUTE: Fetches stock data to display in the edit form
-// =========================================================
 router.get("/stock/edit/:id", isstoremanagerOradmin, async (req, res) => {
   try {
     // Look up the specific item using the unique ID passed in the URL
@@ -340,7 +301,6 @@ router.get("/stock/edit/:id", isstoremanagerOradmin, async (req, res) => {
   }
 });
 // edit stock
-// EDIT STOCK POST ROUTE
 router.post(
   "/stock/edit/:id",
   isstoremanagerOradmin,
@@ -356,8 +316,8 @@ router.post(
         sellingPrice,
         paymentMethod,
         factory,
-        supplierName, // Added
-        supplierContact, // Added
+        supplierName,
+        supplierContact,
       } = req.body;
 
       const qty = Number(quantity);
@@ -367,7 +327,7 @@ router.post(
       const stock = await Stock.findById(req.params.id);
       if (!stock) return res.status(404).send("Stock record not found");
 
-      // Validate including new supplier fields
+      // Validate fields
       if (
         !productName ||
         !category ||
@@ -378,25 +338,30 @@ router.post(
         !supplierContact
       ) {
         return res.render("stockedit", {
-          error: "All fields including Supplier Name and Contact are required.",
+          error: "All fields are required.",
           stock,
         });
       }
 
-      // Logic: Update quantity and lifetime (Initial) total
+      // If refilling stock, we ensure the batchId is reset to null
+      // so it doesn't try to link a new shipment to an old payment voucher.
       const updatedData = {
         productName,
         category,
         quantity: stock.quantity + qty,
-        initialQuantity: stock.initialQuantity + qty, // Keeps lifetime audit
+        initialQuantity: stock.initialQuantity + qty,
         unit,
         buyingPrice: buy,
         sellingPrice: sell,
         paymentMethod,
         factory,
-        supplierName, // Added
-        supplierContact, // Added
+        supplierName,
+        supplierContact,
         total: (stock.quantity + qty) * buy,
+        // CRITICAL: If the stock was already "Paid",
+        // a refill usually starts as "Pending" debt again.
+        paymentStatus: qty > 0 ? "Pending" : stock.paymentStatus,
+        paymentBatchId: qty > 0 ? null : stock.paymentBatchId,
       };
 
       if (req.file) {
@@ -408,15 +373,11 @@ router.post(
     } catch (error) {
       console.error("POST EDIT ROUTE ERROR:", error);
       const stock = await Stock.findById(req.params.id);
-      return res.render("stockedit", {
-        error: "Something went wrong while updating.",
-        stock,
-      });
+      return res.render("stockedit", { error: "Something went wrong.", stock });
     }
   },
 );
 // 5. DELETE ROUTE: Safely removes an item from stock records
-// =========================================================
 router.post("/deleted/:id", isstoremanagerOradmin, async (req, res) => {
   try {
     await Stock.findByIdAndDelete(req.params.id);
@@ -428,54 +389,54 @@ router.post("/deleted/:id", isstoremanagerOradmin, async (req, res) => {
 });
 
 // supplier
-// GET: List all suppliers and their total debt + summary stats
 router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
   try {
-    // 1. Initialize stats object
-    let stats = {
-      totalPendingDebt: 0,
-      totalPendingQty: 0,
-      totalPendingItems: 0,
-    };
-
-    // 2. Fetch Supplier Table Data (The list for your table)
+    // 1. Group ALL suppliers (no $match)
     const supplierDebts = await Stock.aggregate([
-      { $match: { paymentStatus: "Pending" } },
       {
         $group: {
           _id: "$supplierName",
-          totalDebt: { $sum: "$total" },
-          itemsCount: { $sum: 1 },
           contact: { $first: "$supplierContact" },
-          // Added product list logic
           productsSupplied: { $addToSet: "$productName" },
+          // HOW: Use $cond to calculate debt only for "Pending" items
+          totalDebt: {
+            $sum: {
+              $cond: [{ $eq: ["$paymentStatus", "Pending"] }, "$total", 0],
+            },
+          },
         },
       },
       { $sort: { totalDebt: -1 } },
     ]);
 
-    // 3. Populate Stats: Total Debt (Grand Total)
-    const debtAgg = await Stock.aggregate([
-      { $match: { paymentStatus: "Pending" } },
-      { $group: { _id: null, grandTotal: { $sum: "$total" } } },
+    // 2. Stats: Calculate totals only for "Pending" items
+    const statsResult = await Stock.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalPendingDebt: {
+            $sum: {
+              $cond: [{ $eq: ["$paymentStatus", "Pending"] }, "$total", 0],
+            },
+          },
+          totalPendingQty: {
+            $sum: {
+              $cond: [{ $eq: ["$paymentStatus", "Pending"] }, "$quantity", 0],
+            },
+          },
+          totalPendingItems: {
+            $sum: { $cond: [{ $eq: ["$paymentStatus", "Pending"] }, 1, 0] },
+          },
+        },
+      },
     ]);
-    stats.totalPendingDebt = debtAgg.length > 0 ? debtAgg[0].grandTotal : 0;
 
-    // 4. Populate Stats: Total Quantity (Grand Total)
-    const qtyAgg = await Stock.aggregate([
-      { $match: { paymentStatus: "Pending" } },
-      { $group: { _id: null, grandQty: { $sum: "$quantity" } } },
-    ]);
-    stats.totalPendingQty = qtyAgg.length > 0 ? qtyAgg[0].grandQty : 0;
+    const stats = statsResult[0] || {
+      totalPendingDebt: 0,
+      totalPendingQty: 0,
+      totalPendingItems: 0,
+    };
 
-    // 5. Populate Stats: Total Pending Items (Count)
-    const itemsAgg = await Stock.aggregate([
-      { $match: { paymentStatus: "Pending" } },
-      { $count: "totalCount" },
-    ]);
-    stats.totalPendingItems = itemsAgg.length > 0 ? itemsAgg[0].totalCount : 0;
-
-    // 6. Render the view with both the table data and the card stats
     res.render("suppliers", { supplierDebts, stats });
   } catch (error) {
     console.error("SUPPLIER ROUTE ERROR:", error.message);
@@ -484,41 +445,67 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
 });
 
 // POST: Complete Payment for a specific supplier
+// 1. The Payment Route (The "Tagging" Logic)
 router.post(
   "/pay-supplier/:supplierName",
   isstoremanagerOradmin,
   async (req, res) => {
     try {
       const supplierName = req.params.supplierName;
+      const batchId = Date.now().toString(); // Generates a unique ID for this specific payment
 
-      // Updates all "Pending" items for this supplier to "Paid"
+      // Updates only the currently "Pending" items and stamps them with the Batch ID
       await Stock.updateMany(
         { supplierName: supplierName, paymentStatus: "Pending" },
-        { $set: { paymentStatus: "Paid" } },
+        {
+          $set: {
+            paymentStatus: "Paid",
+            paymentBatchId: batchId,
+          },
+        },
       );
 
-      // Redirect back to the dashboard to see the changes
-      res.redirect("/suppliers");
+      // Redirect to evidence showing ONLY this specific batch
+      res.redirect(`/evidence/${supplierName}?batchId=${batchId}`);
     } catch (error) {
       console.error("PAYMENT ERROR:", error.message);
       res.status(500).send("Error updating payment status");
     }
   },
 );
+
+// 2. The Evidence Route (The "Isolation" Logic)
 // GET: Generate the Evidence/Voucher
 router.get(
   "/evidence/:supplierName",
   isstoremanagerOradmin,
   async (req, res) => {
     try {
-      const items = await Stock.find({
-        supplierName: req.params.supplierName,
-        paymentStatus: "Paid",
-      }).sort({ updatedAt: -1 });
+      const { supplierName } = req.params;
+      const { batchId } = req.query;
+
+      let query = { supplierName: supplierName, paymentStatus: "Paid" };
+
+      // If a specific batch ID is provided, ONLY find those items
+      if (batchId) {
+        query.paymentBatchId = batchId;
+      } else {
+        // Fallback: If no batch provided, find the most recent payment batch
+        const latest = await Stock.findOne(query).sort({ paymentBatchId: -1 });
+        if (latest && latest.paymentBatchId) {
+          query.paymentBatchId = latest.paymentBatchId;
+        }
+      }
+
+      const items = await Stock.find(query).sort({ updatedAt: -1 });
 
       res.render("evidence", {
-        supplierName: req.params.supplierName,
-        items,
+        supplierName: supplierName,
+        items: items || [],
+        error:
+          items.length === 0
+            ? "No payment records found for this supplier."
+            : null,
       });
     } catch (error) {
       console.error("EVIDENCE ERROR:", error.message);

@@ -25,7 +25,7 @@ body{
 }
 
 .logo{
-  margin-bottom:35px;
+  margin: 15px  0  30px 0;
 }
 
 .logo h3{
@@ -41,7 +41,7 @@ body{
 }
 
 .sidebar ul li{
-  margin:18px 0;
+  margin:29px 0;
 }
 
 .sidebar ul li a{
@@ -135,7 +135,7 @@ body{
 /* ================= PAGE TITLE ================= */
 .main h2{
   margin-bottom:28px;
-  color:#0f172a;
+  color:#183067;
   font-size:1.3rem;
 }
 
@@ -152,7 +152,7 @@ body{
   background:white;
   border-radius:18px;
   padding:22px;
-  height:165px;
+  height:130px;
   display:flex;
   align-items:center;
   gap:18px;
@@ -224,7 +224,7 @@ body{
 
 .card-info h4{
   font-size:1rem;
-  color:#082349;
+  color:#103c79;
   margin-bottom:10px;
   line-height:1.4;
 }
@@ -232,7 +232,7 @@ body{
 .card-info p{
   font-size:1rem;
   font-weight:bold;
-  color:#06163a;
+  color:#040e26;
   word-break:break-word;
 }
 
@@ -240,13 +240,13 @@ body{
 .table-title{
   margin:20px 0;
   font-size:1.2rem;
-  color:#0f172a;
+  color:#0e2458;
 }
 
 /* ================= TABLE CONTAINER ================= */
 .grid{
   /* background:rgb(4, 4, 54); */
-  border-top: 8px solid rgb(3, 3, 30);
+  /* border-top: 8px solid rgb(3, 3, 30); */
   padding:20px;
   border-radius:18px;
   box-shadow:0 4px 14px rgba(0,0,0,0.08);
@@ -262,11 +262,11 @@ body{
 }
 
 .styled-table thead{
-  background:#020c24;
+  background:#030f2e;
   color:white;
 }
 .styled-table thead{
-  background:#031130; /* BLUE */
+  background:#030e29; /* BLUE */
 }
 
 .styled-table thead th{

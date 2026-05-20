@@ -1,0 +1,159 @@
+/* ================= BASE ================= */
+body{
+  font-family: Arial, sans-serif;
+  background:#eef2f7;
+  margin:0;
+  padding:30px;
+  display:flex;
+  justify-content:center;
+  color:#1e293b;
+}
+
+/* ================= MAIN CONTAINER ================= */
+.voucher-container{
+  width:100%;
+  max-width:900px;
+  background:white;
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+
+  display:flex;
+  flex-direction:column;
+  min-height:90vh;
+}
+
+/* ================= HEADER ================= */
+.header{
+  text-align:center;
+  padding-bottom:18px;
+  margin-bottom:20px;
+  border-bottom:2px solid #e5e7eb;
+}
+
+.header h1{
+  margin:0;
+  font-size:26px;
+  letter-spacing:1px;
+  color:#0f172a;
+}
+
+.header p{
+  margin-top:6px;
+  font-size:14px;
+  color:#64748b;
+}
+
+/* ================= META ================= */
+.meta{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:20px;
+  font-size:14px;
+}
+
+.meta p{
+  margin:6px 0;
+}
+
+/* ================= TABLE ================= */
+.voucher-table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.voucher-table th{
+  background:#0f172a;
+  color:white;
+  padding:12px;
+  text-align:left;
+  font-size:13px;
+}
+
+.voucher-table td{
+  padding:12px;
+  border-bottom:1px solid #e5e7eb;
+  font-size:14px;
+}
+
+.voucher-table tbody tr:hover{
+  background:#f8fafc;
+}
+
+/* ================= TOTAL ================= */
+.total-section{
+  margin-top:20px;
+  padding:15px;
+  text-align:right;
+  font-size:18px;
+  font-weight:700;
+  border-top:2px solid #e5e7eb;
+}
+
+/* ================= FOOTER PUSHES BUTTONS DOWN ================= */
+.footer{
+  margin-top:auto;
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+  padding-top:30px;
+}
+
+/* ================= ACTION AREA (BOTTOM CENTER) ================= */
+.actions-area{
+  margin-top:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  text-align:center;
+}
+
+.actions-area hr{
+  width:100%;
+  border:0;
+  border-top:1px solid #e5e7eb;
+}
+
+/* PRINT BUTTON */
+.print-btn{
+  padding:12px 22px;
+  border:none;
+  background:#2563eb;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:14px;
+  transition:0.3s;
+}
+
+.print-btn:hover{
+  background:#1d4ed8;
+}
+
+/* BACK LINK */
+.back-link{
+  text-decoration:none;
+  color:#0f172a;
+  font-weight:600;
+}
+
+.back-link:hover{
+  text-decoration:underline;
+}
+
+/* ================= PRINT ================= */
+@media print{
+  .actions-area{
+    display:none;
+  }
+
+  body{
+    background:white;
+    padding:0;
+  }
+
+  .voucher-container{
+    box-shadow:none;
+  }
+}

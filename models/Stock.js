@@ -59,6 +59,7 @@ const StockSchema = new mongoose.Schema(
       required: [true, "Supplier name is required"],
       trim: true,
     },
+    paymentBatchId: { type: String, default: null },
     supplierContact: {
       type: String,
       required: [true, "Supplier contact number is required"],
@@ -80,7 +81,7 @@ const StockSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Stock", StockSchema);

@@ -11,21 +11,21 @@ html
       .logo
         h2 ⚒ NYONDO HARDWARE
       ul
-        li: a(href='storedash'): i.fas.fa-home | Dashboard
-        li.active: a(href='invento'): i.fas.fa-boxes | Inventory
-        li: a(href='storsales'): i.fas.fa-cash-register | Sales
-        li: a(href='addstock'): i.fas.fa-plus-circle | Add Stock
-        li: a(href='logout'): i.fas.fa-sign-out-alt | Logout
+        li: a(href='storedash'): i.fas.fa-home  Dashboard
+        li: a(href='invento'): i.fas.fa-boxes  Inventory
+        li: a(href='storsales'): i.fas.fa-cash-register  Sales
+        li: a(href='addstock'): i.fas.fa-plus-circle  Add Stock
+        li: a(href='logout'): i.fas.fa-sign-out-alt  Logout
 
     .main
       .header
         h1
           i.fas.fa-boxes
-          |  Inventory Overview
+          |  Inventory Overview
         .actions
           a.btn(href='addstock')
             i.fas.fa-plus
-            |  Add Stock
+            |  Add Stock
 
       .cards
         .card
@@ -55,15 +55,16 @@ html
               th Image
               th Factory / Depot
               th Date Added
-              th Lifetime Total Added
-              th Current Shelf Qty
+              th Status
+              th Amount in Stock
               th Buying Price
               th Selling Price
+              th Evidence
               th Actions
           tbody
             if dbStock.length === 0
               tr
-                td(colspan='9') No stock records found.
+                td(colspan='10') No stock records found.
             each stock in dbStock
               tr
                 td #{stock.productName}
@@ -75,12 +76,20 @@ html
                 td #{stock.factory}
                 td #{new Date(stock.createdAt).toLocaleDateString()}
                 //- Lifetime total added (grows with every edit)
-                td 
-                  strong #{stock.initialQuantity}
+                //- New column: Payment Status
+                td
+                  if stock.paymentStatus === 'Paid'
+                    span.badge.badge-success Paid
+                  else
+                    span.badge.badge-warning Pending
+                td #{stock.initialQuantity}
                 //- Current shelf quantity (reduces with sales)
-                td #{stock.quantity}
                 td #{stock.buyingPrice.toLocaleString()}
                 td #{stock.sellingPrice.toLocaleString()}
+                td
+                  a.btn-action.btn-evidence(href=`/evidence/${stock.supplierName}` target="_blank")
+                    i.fas.fa-file-alt
+                    |  Voucher
                 td
                   .action-btns
                     a.btn.btn-sm.btn-outline-warning(href=`/stock/edit/${stock._id}`)

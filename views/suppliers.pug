@@ -11,17 +11,17 @@ html
         | ⚒ NYONDO HARDWARE
       ul
         li
-          a(href='ssales')
+          a(href='storedash')
             i.fas.fa-home
             |  Dashboard
         li
-          a(href='newsale')
+          a(href='invento')
             i.fas.fa-cash-register
-            |  New Sale
+            |  Inventory
         li
-          a(href='stockview')
+          a(href='addstock')
             i.fas.fa-box
-            |  Stock View
+            |  Add Stock
         li
           a(href='suppliers').active
             i.fas.fa-truck-loading
@@ -57,6 +57,7 @@ html
             th Contact
             th Items Supplied
             th Total Debt (UGX)
+            th Status
             th Actions
         tbody
           if supplierDebts && supplierDebts.length > 0
@@ -70,15 +71,23 @@ html
                     each prod in sup.productsSupplied
                       li(style="font-size: 0.85em; color: #444;") • #{prod}
                 td #{sup.totalDebt.toLocaleString()}
+                td
+                  if sup.totalDebt > 0
+                    span.status-pending(style="color: orange; font-weight: bold;") Pending
+                  else
+                    span.status-paid(style="color: green; font-weight: bold;") Paid
                 td.actions
-                  form(action=`/pay-supplier/${sup._id}`, method="POST" style="display:inline;")
-                    button.btn-action.btn-pay(type="submit" onclick='return confirm("Confirm payment for ' + sup._id + '?")')
-                      i.fas.fa-check-circle
-                      |  Pay
+                  //- ONLY show Pay button if debt is greater than 0
+                  if sup.totalDebt > 0
+                    form(action=`/pay-supplier/${sup._id}`, method="POST" style="display:inline;")
+                      button.btn-action.btn-pay(type="submit" onclick='return confirm("Confirm payment for ' + sup._id + '?")')
+                        i.fas.fa-check-circle
+                        |  Pay
                   
+                  //- Evidence button is always visible
                   a.btn-action.btn-evidence(href=`evidence/${sup._id}`, target="_blank")
                     i.fas.fa-file-alt
                     |  Evidence
           else
             tr
-              td(colspan='5' style="text-align:center;") No outstanding credit balances.
+              td(colspan='6' style="text-align:center;") No suppliers found.

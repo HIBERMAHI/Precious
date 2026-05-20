@@ -16,7 +16,7 @@ body {
 /* ================= SIDEBAR ================= */
 .sidebar {
   width: 250px;
-  background: linear-gradient(to bottom, #0f172a, #1e293b);
+  background: linear-gradient(to bottom, #01091b, #010917);
   color: white;
   padding: 25px 0;
   position: fixed;
@@ -28,7 +28,7 @@ body {
   text-align: center;
   font-size: 22px;
   font-weight: bold;
-  margin-bottom: 35px;
+  margin: 10px  40px  35px 0;
   color: #facc15;
   letter-spacing: 1px;
 }
@@ -38,7 +38,7 @@ body {
 }
 
 .sidebar ul li {
-  margin: 8px 15px;
+  margin: 25px 15px;
 }
 
 .sidebar ul li a {
@@ -55,14 +55,11 @@ body {
 }
 
 .sidebar ul li a:hover {
-  background: rgba(255, 255, 255, 0.12);
-  transform: translateX(4px);
+   background:rgba(250, 204, 21, 0.12);
+  color:#facc15;
+  transform:translateX(4px);
 }
 
-.sidebar ul li a.active {
-  background: #2563eb;
-  color: white;
-}
 
 .sidebar ul li a i {
   font-size: 16px;
@@ -76,9 +73,9 @@ body {
 }
 
 .main h1 {
-  font-size: 30px;
+  font-size: 1.5rem;
   margin-bottom: 30px;
-  color: #0f172a;
+  color: #0d2662;
   font-weight: 700;
 }
 
@@ -103,13 +100,13 @@ body {
 }
 
 .card h3 {
-  font-size: 17px;
+  font-size: 1rem;
   color: #64748b;
   margin-bottom: 12px;
 }
 
 .stat-value {
-  font-size: 30px;
+  font-size:1rem;
   font-weight: bold;
   color: #0f172a;
 }
@@ -138,7 +135,7 @@ body {
 }
 
 .supplier-table thead {
-  background: #1e293b;
+  background: #041735;
   color: white;
 }
 

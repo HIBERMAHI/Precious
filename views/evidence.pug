@@ -2,54 +2,61 @@ doctype html
 html
   head
     title Payment Voucher - #{supplierName}
-    style.
-      body { font-family: 'Arial', sans-serif; padding: 40px; color: #333; }
-      .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px; }
-      .meta { display: flex; justify-content: space-between; margin-bottom: 20px; }
-      table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-      th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-      th { background-color: #f4f4f4; }
-      .total-section { margin-top: 20px; text-align: right; font-size: 1.2em; font-weight: bold; }
-      .footer { margin-top: 50px; display: flex; justify-content: space-between; }
-      @media print { .no-print { display: none; } }
+    link(rel='stylesheet' href='/css/evidence.css')
   body
-    .header
-      h1 PAYMENT VOUCHER
-      p NYONDO HARDWARE - Official Settlement Record
-    
-    .meta
-      div
-        p #[strong Supplier:] #{supplierName}
-      div
-        p #[strong Date Settled:] #{new Date().toLocaleDateString()}
-    
-    table
-      thead
-        tr
-          th Product Name
-          th Quantity
-          th Price (UGX)
-          th Total (UGX)
-      tbody
-        - var grandTotal = 0
-        each item in items
-          tr
-            td #{item.productName}
-            td #{item.initialQuantity}
-            td #{item.buyingPrice.toLocaleString()}
-            td #{item.total.toLocaleString()}
-            - grandTotal += item.total
-    
-    .total-section
-      p Grand Total Paid: #{grandTotal.toLocaleString()} UGX
-    
-    .footer
-      div
-        p Received By: ____________________
-      div
-        p Authorized Signature: ____________________
+    .voucher-container
+      .header
+        h1 PAYMENT VOUCHER
+        p NYONDO HARDWARE - Official Settlement Record
+      
+      .meta
+        div
+          p #[strong Supplier:] #{supplierName}
+          //- Added Supplier Contact display
+          if items.length > 0
+            p #[strong Contact:] #{items[0].supplierContact}
+        div
+          p #[strong Date Settled:] #{new Date().toLocaleDateString()}
+          //- Added Voucher Number (Batch ID)
+          if items.length > 0 && items[0].paymentBatchId
+            p #[strong Voucher No:] #{items[0].paymentBatchId}
+      
+      //- CHECK IF THERE ARE ITEMS TO DISPLAY
+      if items && items.length > 0
+        table.voucher-table
+          thead
+            tr
+              th Product Name
+              th Quantity
+              th Price (UGX)
+              th Total (UGX)
+          tbody
+            - var grandTotal = 0
+            each item in items
+              tr
+                td #{item.productName}
+                td #{item.initialQuantity}
+                td #{item.buyingPrice.toLocaleString()}
+                td #{item.total.toLocaleString()}
+                - grandTotal += item.total
+        
+        .total-section
+          h2 Grand Total Paid: #{grandTotal.toLocaleString()} UGX
+      
+      else
+        //- SHOW THIS IF NO PAID RECORDS EXIST
+        .no-data(style="text-align: center; padding: 40px; color: #777;")
+          p No settled payment records found for this supplier.
 
-    .no-print
-      hr
-      button(onclick="window.print()" style="padding: 10px 20px; cursor: pointer;") Print This Voucher
-      a(href="/suppliers" style="margin-left: 15px;") Back to Dashboard
+      .footer
+        div
+          p Received By: ____________________
+        div
+          p Authorized Signature: ____________________
+
+      //- Action buttons
+      .no-print.actions-area
+        hr
+        if items && items.length > 0
+          button(onclick="window.print()" class="print-btn") Print This Voucher
+        a(href="/suppliers" class="back-link") Back to Dashboard
