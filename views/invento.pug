@@ -11,17 +11,32 @@ html
       .logo
         h2 ⚒ NYONDO HARDWARE
       ul
-        li: a(href='storedash'): i.fas.fa-home  Dashboard
-        li: a(href='invento'): i.fas.fa-boxes  Inventory
-        li: a(href='storsales'): i.fas.fa-cash-register  Sales
-        li: a(href='addstock'): i.fas.fa-plus-circle  Add Stock
-        li: a(href='logout'): i.fas.fa-sign-out-alt  Logout
+        li
+          a(href='storedash')
+            i.fas.fa-home.fa-fw
+            span.nav-text Dashboard
+        li.active
+          a(href='invento')
+            i.fas.fa-boxes.fa-fw
+            span.nav-text Inventory
+        li
+          a(href='storsales')
+            i.fas.fa-cash-register.fa-fw
+            span.nav-text Reports
+        li
+          a(href='addstock')
+            i.fas.fa-plus-circle.fa-fw
+            span.nav-text Add Stock
+        li
+          a(href='logout')
+            i.fas.fa-sign-out-alt.fa-fw
+            span.nav-text Logout
 
     .main
       .header
         h1
           i.fas.fa-boxes
-          |  Inventory Overview
+          |  Stock Overview
         .actions
           a.btn(href='addstock')
             i.fas.fa-plus

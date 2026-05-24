@@ -1,6 +1,4 @@
-/* ==========================================================================
-   1. RESET & GLOBAL STYLES
-   ========================================================================== */
+
 *{
   margin:0;
   padding:0;
@@ -15,10 +13,6 @@ body{
   min-height:100vh;
   overflow-x:hidden;
 }
-
-/* ==========================================================================
-   2. SIDEBAR (UNCHANGED THEME)
-   ========================================================================== */
 .sidebar{
   width:250px;
   background:#02060f;
@@ -94,19 +88,11 @@ body{
   background:rgba(250,204,21,0.08);
   color:#facc15;
 }
-
-/* ==========================================================================
-   3. MAIN CONTENT
-   ========================================================================== */
 .main{
   margin-left:250px;
   width:calc(100% - 250px);
   padding:30px;
 }
-
-/* ==========================================================================
-   4. TOP SECTION
-   ========================================================================== */
 .top-section{
   display:flex;
   justify-content:space-between;
@@ -114,22 +100,22 @@ body{
   margin-bottom:30px;
   gap:20px;
 }
+.top-section h1{
+  font-size: 1.3rem;
+  color: rgb(15, 15, 109);
+}
 
 .dashboard-heading{
-  font-size:30px;
+  font-size:1.4rem;
   font-weight:700;
   color:#0f172a;
-  margin-bottom:5px;
+  margin: 0  0 13px  20px;
 }
 
 .dashboard-subtext{
   color:#64748b;
   font-size:14px;
 }
-
-/* ==========================================================================
-   5. PROFILE CARD
-   ========================================================================== */
 .profile-card{
   display:flex;
   align-items:center;
@@ -172,10 +158,6 @@ body{
   font-size:11px;
   font-weight:600;
 }
-
-/* ==========================================================================
-   6. SUMMARY CARDS
-   ========================================================================== */
 .cards-container{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
@@ -209,16 +191,18 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
+  width: 5px;
+  height: 5px;
 }
 
 .card-title{
-  font-size:1rem;
+  font-size:0.8rem;
   color:#64748b;
   margin-bottom:6px;
 }
 
 .card-value{
-  font-size:1rem;
+  font-size:0.8rem;
   font-weight:700;
   color:#0f172a;
 }
@@ -242,23 +226,19 @@ body{
   background:#dcfce7;
   color:#16a34a;
 }
-
-/* ==========================================================================
-   7. QUICK ACTIONS
-   ========================================================================== */
 .quick-actions-section{
   margin-bottom:35px;
 }
 
 .section-heading{
-  font-size:18px;
+  font-size:1rem;
   font-weight:700;
   margin-bottom:20px;
-  color:#0f172a;
+  color:#0d2869;
 
   display:flex;
-  justify-content:center;   /* centers horizontally */
-  align-items:center;
+  /* justify-content:center;   */
+  /* align-items:center; */
   gap:10px;
 
   text-align:center;
@@ -267,7 +247,7 @@ body{
 /* CENTERED ACTION BUTTONS */
 .links-grid{
   display:flex;
-  justify-content:center;
+  justify-content:space-between;
   align-items:center;
   gap:30px;
   flex-wrap:wrap;
@@ -352,10 +332,6 @@ body{
 .table-row:hover{
   background:#f8fafc;
 }
-
-/* ==========================================================================
-   9. TABLE CELL STYLES
-   ========================================================================== */
 .customer-cell{
   font-weight:700;
   color:#0f172a;
@@ -379,10 +355,6 @@ body{
   font-size:12px;
   color:#64748b;
 }
-
-/* ==========================================================================
-   10. STATUS BADGES
-   ========================================================================== */
 .status-badge{
   display:inline-block;
   padding:5px 12px;
@@ -402,10 +374,6 @@ body{
   background:#fef3c7;
   color:#b45309;
 }
-
-/* ==========================================================================
-   11. ITEM SUMMARY DESIGN
-   ========================================================================== */
 .summary-cell{
   min-width:180px;
 }
@@ -457,20 +425,12 @@ body{
   color:#94a3b8;
   font-style:italic;
 }
-
-/* ==========================================================================
-   12. EMPTY TABLE ROW
-   ========================================================================== */
 .text-center-fallback{
   text-align:center !important;
   padding:35px !important;
   color:#94a3b8;
   font-style:italic;
 }
-
-/* ==========================================================================
-   13. RESPONSIVE DESIGN
-   ========================================================================== */
 @media(max-width:1200px){
 
   .cards-container{

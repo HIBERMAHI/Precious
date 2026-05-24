@@ -35,7 +35,7 @@ body{
   margin:0;
   font-size:26px;
   letter-spacing:1px;
-  color:#0f172a;
+  color:#0e2865;
 }
 
 .header p{
@@ -63,7 +63,7 @@ body{
 }
 
 .voucher-table th{
-  background:#0f172a;
+  background:#04153b;
   color:white;
   padding:12px;
   text-align:left;
@@ -89,7 +89,9 @@ body{
   font-weight:700;
   border-top:2px solid #e5e7eb;
 }
-
+.total-section  h2{
+  color: rgb(76, 18, 130);
+}
 /* ================= FOOTER PUSHES BUTTONS DOWN ================= */
 .footer{
   margin-top:auto;
@@ -119,7 +121,7 @@ body{
 .print-btn{
   padding:12px 22px;
   border:none;
-  background:#2563eb;
+  background:#051333;
   color:white;
   border-radius:10px;
   cursor:pointer;

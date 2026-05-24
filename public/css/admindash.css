@@ -4,7 +4,7 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:Arial, Helvetica, sans-serif;
+   font-family: "Inter", "Segoe UI", sans-serif;
 }
 
 body{
@@ -18,7 +18,7 @@ body{
 
 .sidebar{
   width:240px;
-  background-color: rgb(3, 3, 34);
+  background-color: rgb(2, 2, 22);
   color:#fff;
   padding:20px 18px;
   position:fixed;
@@ -29,7 +29,7 @@ body{
 
 .logo{
   text-align:center;
-  margin-bottom:35px;
+margin: 10px  0  35px  0;
 }
 
 .logo h2{
@@ -44,7 +44,7 @@ body{
 }
 
 .nav li{
-  margin: 0 30px 0 0;
+  margin: 40px 40px 0 0;
 
 }
 
@@ -215,7 +215,7 @@ table{
 }
 
 table th{
-  background:#041e45;
+  background:#021025;
   color:rgb(245, 245, 247);
   padding:14px;
   text-align:left;

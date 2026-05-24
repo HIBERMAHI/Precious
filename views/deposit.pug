@@ -10,10 +10,22 @@ html
     .sidebar
       .logo ⚒ NYONDO HARDWARE
       ul
-        li: a(href='/admindash'): i.fas.fa-home Dashboard
-        li.active: a(href='/deposit'): i.fas.fa-piggy-bank Deposit Scheme
-        li: a(href='/regicredit'): i.fas.fa-user-plus Register Customer
-        li: a(href='/logout'): i.fas.fa-sign-out-alt Logout
+        li
+          a(href='/admindash')
+            i.fas.fa-home.fa-fw
+            |   Dashboard
+        li.active
+          a(href='/deposit')
+            i.fas.fa-piggy-bank.fa-fw
+            span.nav-text Deposit Scheme
+        li
+          a(href='/regicredit')
+            i.fas.fa-user-plus.fa-fw
+            span.nav-text Register Customer
+        li
+          a(href='/logout')
+            i.fas.fa-sign-out-alt.fa-fw
+            span.nav-text Logout
 
     .main
       h1 Salary Earner Deposit Scheme
@@ -85,6 +97,7 @@ html
         table
           thead
             tr
+              th #
               th Receipt #
               th Customer
               th Distance (KM)
@@ -96,8 +109,9 @@ html
               th Action
           tbody
             if deposits && deposits.length > 0
-              each d in deposits
+              each d , index in deposits
                 tr
+                  td #{index + 1}
                   td.receipt-cell #{d.receiptNumber}
                   td.customer-cell #{d.customer ? d.customer.fullName : 'Deleted'}
                   
@@ -148,7 +162,7 @@ html
             else
               tr
                 //- Adjusted colspan to 9 to cleanly match the structural row count balance
-                td.empty-table-cell(colspan="9") No deposits recorded yet.
+                td.empty-table-cell(colspan="10") No deposits recorded yet.
 
     script.
       document.addEventListener('DOMContentLoaded', () => {

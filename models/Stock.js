@@ -54,6 +54,9 @@ const StockSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    settlementDate: { 
+      type: Date 
+    },
     supplierName: {
       type: String,
       required: [true, "Supplier name is required"],

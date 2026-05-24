@@ -1,0 +1,265 @@
+/* =========================
+   GLOBAL STYLES
+========================= */
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  background: #eef2f7;
+  color: #333;
+  min-height: 100vh;
+  padding: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+.report-container{
+  width: 72%;
+  max-width: 760px;
+  background: #fff;
+  padding: 22px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+/* =========================
+   HEADER SECTION
+========================= */
+.report-header{
+  text-align: center;
+  margin-bottom: 22px;
+  border-bottom: 1px solid #0d6efd;
+  padding-bottom: 14px;
+}
+
+.report-header h1{
+  font-size: 20px;
+  color: #0d1b2a;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.report-header h2{
+  font-size: 15px;
+  color: #0d6efd;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.report-date{
+  color: #666;
+  font-size: 11px;
+  margin-bottom: 14px;
+}
+
+/* =========================
+   SUMMARY BOX
+========================= */
+.summary-box{
+  width: 210px;
+  margin: auto;
+  background: linear-gradient(135deg, #0d6efd, #0047b3);
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.summary-box h3{
+  font-size: 11px;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.grand-total{
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* =========================
+   DAILY SECTIONS
+========================= */
+.daily-section{
+  margin-top: 20px;
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+}
+
+.date-header{
+  font-size: 14px;
+  color: #0d1b2a;
+  margin-bottom: 12px;
+  padding-left: 8px;
+  border-left: 3px solid #0d6efd;
+}
+
+/* =========================
+   TABLE DESIGN
+========================= */
+.report-table{
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table thead{
+  background: #0d6efd;
+  color: white;
+}
+
+.report-table th{
+  padding: 8px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.report-table td{
+  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: top;
+  font-size: 10px;
+}
+
+.report-table tbody tr:nth-child(even){
+  background: #f8fbff;
+}
+
+/* =========================
+   ITEM LIST
+========================= */
+.item-list{
+  padding-left: 14px;
+}
+
+.item-list li{
+  margin-bottom: 2px;
+  color: #444;
+  font-size: 10px;
+}
+
+/* =========================
+   DAY TOTAL ROW
+========================= */
+.day-total-row{
+  background: #dbe9ff !important;
+}
+
+.day-total-row td{
+  padding: 10px;
+  color: #0d1b2a;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* =========================
+   DIVIDER
+========================= */
+.divider{
+  margin-top: 16px;
+  border: none;
+  height: 1px;
+  background: #ddd;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+.report-actions{
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn,
+.report-actions a{
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Print Button */
+.btn-print{
+  background: #0d6efd;
+  color: white;
+}
+
+/* Back Button */
+.report-actions a{
+  background: #1f2937;
+  color: white;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+@media(max-width: 768px){
+
+  body{
+    padding: 20px;
+  }
+
+  .report-container{
+    width: 100%;
+    padding: 15px;
+  }
+
+  .report-table{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .summary-box{
+    width: 100%;
+  }
+
+  .report-actions{
+    flex-direction: column;
+  }
+
+  .btn,
+  .report-actions a{
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* =========================
+   PRINT STYLING
+========================= */
+@media print{
+
+  body{
+    background: white;
+    padding: 20px;
+  }
+
+  .report-container{
+    width: 100%;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .report-actions{
+    display: none;
+  }
+
+  .daily-section{
+    border: none;
+    padding: 0;
+  }
+}

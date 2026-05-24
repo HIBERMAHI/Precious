@@ -19,7 +19,9 @@ html(lang="en")
         gap: 10px;
         font-weight: bold;
       }
+      .success-color { background-color: #e6fffa; border: 1px solid #00875a; color: #00875a; }
       .hidden { display: none !important; }
+      .toggle-eye { cursor: pointer; margin-left: -30px; z-index: 10; }
 
   body
     .sidebar
@@ -34,15 +36,18 @@ html(lang="en")
           .top
             p Update Customer Profile: #{customer.fullName}
           
-          //- Error Box: Displays message from server if validation fails
+          //- Error Box: Displays message from server or validation
           if error
             #errorBox.error-message
-              i.fas.fa-circle-exclamation
-              span #{error}
+              i#errorIcon.fas.fa-circle-exclamation
+              span#errorMessage #{error}
+          else
+            #errorBox.error-message.hidden
+              i#errorIcon.fas.fa-circle-exclamation
+              span#errorMessage
 
           form#editForm(action=`/credit/update/${customer._id}` method='post')
             .grid-container
-              
               .input-group
                 label Full Names
                 .input-field
@@ -53,7 +58,7 @@ html(lang="en")
                 label Phone Number
                 .input-field
                   i.fas.fa-phone
-                  input(type='text' name='phoneNumber' value=customer.phoneNumber required)
+                  input#phoneNumber(type='text' name='phoneNumber' value=customer.phoneNumber required placeholder='07XXXXXXXX')
 
               .input-group
                 label Address
@@ -67,7 +72,6 @@ html(lang="en")
                   i.fas.fa-truck-fast
                   input(type='number' name='distanceFromStore' value=customer.distanceFromStore required min='1')
 
-              //- Identity/Auth fields (usually kept read-only or hidden during simple edits)
               .input-group
                 label Email (Locked)
                 .input-field
@@ -78,7 +82,7 @@ html(lang="en")
                 label NIN (Locked)
                 .input-field
                   i.fas.fa-id-card
-                  input(type='text' value=customer.nin disabled)
+                  input#nin(type='text' name='nin' value=customer.nin readonly)
 
               .input-group.full-width
                 label Confirm Password to Save Changes
@@ -92,33 +96,60 @@ html(lang="en")
               span Update Information
 
     script.
-      const errorBox = document.getElementById('errorBox');
-      const allInputs = document.querySelectorAll('input');
-      const togglePassword = document.querySelector('#togglePassword');
-      const passwordField = document.querySelector('#password');
+      document.addEventListener('DOMContentLoaded', () => {
+        const errorBox = document.getElementById('errorBox');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorIcon = document.getElementById('errorIcon');
+        const editForm = document.getElementById('editForm');
+        const phoneInput = document.getElementById('phoneNumber');
+        const passwordField = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
 
-      // 1. Password Visibility Toggle
-      togglePassword.addEventListener('click', function () {
-        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordField.setAttribute('type', type);
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-      });
-
-      // 2. Hide error message as soon as customer starts typing
-      if (errorBox) {
-        allInputs.forEach(input => {
-          input.addEventListener('input', () => {
-            errorBox.classList.add('hidden');
-          }, { once: true });
-        });
-      }
-
-      // 3. Frontend Validation before submission
-      document.getElementById('editForm').addEventListener('submit', function(e) {
-        const pass = passwordField.value;
-        if (pass.length < 6 || pass.length > 14) {
-          e.preventDefault(); // STOP submission
-          alert("Password must be between 6 and 14 characters.");
+        function updateUI(msg, isValid) {
+          errorBox.classList.remove('hidden');
+          errorMessage.textContent = msg;
+          if (isValid) {
+            errorBox.classList.add('success-color');
+            errorIcon.className = 'fas fa-check-circle';
+          } else {
+            errorBox.classList.remove('success-color');
+            errorIcon.className = 'fas fa-circle-exclamation';
+          }
         }
+
+        function validate() {
+          const phoneRegex = /^(?:07\d{8}|\+256\d{9})$/;
+          const isPhoneValid = phoneRegex.test(phoneInput.value);
+          const isPassValid = passwordField.value.length >= 6 && passwordField.value.length <= 14;
+
+          if (!isPhoneValid) {
+            updateUI("Phone must start with 07 or +256.", false);
+            return false;
+          } else if (!isPassValid) {
+            updateUI("Password must be 6-14 characters.", false);
+            return false;
+          } else {
+            updateUI("Everything looks good!", true);
+            return true;
+          }
+        }
+
+        // Toggle Password
+        togglePassword.addEventListener('click', () => {
+          const type = passwordField.type === 'password' ? 'text' : 'password';
+          passwordField.type = type;
+          togglePassword.classList.toggle('fa-eye-slash');
+        });
+
+        // Validation on typing
+        [phoneInput, passwordField].forEach(input => {
+          input.addEventListener('input', validate);
+        });
+
+        // Final Submit Check
+        editForm.addEventListener('submit', (e) => {
+          if (!validate()) {
+            e.preventDefault();
+          }
+        });
       });

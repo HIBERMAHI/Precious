@@ -128,8 +128,8 @@ background: rgba(250, 204, 21, 0.12);
 
 .stock-form h2{
     margin-bottom: 25px;
-    color: #072145;
-    font-size: 1.3rem;
+    color: #0a2c5b;
+    font-size: 1.1rem;
     border-left: 5px solid #f59e0b;
     padding-left: 12px;
 }
@@ -152,7 +152,7 @@ background: rgba(250, 204, 21, 0.12);
 
 .field label{
     margin-bottom: 8px;
-    font-size: 0.9em;
+    font-size: 0.8em;
     color: #0f2c5b;
     font-weight: 600;
 }

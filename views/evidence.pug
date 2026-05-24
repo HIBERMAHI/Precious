@@ -12,21 +12,24 @@ html
       .meta
         div
           p #[strong Supplier:] #{supplierName}
-          //- Added Supplier Contact display
           if items.length > 0
             p #[strong Contact:] #{items[0].supplierContact}
         div
-          p #[strong Date Settled:] #{new Date().toLocaleDateString()}
-          //- Added Voucher Number (Batch ID)
+          p #[strong Date Settled:] 
+            if items.length > 0 && items[0].settlementDate
+              | #{new Date(items[0].settlementDate).toLocaleDateString('en-GB')}
+            else
+              | #{new Date().toLocaleDateString('en-GB')}
+              
           if items.length > 0 && items[0].paymentBatchId
             p #[strong Voucher No:] #{items[0].paymentBatchId}
       
-      //- CHECK IF THERE ARE ITEMS TO DISPLAY
       if items && items.length > 0
         table.voucher-table
           thead
             tr
               th Product Name
+              th Factory
               th Quantity
               th Price (UGX)
               th Total (UGX)
@@ -35,6 +38,7 @@ html
             each item in items
               tr
                 td #{item.productName}
+                td #{item.factory || 'N/A'}
                 td #{item.initialQuantity}
                 td #{item.buyingPrice.toLocaleString()}
                 td #{item.total.toLocaleString()}
@@ -44,7 +48,6 @@ html
           h2 Grand Total Paid: #{grandTotal.toLocaleString()} UGX
       
       else
-        //- SHOW THIS IF NO PAID RECORDS EXIST
         .no-data(style="text-align: center; padding: 40px; color: #777;")
           p No settled payment records found for this supplier.
 
@@ -54,7 +57,6 @@ html
         div
           p Authorized Signature: ____________________
 
-      //- Action buttons
       .no-print.actions-area
         hr
         if items && items.length > 0

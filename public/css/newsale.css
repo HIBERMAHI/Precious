@@ -69,9 +69,9 @@ body{
 
 /* ================= PAGE TITLE ================= */
 h1{
-  font-size:30px;
-  margin-bottom:25px;
-  color:#0f172a;
+  font-size:1.2rem;
+  margin: 0  0  25px  20px;
+  color:#143581;
   font-weight:700;
 }
 
@@ -90,10 +90,10 @@ h1{
 /* ================= FORM TITLES ================= */
 .form-title,
 .sales-title{
-  font-size:22px;
+  font-size:1rem;
   font-weight:700;
-  margin-bottom:25px;
-  color:#0f172a;
+  margin: 0  0  25px  0;
+  color:#0d2a6f;
   position:relative;
   padding-left:15px;
 }
@@ -106,7 +106,7 @@ h1{
   top:2px;
   width:5px;
   height:26px;
-  background:#2563eb;
+  background:#000000;
   border-radius:10px;
 }
 
@@ -138,9 +138,9 @@ h1{
 /* ================= LABELS ================= */
 label{
   margin-bottom:8px;
-  font-size:13px;
+  font-size:0.8rem;
   font-weight:600;
-  color:#334155;
+  color:#495b74;
 }
 
 /* ================= INPUTS ================= */
@@ -150,7 +150,7 @@ label{
   border:1px solid #dbe2ea;
   border-radius:12px;
   background:#f8fafc;
-  font-size:14px;
+  font-size:0.7rem;
   transition:0.3s ease;
 }
 
@@ -178,8 +178,8 @@ label{
 }
 
 .items-header h3{
-  font-size:19px;
-  color:#0f172a;
+  font-size:1rem;
+  color:#0f2c71;
 }
 
 /* ================= ADD ITEM BUTTON ================= */
@@ -246,13 +246,9 @@ hr{
   border-top:1px solid #e2e8f0;
   margin:28px 0;
 }
-
-/* ================= BUTTON GROUP ================= */
 .button-group{
   margin-top:30px;
 }
-
-/* ================= SUBMIT BUTTON ================= */
 .register-btn{
   width:100%;
   padding:17px;
@@ -276,8 +272,6 @@ hr{
   transform:translateY(-2px);
   box-shadow:0 14px 25px rgba(22, 163, 74, 0.25);
 }
-
-/* ================= TABLE (UNCHANGED STRUCTURE) ================= */
 table{
   width:100%;
   border-collapse:collapse;
@@ -299,8 +293,6 @@ td{
 tbody tr:hover{
   background:#f3f4f6;
 }
-
-/* ================= STATUS BADGE ================= */
 .status-badge{
   padding:5px 12px;
   border-radius:30px;
@@ -316,8 +308,6 @@ tbody tr:hover{
 .status-badge.pending{
   background:#f59e0b;
 }
-
-/* ================= ACTIONS ================= */
 .actions-cell{
   display:flex;
   justify-content:center;

@@ -1,0 +1,60 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Weekly Sales Report | Nyondo General Hardware
+    link(rel="stylesheet", href="/css/reports.css")
+  
+  body
+    .container.report-container
+      //- Header Section
+      header.report-header
+        h1 Nyondo General Hardware
+        h2 Weekly Sales Report
+        p.report-date Reporting Period: Last 7 Days
+        .summary-box
+          h3 Total Weekly Revenue
+          p.grand-total #{weekTotal.toLocaleString()} UGX
+
+      //- JavaScript logic to group sales by date
+      - 
+        const groupedSales = sales.reduce((acc, sale) => {
+          const date = sale.date.toDateString();
+          if (!acc[date]) acc[date] = [];
+          acc[date].push(sale);
+          return acc;
+        }, {});
+
+      //- Daily Report Sections
+      each daySales, date in groupedSales
+        section.daily-section
+          h3.date-header Date: #{date}
+          table.report-table
+            thead
+              tr
+                th Customer
+                th Attendant
+                th Items Sold (Qty)
+                th Amount (UGX)
+            tbody
+              each sale in daySales
+                tr
+                  td= sale.customerName
+                  td= sale.attendant ? sale.attendant.fullname : "N/A"
+                  td
+                    ul.item-list
+                      each item in sale.items
+                        li= item.productName.productName + " (" + item.quantity + ")"
+                  td= (sale.totalAmount + sale.transportFee).toLocaleString()
+              
+              //- Day Total Row
+              tr.day-total-row
+                td(colspan="3") #[strong Day Total]
+                td #[strong #{daySales.reduce((s, sa) => s + (sa.totalAmount || 0) + (sa.transportFee || 0), 0).toLocaleString()}]
+          hr.divider
+
+      //- Action Controls
+      .report-actions
+        button.btn.btn-print(onclick="window.print()") Print Report
+        a(href="/salesDash") Back to Dashboard

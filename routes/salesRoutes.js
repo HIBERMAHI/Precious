@@ -77,16 +77,16 @@ router.get("/ssales", issalesattendantOradmin, async (req, res) => {
     // =====================================================
     // 5. SALES REVENUE (TOTAL AMOUNT)
     // =====================================================
-   const salesAgg = await Sale.aggregate([
-  {
-    $group: {
-      _id: null,
-      // This tells MongoDB to add totalAmount and transportFee together for each sale, 
-      // and then calculate the grand sum of all sales.
-      grandTotal: { $sum: { $add: ["$totalAmount", "$transportFee"] } },
-    },
-  },
-]);
+    const salesAgg = await Sale.aggregate([
+      {
+        $group: {
+          _id: null,
+          // This tells MongoDB to add totalAmount and transportFee together for each sale,
+          // and then calculate the grand sum of all sales.
+          grandTotal: { $sum: { $add: ["$totalAmount", "$transportFee"] } },
+        },
+      },
+    ]);
 
     stats.salesRevenue = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
 
@@ -549,4 +549,44 @@ router.get("/stockview", issalesattendantOradmin, async (req, res) => {
     res.status(500).send("Unable to pick stock from the data base");
   }
 });
+
+// sales report
+// Add this to your routes file (e.g., routes/sales.js)
+
+router.get(
+  "/weeklyReport",
+  issalesattendantOradmin,
+  async (req, res) => {
+    try {
+      // 1. Calculate the start of the week (last 7 days from May 21, 2026)
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      // 2. Fetch sales from the last 7 days
+      // - Populate 'items.productName' to get product details
+      // - Populate 'attendant' to get the staff name
+      // - Sort by date descending (newest first)
+      const sales = await Sale.find({ date: { $gte: sevenDaysAgo } })
+        .populate("items.productName", "productName")
+        .populate("attendant", "fullname")
+        .sort({ date: -1 });
+
+      // 3. Calculate the total revenue for the entire week
+      // We sum (totalAmount + transportFee) for every sale found
+      const weekTotal = sales.reduce((sum, sale) => {
+        const saleTotal = (sale.totalAmount || 0) + (sale.transportFee || 0);
+        return sum + saleTotal;
+      }, 0);
+
+      // 4. Render the page, passing the full sales list and the grand total
+      res.render("weeklyReport", {
+        sales,
+        weekTotal,
+      });
+    } catch (error) {
+      console.error("Weekly Report Error:", error);
+      res.status(500).send("Unable to generate the weekly sales report.");
+    }
+  },
+);
 module.exports = router;

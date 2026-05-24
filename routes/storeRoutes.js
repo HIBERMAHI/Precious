@@ -76,47 +76,6 @@ router.get("/storedash", isstoremanagerOradmin, async (req, res) => {
     res.status(500).send("Unable to load data");
   }
 });
-
-// storesales
-router.get("/storsales", isstoremanagerOradmin, async (req, res) => {
-  try {
-    let stats = {
-      salesRevenue: 0,
-      itemsSold: 0,
-    };
-    const salesAgg = await Sale.aggregate([
-      {
-        $group: {
-          _id: null,
-          grandTotal: { $sum: { $add: ["$totalAmount", "$transportFee"] } },
-        },
-      },
-    ]);
-    stats.salesRevenue = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
-    const itemsAgg = await Sale.aggregate([
-      { $unwind: "$items" },
-      {
-        $group: {
-          _id: null,
-          grandItems: { $sum: "$items.quantity" },
-        },
-      },
-    ]);
-    stats.itemsSold = itemsAgg.length > 0 ? itemsAgg[0].grandItems : 0;
-    const dbSales = await Sale.find()
-      .populate({
-        path: "items.productName",
-        select: "productName",
-      })
-      .populate("attendant", "fullname")
-      .sort({ date: -1 }); // Keeping sorting unified with your historical logs field
-    res.render("storsales", { dbSales, stats });
-  } catch (error) {
-    // Prints technical system crash traces to your developer console terminal window
-    console.error("STORSALES ROUTE EXCEPTION:", error.message);
-    res.status(404).send("Unable to pick sales from data base");
-  }
-});
 // invento
 // Updated INVENTO Route
 router.get("/invento", isstoremanagerOradmin, async (req, res) => {
@@ -389,15 +348,18 @@ router.post("/deleted/:id", isstoremanagerOradmin, async (req, res) => {
 });
 
 // supplier
+// supplier
 router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
   try {
-    // 1. Group ALL suppliers (no $match)
+    // 1. Group ALL suppliers and include the factories they supply
     const supplierDebts = await Stock.aggregate([
       {
         $group: {
           _id: "$supplierName",
           contact: { $first: "$supplierContact" },
           productsSupplied: { $addToSet: "$productName" },
+          // NEW: Collect unique factory names for this supplier
+          factoriesSupplied: { $addToSet: "$factory" },
           // HOW: Use $cond to calculate debt only for "Pending" items
           totalDebt: {
             $sum: {
@@ -443,24 +405,25 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
     res.status(500).send("Unable to load supplier dashboard");
   }
 });
-
-// POST: Complete Payment for a specific supplier
-// 1. The Payment Route (The "Tagging" Logic)
 router.post(
   "/pay-supplier/:supplierName",
   isstoremanagerOradmin,
   async (req, res) => {
     try {
       const supplierName = req.params.supplierName;
-      const batchId = Date.now().toString(); // Generates a unique ID for this specific payment
+      // Generates a unique ID and captures the current timestamp at the moment of payment
+      const batchId = Date.now().toString();
+      const paymentTimestamp = new Date();
 
-      // Updates only the currently "Pending" items and stamps them with the Batch ID
+      // Updates only the currently "Pending" items and stamps them
+      // with both the Batch ID and the exact Settlement Date
       await Stock.updateMany(
         { supplierName: supplierName, paymentStatus: "Pending" },
         {
           $set: {
             paymentStatus: "Paid",
             paymentBatchId: batchId,
+            settlementDate: paymentTimestamp, // Save the date to the database
           },
         },
       );
@@ -473,43 +436,42 @@ router.post(
     }
   },
 );
-
-// 2. The Evidence Route (The "Isolation" Logic)
 // GET: Generate the Evidence/Voucher
 router.get(
   "/evidence/:supplierName",
   isstoremanagerOradmin,
   async (req, res) => {
     try {
-      const { supplierName } = req.params;
-      const { batchId } = req.query;
+      const supplierName = req.params.supplierName;
 
-      let query = { supplierName: supplierName, paymentStatus: "Paid" };
+      // Find the most recent batch of paid items for this supplier
+      // We filter for 'Paid' status so we don't accidentally pull pending items
+      const lastPaidItem = await Stock.findOne({
+        supplierName,
+        paymentStatus: "Paid",
+      }).sort({ settlementDate: -1 });
 
-      // If a specific batch ID is provided, ONLY find those items
-      if (batchId) {
-        query.paymentBatchId = batchId;
-      } else {
-        // Fallback: If no batch provided, find the most recent payment batch
-        const latest = await Stock.findOne(query).sort({ paymentBatchId: -1 });
-        if (latest && latest.paymentBatchId) {
-          query.paymentBatchId = latest.paymentBatchId;
-        }
+      if (!lastPaidItem) {
+        return res.send("No payment history found for this supplier.");
       }
 
-      const items = await Stock.find(query).sort({ updatedAt: -1 });
+      const batchId = lastPaidItem.paymentBatchId;
+
+      // IMPORTANT: This only fetches items from that specific payment event
+      const items = await Stock.find({
+        supplierName,
+        paymentBatchId: batchId,
+      });
 
       res.render("evidence", {
-        supplierName: supplierName,
-        items: items || [],
-        error:
-          items.length === 0
-            ? "No payment records found for this supplier."
-            : null,
+        items,
+        supplierName,
+        settlementDate: lastPaidItem.settlementDate,
+        batchId,
       });
     } catch (error) {
-      console.error("EVIDENCE ERROR:", error.message);
-      res.status(500).send("Unable to generate evidence");
+      console.error("VOUCHER ROUTE ERROR:", error.message);
+      res.status(500).send("Unable to load voucher");
     }
   },
 );

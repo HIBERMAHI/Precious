@@ -67,11 +67,6 @@ body{
   transform:translateX(4px);
 }
 
-.sidebar ul li.active a{
-  background:rgba(250, 204, 21, 0.18);
-  color:#facc15;
-  font-weight:bold;
-}
 
 /* ================= MAIN ================= */
 .main{
@@ -135,8 +130,8 @@ body{
 /* ================= PAGE TITLE ================= */
 .main h2{
   margin-bottom:28px;
-  color:#183067;
-  font-size:1.3rem;
+  color:#123076;
+  font-size:1.2rem;
 }
 
 /* ================= CARDS ================= */
@@ -180,7 +175,7 @@ body{
 
   border-radius:14px;
   color:white;
-  font-size:0.9rem;
+  font-size:0.8rem;
   line-height:1;
 
   text-align:center;
@@ -223,14 +218,14 @@ body{
 }
 
 .card-info h4{
-  font-size:1rem;
+  font-size:0.9rem;
   color:#103c79;
   margin-bottom:10px;
   line-height:1.4;
 }
 
 .card-info p{
-  font-size:1rem;
+  font-size:0.9rem;
   font-weight:bold;
   color:#040e26;
   word-break:break-word;
@@ -239,8 +234,8 @@ body{
 /* ================= TABLE TITLE ================= */
 .table-title{
   margin:20px 0;
-  font-size:1.2rem;
-  color:#0e2458;
+  font-size:1.1rem;
+  color:#133071;
 }
 
 /* ================= TABLE CONTAINER ================= */

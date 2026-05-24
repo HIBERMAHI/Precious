@@ -21,51 +21,30 @@ html(lang="en")
         gap: 10px;
         font-weight: bold;
       }
-
       .hidden {
         display: none !important;
       }
+      .inline-error {
+        color: #cc0033;
+        font-size: 0.75rem;
+        margin-top: 4px;
+        display: block;
+      }
 
   body
-
-    // ================= SIDEBAR =================
     .sidebar
       .logo
         span ⚒ NYONDO HARDWARE
-
       ul
-        li
-          a(href='/dashboard')
-            i.fas.fa-home
-            | Dashboard
+        li: a(href='admindash') #[i.fas.fa-home] Dashboard
+        li: a(href='regicredit') #[i.fas.fa-cash-register] Customers
+        li: a(href='deposit') #[i.fas.fa-boxes] Deposits
+        li: a.active(href='supplier') #[i.fas.fa-user-plus] Suppliers
+        li: a(href='/logout') #[i.fas.fa-right-from-bracket] Logout
 
-        li
-          a(href='/newsale')
-            i.fas.fa-cash-register
-            | New Sale
-
-        li
-          a(href='/stockview')
-            i.fas.fa-boxes
-            | Stock View
-
-        li
-          a.active(href='/regicredit')
-            i.fas.fa-user-plus
-            | Credit Customers
-
-        li
-          a(href='/logout')
-            i.fas.fa-right-from-bracket
-            | Logout
-
-    // ================= MAIN =================
     .main-content
-
-      // ================= FORM SECTION =================
       .container
         .register-box
-
           .top
             p Secure Customer Enrollment
 
@@ -75,106 +54,67 @@ html(lang="en")
               span #{error}
 
           form(action='/regicredit' method='post')
-
             .grid-container
-
               .input-group
                 label Full Names
                 .input-field
                   i.fas.fa-user
-                  input(
-                    type='text'
-                    name='fullName'
-                    placeholder='Enter full name'
-                    required
-                  )
+                  input#fullName(type='text' name='fullName' placeholder='Enter full name' required)
+                span#fullNameError.inline-error.hidden Name is too short.
 
               .input-group
                 label NIN (14 Characters)
                 .input-field
                   i.fas.fa-id-card
-                  input(
-                    type='text'
-                    name='nin'
-                    placeholder='Exactly 14 characters'
-                    required
-                    minlength='14'
-                    maxlength='14'
-                  )
+                  input#nin(type='text' name='nin' placeholder='Exactly 14 characters' required minlength='14' maxlength='14')
+                span#ninError.inline-error.hidden Must be 14 uppercase letters/numbers.
 
               .input-group
                 label Phone (+256...)
                 .input-field
                   i.fas.fa-phone
-                  input(
-                    type='text'
-                    name='phoneNumber'
-                    placeholder='+2567...'
-                    required
-                  )
+                  input#phoneNumber(type='text' name='phoneNumber' placeholder='+2567...' required)
+                span#phoneError.inline-error.hidden Format: +256... or 07...
 
               .input-group
                 label Address
                 .input-field
                   i.fas.fa-location-dot
-                  input(
-                    type='text'
-                    name='address'
-                    placeholder='e.g. Nansana, Kampala'
-                    required
-                  )
+                  input#address(type='text' name='address' placeholder='e.g. Nansana, Kampala' required)
+                span#addressError.inline-error.hidden Address is required.
 
               .input-group
                 label Distance (KM)
                 .input-field
                   i.fas.fa-truck-fast
-                  input(
-                    type='number'
-                    name='distanceFromStore'
-                    placeholder='0'
-                    required
-                    min='1'
-                  )
+                  input#distance(type='number' name='distanceFromStore' placeholder='0' required min='1')
+                span#distanceError.inline-error.hidden Distance must be at least 1 KM.
 
               .input-group
                 label Email (Username)
                 .input-field
                   i.fas.fa-envelope
-                  input(
-                    type='email'
-                    name='email'
-                    placeholder='customer@gmail.com'
-                    required
-                  )
+                  input#email(type='email' name='email' placeholder='customer@gmail.com' required)
+                span#emailError.inline-error.hidden Enter a valid email.
 
               .input-group.full-width
                 label Create Password
-
                 .input-field
                   i.fas.fa-lock
-
-                  input#password(
-                    type='password'
-                    name='password'
-                    placeholder='Between 6 and 14 characters'
-                    required
-                  )
-
+                  input#password(type='password' name='password' placeholder='Between 6 and 14 characters' required)
                   i#togglePassword.fas.fa-eye.toggle-eye
+                span#passwordError.inline-error.hidden Password must be 6-14 characters.
 
             button.btn(type='submit')
               i.fas.fa-user-check
               span Register Customer
 
-      // ================= TABLE SECTION =================
       section.customer-table
-
-        .table-header
-          h2 Registered Credit Customers
-
+        .table-header: h2 Registered Credit Customers
         table
           thead
             tr
+              th #
               th Full Name
               th NIN
               th Phone
@@ -182,79 +122,69 @@ html(lang="en")
               th Distance
               th Email
               th Actions
-
           tbody
-
             if customers && customers.length > 0
-
-              each customer in customers
-
+              each customer, index  in customers
                 tr
+                  td #{index + 1}
                   td #{customer.fullName}
                   td #{customer.nin}
                   td #{customer.phoneNumber}
                   td #{customer.address}
                   td #{customer.distanceFromStore} KM
                   td #{customer.email}
-
                   td
                     .action-buttons
-
-                      a.edit-btn(
-                        href=`/credit/edit/${customer._id}`
-                      )
-                        i.fas.fa-pen
-
-                      form(
-                        action=`/credit/delete/${customer._id}`
-                        method='post'
-                        onsubmit='return confirm("Delete this customer?")'
-                      )
-
-                        button.delete-btn(type='submit')
-                          i.fas.fa-trash
-
+                      a.edit-btn(href=`/credit/edit/${customer._id}`) #[i.fas.fa-pen]
+                      form(action=`/credit/delete/${customer._id}` method='post' onsubmit='return confirm("Delete this customer?")')
+                        button.delete-btn(type='submit') #[i.fas.fa-trash]
             else
-
-              tr
-                td.empty(colspan='7')
-                  | No registered credit customers yet
+              tr: td.empty(colspan='7') No registered credit customers yet
 
     script.
       // PASSWORD TOGGLE
       const togglePassword = document.querySelector('#togglePassword');
       const passwordField = document.querySelector('#password');
-
       togglePassword.addEventListener('click', function () {
-
-        const isPassword =
-          passwordField.getAttribute('type') === 'password';
-
-        passwordField.setAttribute(
-          'type',
-          isPassword ? 'text' : 'password'
-        );
-
+        const isPassword = passwordField.getAttribute('type') === 'password';
+        passwordField.setAttribute('type', isPassword ? 'text' : 'password');
         this.classList.toggle('fa-eye');
         this.classList.toggle('fa-eye-slash');
       });
 
-      // HIDE ERROR MESSAGE
+      // HIDE SERVER ERROR
       const errorBox = document.getElementById('errorBox');
-
-      const allInputs =
-        document.querySelectorAll('input');
-
       if (errorBox) {
-
-        allInputs.forEach(input => {
-
-          input.addEventListener('input', () => {
-
-            errorBox.classList.add('hidden');
-
-          }, { once: true });
-
+        document.querySelectorAll('input').forEach(input => {
+          input.addEventListener('input', () => errorBox.classList.add('hidden'), { once: true });
         });
-
       }
+
+      // REAL-TIME VALIDATION
+      const rules = {
+        nin: { regex: /^[A-Z0-9]{14}$/, error: 'ninError' },
+        phoneNumber: { regex: /^(07\d{8}|\+256\d{9})$/, error: 'phoneError' },
+        email: { regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, error: 'emailError' },
+        password: { regex: /^.{6,14}$/, error: 'passwordError' },
+        fullName: { regex: /.{3,}/, error: 'fullNameError' },
+        address: { regex: /.{3,}/, error: 'addressError' },
+        distance: { regex: /^[1-9]\d*$/, error: 'distanceError' }
+      };
+
+      Object.keys(rules).forEach(id => {
+        const input = document.getElementById(id);
+        const errorSpan = document.getElementById(rules[id].error);
+        if(!input || !errorSpan) return;
+
+        input.addEventListener('input', () => {
+          if(id === 'nin') input.value = input.value.toUpperCase();
+          
+          if (input.value.length > 0 && !rules[id].regex.test(input.value)) {
+            errorSpan.classList.remove('hidden');
+            input.style.border = "1px solid red";
+          } else {
+            errorSpan.classList.add('hidden');
+            input.style.border = "1px solid #ccc";
+          }
+        });
+      });

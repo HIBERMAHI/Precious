@@ -3,7 +3,7 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:"Inter","Segoe UI",sans-serif;
+  font-family:"Segoe UI", system-ui, sans-serif;
 }
 
 body{
@@ -31,8 +31,8 @@ body{
 .sidebar .logo{
   font-size:22px;
   font-weight:800;
-  color:#f8fafc;
-  margin-bottom:35px;
+  color:#facc15;
+  margin:10px 0 35px 20px;
   letter-spacing:1px;
 }
 
@@ -41,7 +41,7 @@ body{
 }
 
 .sidebar ul li{
-  margin-bottom:12px;
+  margin:40px 0 14px 0;
 }
 
 .sidebar ul li a{
@@ -54,17 +54,18 @@ body{
   border-radius:14px;
   transition:0.3s ease;
   font-size:15px;
+  font-family:system-ui,-apple-system,sans-serif !important;
+  white-space:nowrap;
+}
+
+.sidebar ul li a i{
+  font-family:"Font Awesome 6 Free","Font Awesome 6 Brands" !important;
 }
 
 .sidebar ul li a:hover{
-  background:#1e293b;
-  color:white;
   transform:translateX(5px);
-}
-
-.sidebar ul li.active a{
-  background:linear-gradient(135deg,#2563eb,#1d4ed8);
-  color:white;
+  background:rgba(250,204,21,0.08);
+  color:#facc15;
 }
 
 /* ================= MAIN ================= */
@@ -75,9 +76,10 @@ body{
 }
 
 .main h1{
-  font-size:32px;
+  font-size:1.4rem;
   font-weight:800;
   margin-bottom:25px;
+  color:rgb(12,12,109);
 }
 
 /* ================= CARDS ================= */
@@ -90,16 +92,22 @@ body{
   box-shadow:0 10px 30px rgba(15,23,42,0.06);
 }
 
-/* ================= FORM GROUP ================= */
 .form-group{
   display:flex;
   flex-direction:column;
 }
 
+.sale-form h2{
+  font-size:1rem;
+  margin:10px 0;
+  color:#040e25;
+}
+
 .form-group label{
   margin-bottom:8px;
-  font-size:14px;
+  font-size:0.8rem;
   font-weight:700;
+  color:rgb(17,17,140);
 }
 
 .form-group input,
@@ -113,7 +121,10 @@ body{
   outline:none;
 }
 
-/* ================= TOP ROW ================= */
+option{
+  padding-right:20px;
+}
+
 .form-inline-header-group{
   display:grid;
   grid-template-columns:2fr 1fr 1fr;
@@ -122,7 +133,7 @@ body{
   align-items:end;
 }
 
-/* ================= ⭐ ESTIMATED BOX (UNCHANGED LOOK) ================= */
+/* ================= SUMMARY ================= */
 .live-calculation-box{
   display:flex;
   flex-direction:column;
@@ -142,10 +153,8 @@ body{
   align-items:center;
   justify-content:center;
   gap:8px;
-
   background:linear-gradient(135deg,#ff7a18,#af002d 70%);
   color:white;
-
   font-weight:900;
   box-shadow:0 10px 25px rgba(175,0,45,0.25);
 }
@@ -156,6 +165,11 @@ body{
 
 .summary-currency{
   font-size:13px;
+}
+
+.cart-section-title{
+  font-size:1rem;
+  color:rgb(2,2,24);
 }
 
 /* ================= CART ================= */
@@ -170,7 +184,6 @@ body{
   margin-bottom:18px;
 }
 
-/* ================= BUTTONS ================= */
 .remove-item-btn{
   width:54px;
   height:54px;
@@ -180,7 +193,6 @@ body{
   color:white;
 }
 
-/* ================= ADD BUTTON ================= */
 .btn-add-item{
   background:#0f172a;
   color:white;
@@ -189,7 +201,6 @@ body{
   border:none;
 }
 
-/* ================= SUBMIT ================= */
 .register-btn{
   width:100%;
   margin-top:28px;
@@ -201,92 +212,141 @@ body{
   font-weight:800;
 }
 
-/* =========================================================
-   🔥 FINAL TABLE FIX (CLEAN, NO CUTTING, NO HORIZONTAL SCROLL)
-   ========================================================= */
+/* =======================================================
+   TABLE SECTION ONLY CHANGED
+======================================================= */
 
 .recent-sales{
   width:100%;
-  overflow-x:auto; /* allows safe scroll ONLY if needed */
+  overflow:hidden;
 }
 
-/* TABLE */
+.recent-sales h2{
+  font-size:1rem;
+  margin:10px;
+}
+
+/* ================= TABLE ================= */
 .recent-sales table{
   width:100%;
   border-collapse:collapse;
-
-  /* KEY FIX */
   table-layout:fixed;
-  min-width:100%;
 }
 
-/* HEADER */
+/* ================= TABLE HEADER ================= */
 .recent-sales thead th{
-  padding:14px 10px;
-  font-size:13px;
-  font-weight:700;
-  text-align:left;
-
   background:#0f172a;
   color:white;
-
-  white-space:normal;
-  word-break:break-word;
+  padding:15px 8px;
+  font-size:12px;
+  font-weight:700;
+  text-align:center;
+  white-space:nowrap;
 }
 
-/* BODY CELLS */
+/* ================= TABLE BODY ================= */
 .recent-sales tbody td{
-  padding:14px 10px;
-  font-size:13px;
-
-  white-space:normal;
-  word-break:break-word;
-  overflow-wrap:break-word;
-
+  padding:14px 8px;
+  font-size:12px;
+  text-align:center;
+  vertical-align:middle;
   border-bottom:1px solid #e2e8f0;
+
+  /* prevents breaking */
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-/* ROW HOVER */
-.recent-sales tbody tr:hover{
-  background:#f8fafc;
+/* ================= COLUMN WIDTHS ================= */
+.recent-sales th:nth-child(1),
+.recent-sales td:nth-child(1){
+  width:2%;
 }
 
-/* ITEMS INSIDE CELLS */
+.recent-sales th:nth-child(2),
+.recent-sales td:nth-child(2){
+  width:10%;
+}
+
+.recent-sales th:nth-child(3),
+.recent-sales td:nth-child(3){
+  width:10%;
+}
+
+.recent-sales th:nth-child(4),
+.recent-sales td:nth-child(4){
+  width:8%;
+}
+
+.recent-sales th:nth-child(5),
+.recent-sales td:nth-child(5){
+  width:14%;
+}
+
+.recent-sales th:nth-child(6),
+.recent-sales td:nth-child(6){
+  width:7%;
+}
+
+.recent-sales th:nth-child(7),
+.recent-sales td:nth-child(7){
+  width:8%;
+  
+}
+
+.recent-sales th:nth-child(8),
+.recent-sales td:nth-child(8){
+  width:9%;
+}
+
+.recent-sales th:nth-child(9),
+.recent-sales td:nth-child(9){
+  width:15%;
+  text-align: left;
+  padding-left: 2px;
+}
+
+/* ================= ITEMS INSIDE TABLE ================= */
 .cart-item-name-display,
 .cart-qty-display{
-  white-space:normal;
-  word-break:break-word;
-  margin-bottom:6px;
+  margin-bottom:4px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-/* STATUS */
+/* ================= STATUS ================= */
+.status-pending,
+.status-completed{
+  padding:6px 10px;
+  border-radius:10px;
+  font-size:11px;
+  font-weight:700;
+  display:inline-block;
+  white-space:nowrap;
+  margin-left:-8px; 
+}
+
 .status-pending{
   background:#fef3c7;
   color:#92400e;
-  padding:6px 10px;
-  border-radius:999px;
-  font-weight:700;
-  display:inline-block;
 }
 
 .status-completed{
   background:#dcfce7;
   color:#166534;
-  padding:6px 10px;
-  border-radius:999px;
-  font-weight:700;
-  display:inline-block;
 }
 
-/* ACTIONS */
+/* ================= ACTIONS ================= */
 .actions-cell{
   display:flex;
-  gap:6px;
+  justify-content:center;
   align-items:center;
-  flex-wrap:wrap;
+  gap:8px;
+  flex-wrap:nowrap;
 }
 
-/* ACTION BUTTONS */
 .action-btn-print,
 .action-btn-edit,
 .action-btn-delete{
@@ -298,19 +358,34 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
+  flex-shrink:0;
 }
 
 /* COLORS */
-.action-btn-print{ background:#2563eb; }
-.action-btn-edit{ background:#f59e0b; }
-.action-btn-delete{ background:#ef4444; }
+.action-btn-print{
+  background:#2563eb;
+}
 
-/* EMPTY */
+.action-btn-edit{
+  background:#f59e0b;
+}
+
+.action-btn-delete{
+  background:#ef4444;
+}
+
+/* ================= ROW HOVER ================= */
+.recent-sales tbody tr:hover{
+  background:#f8fafc;
+}
+
+/* ================= EMPTY ================= */
 .empty-table-cell{
   text-align:center;
   padding:30px;
   font-weight:700;
   color:#64748b;
+  font-size:13px;
 }
 
 /* ================= RESPONSIVE ================= */
