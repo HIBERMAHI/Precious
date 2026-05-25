@@ -97,6 +97,7 @@ html
           table.sales-data-table
             thead
               tr
+                th #
                 th Customer
                 th Item Name
                 th Quantity
@@ -108,8 +109,9 @@ html
 
             tbody
               if dbSales && dbSales.length
-                each sale in dbSales
+                each sale, index in dbSales
                   tr.table-row
+                    td #{index + 1}
                     td.customer-cell #{sale.customerName}
 
                     // ================= DEDICATED ITEM NAME COLUMN (No Quantities / No Prices) =================

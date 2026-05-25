@@ -66,6 +66,7 @@ html
         table
           thead
             tr
+              th #
               th Product Name
               th Image
               th Factory / Depot
@@ -80,8 +81,9 @@ html
             if dbStock.length === 0
               tr
                 td(colspan='10') No stock records found.
-            each stock in dbStock
+            each stock, index in dbStock
               tr
+                td #{index + 1}
                 td #{stock.productName}
                 td
                   if stock.itemImage
@@ -102,7 +104,7 @@ html
                 td #{stock.buyingPrice.toLocaleString()}
                 td #{stock.sellingPrice.toLocaleString()}
                 td
-                  a.btn-action.btn-evidence(href=`/evidence/${stock.supplierName}` target="_blank")
+                  a.btn-action.btn-evidence(href=`/evidence/${stock.supplierName}?batchId=${stock.paymentBatchId}` target="_blank")
                     i.fas.fa-file-alt
                     |  Voucher
                 td

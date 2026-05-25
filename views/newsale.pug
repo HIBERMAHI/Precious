@@ -136,6 +136,7 @@ html
         table
           thead
             tr
+              th #
               th Client
               th Items Summary
               th Qty
@@ -148,8 +149,9 @@ html
                 th Actions
           tbody
             if dbSales && dbSales.length > 0
-              each sale in dbSales
+              each sale , index in dbSales
                 tr
+                  td #{index + 1}
                   td #{sale.customerName}
                   
                   // ================= PRODUCT COLUMN =================

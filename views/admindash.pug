@@ -110,14 +110,16 @@ html
         table
           thead
             tr
+              th #
               th Name
               th Role
               th Phone
               th Actions
           tbody
             if dbusers && dbusers.length > 0
-              each user in dbusers
+              each user, index in dbusers
                 tr
+                  td #{index + 1}
                   td #{user.fullname}
                   td #{user.role}
                   td #{user.phone}

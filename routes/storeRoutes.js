@@ -145,7 +145,6 @@ router.get("/addstock", isstoremanagerOradmin, (req, res) => {
   res.render("addstock");
 });
 // addstock
-
 router.post(
   "/addstock",
   isstoremanagerOradmin,
@@ -213,6 +212,9 @@ router.post(
       const finalPaymentMethod = paymentMethod || "Cash";
       const finalPaymentStatus = paymentStatus === "Paid" ? "Paid" : "Pending";
 
+      // Generate a unique ID for this specific delivery batch
+      const generatedBatchId = Date.now().toString();
+
       // 5. SAVE TO DATABASE
       const newStock = new Stock({
         productName,
@@ -224,7 +226,8 @@ router.post(
         sellingPrice: sell,
         paymentMethod: finalPaymentMethod,
         paymentStatus: finalPaymentStatus,
-        paymentBatchId: null, // Ensures new stock isn't attached to old payments
+        // Assign the unique batch ID so this delivery is isolated
+        paymentBatchId: generatedBatchId,
         factory,
         supplierName,
         supplierContact,
@@ -351,53 +354,54 @@ router.post("/deleted/:id", isstoremanagerOradmin, async (req, res) => {
 // supplier
 router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
   try {
-    // 1. Group ALL suppliers and include the factories they supply
+    // 1. Group by Batch ID to keep every delivery as a separate row
     const supplierDebts = await Stock.aggregate([
       {
         $group: {
-          _id: "$supplierName",
+          _id: "$paymentBatchId",
+          supplierName: { $first: "$supplierName" },
           contact: { $first: "$supplierContact" },
           productsSupplied: { $addToSet: "$productName" },
-          // NEW: Collect unique factory names for this supplier
           factoriesSupplied: { $addToSet: "$factory" },
-          // HOW: Use $cond to calculate debt only for "Pending" items
-          totalDebt: {
+          totalDebt: { $sum: "$total" },
+          pendingCount: {
             $sum: {
-              $cond: [{ $eq: ["$paymentStatus", "Pending"] }, "$total", 0],
+              $cond: [{ $eq: ["$paymentStatus", "Pending"] }, 1, 0],
             },
           },
+          paymentBatchId: { $first: "$paymentBatchId" }
         },
       },
-      { $sort: { totalDebt: -1 } },
+      { $sort: { _id: -1 } }, 
     ]);
 
-    // 2. Stats: Calculate totals only for "Pending" items
-    const statsResult = await Stock.aggregate([
-      {
-        $group: {
-          _id: null,
-          totalPendingDebt: {
-            $sum: {
-              $cond: [{ $eq: ["$paymentStatus", "Pending"] }, "$total", 0],
-            },
-          },
-          totalPendingQty: {
-            $sum: {
-              $cond: [{ $eq: ["$paymentStatus", "Pending"] }, "$quantity", 0],
-            },
-          },
-          totalPendingItems: {
-            $sum: { $cond: [{ $eq: ["$paymentStatus", "Pending"] }, 1, 0] },
-          },
-        },
-      },
-    ]);
-
-    const stats = statsResult[0] || {
+    // 2. Initialize the stats object
+    let stats = {
       totalPendingDebt: 0,
       totalPendingQty: 0,
       totalPendingItems: 0,
     };
+
+    // 3. Calculate Global Pending Debt
+    const debtAgg = await Stock.aggregate([
+      { $match: { paymentStatus: "Pending" } },
+      { $group: { _id: null, total: { $sum: "$total" } } }
+    ]);
+    stats.totalPendingDebt = debtAgg.length > 0 ? debtAgg[0].total : 0;
+
+    // 4. Calculate Global Pending Quantity
+    const qtyAgg = await Stock.aggregate([
+      { $match: { paymentStatus: "Pending" } },
+      { $group: { _id: null, total: { $sum: "$quantity" } } }
+    ]);
+    stats.totalPendingQty = qtyAgg.length > 0 ? qtyAgg[0].total : 0;
+
+    // 5. Calculate Global Pending Items Count
+    const countAgg = await Stock.aggregate([
+      { $match: { paymentStatus: "Pending" } },
+      { $count: "total" }
+    ]);
+    stats.totalPendingItems = countAgg.length > 0 ? countAgg[0].total : 0;
 
     res.render("suppliers", { supplierDebts, stats });
   } catch (error) {
@@ -405,75 +409,70 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
     res.status(500).send("Unable to load supplier dashboard");
   }
 });
+// supplier
 router.post(
   "/pay-supplier/:supplierName",
   isstoremanagerOradmin,
   async (req, res) => {
     try {
-      const supplierName = req.params.supplierName;
-      // Generates a unique ID and captures the current timestamp at the moment of payment
-      const batchId = Date.now().toString();
-      const paymentTimestamp = new Date();
+      const { supplierName } = req.params;
+      // Convert to string explicitly to ensure it matches the database schema
+      const batchId = String(req.body.batchId);
 
-      // Updates only the currently "Pending" items and stamps them
-      // with both the Batch ID and the exact Settlement Date
-      await Stock.updateMany(
-        { supplierName: supplierName, paymentStatus: "Pending" },
+      // We removed the 'paymentStatus: "Pending"' filter.
+      // Now, this route will find ALL items in the batch.
+      // It sets them to 'Paid' and updates the 'settlementDate' to the exact moment of this action.
+      const result = await Stock.updateMany(
+        {
+          supplierName: supplierName,
+          paymentBatchId: batchId,
+        },
         {
           $set: {
             paymentStatus: "Paid",
-            paymentBatchId: batchId,
-            settlementDate: paymentTimestamp, // Save the date to the database
+            settlementDate: new Date(), // Captures the exact moment payment is finalized
           },
-        },
+        }
       );
+
+      // matchedCount checks if the query found the batch at all
+      if (result.matchedCount === 0) {
+        return res.status(400).send("No records found for this batch. Check your Batch ID.");
+      }
 
       // Redirect to evidence showing ONLY this specific batch
       res.redirect(`/evidence/${supplierName}?batchId=${batchId}`);
     } catch (error) {
       console.error("PAYMENT ERROR:", error.message);
-      res.status(500).send("Error updating payment status");
+      res.status(500).send("Error updating payment status: " + error.message);
     }
-  },
+  }
 );
+
 // GET: Generate the Evidence/Voucher
-router.get(
-  "/evidence/:supplierName",
-  isstoremanagerOradmin,
-  async (req, res) => {
-    try {
-      const supplierName = req.params.supplierName;
+router.get("/evidence/:supplierName", isstoremanagerOradmin, async (req, res) => {
+  try {
+    const { supplierName } = req.params;
+    const { batchId } = req.query;
 
-      // Find the most recent batch of paid items for this supplier
-      // We filter for 'Paid' status so we don't accidentally pull pending items
-      const lastPaidItem = await Stock.findOne({
-        supplierName,
-        paymentStatus: "Paid",
-      }).sort({ settlementDate: -1 });
+    // Fetch items belonging to this batch regardless of status
+    const items = await Stock.find({
+      supplierName: supplierName,
+      paymentBatchId: batchId,
+    });
 
-      if (!lastPaidItem) {
-        return res.send("No payment history found for this supplier.");
-      }
-
-      const batchId = lastPaidItem.paymentBatchId;
-
-      // IMPORTANT: This only fetches items from that specific payment event
-      const items = await Stock.find({
-        supplierName,
-        paymentBatchId: batchId,
-      });
-
-      res.render("evidence", {
-        items,
-        supplierName,
-        settlementDate: lastPaidItem.settlementDate,
-        batchId,
-      });
-    } catch (error) {
-      console.error("VOUCHER ROUTE ERROR:", error.message);
-      res.status(500).send("Unable to load voucher");
+    if (!items || items.length === 0) {
+      return res.send("No records found for this batch.");
     }
-  },
-);
 
+    // Pass the items array to the view
+    res.render("evidence", {
+      items,
+      supplierName,
+    });
+  } catch (error) {
+    console.error("VOUCHER ROUTE ERROR:", error.message);
+    res.status(500).send("Unable to load voucher");
+  }
+});
 module.exports = router;

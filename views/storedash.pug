@@ -98,6 +98,7 @@ html
 
           thead
             tr
+              th #
               th Product Name
               th Image
               th Buying Price
@@ -113,8 +114,9 @@ html
                 td(colspan='7') No stock available
 
             else
-              each stock in dbStock
+              each stock, index in dbStock
                 tr
+                  td #{index + 1}
                   td #{stock.productName}
 
                   td

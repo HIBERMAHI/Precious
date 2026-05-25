@@ -52,6 +52,7 @@ html
       table
         thead
           tr
+            th #
             th ProductName
             th Image
             th Buying Price
@@ -63,9 +64,10 @@ html
             tr
               td(colspan='5' style="text-align: center;") No stock available
           else
-            each stock in dbStock   
+            each stock, index in dbStock   
               //- FIXED: Added the tr wrapper here to break items into clean, individual vertical rows
               tr
+                td #{index + 1}
                 td #{stock.productName}
                 td 
                   if stock.itemImage 

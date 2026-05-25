@@ -39,20 +39,22 @@ html
       .dashboard-stats
         .card.stat-qty
           h3 Pending Quantities
-          p.stat-value #{stats.totalPendingQty}
+          p.stat-value #{stats.totalPendingQty || 0}
         
         .card.stat-items
           h3 Items on Credit
-          p.stat-value #{stats.totalPendingItems}
+          p.stat-value #{stats.totalPendingItems || 0}
         
         .card.stat-debt
           h3 Total Debt (UGX)
-          p.stat-value #{stats.totalPendingDebt.toLocaleString()}
+          //- Added (|| 0) safety check to prevent the toLocaleString crash
+          p.stat-value #{(stats.totalPendingDebt || 0).toLocaleString()}
 
       // ================= SUPPLIER TABLE =================
       table.supplier-table
         thead
           tr
+            th #
             th Supplier Name
             th Contact
             th Products
@@ -62,17 +64,16 @@ html
             th Actions
         tbody
           if supplierDebts && supplierDebts.length > 0
-            each sup in supplierDebts
+            each sup, index in supplierDebts
               tr
-                td #{sup._id}
+                td #{index + 1}
+                td #{sup.supplierName}
                 td #{sup.contact}
                 td 
-                  // Displaying the array of unique product names
                   ul(style="list-style: none; padding: 0; margin: 0;")
                     each prod in sup.productsSupplied
                       li(style="font-size: 0.85em; color: #444;") • #{prod}
                 td 
-                  // Displaying the array of unique factory names
                   ul(style="list-style: none; padding: 0; margin: 0;")
                     each fact in sup.factoriesSupplied
                       li(style="font-size: 0.8em; color: #666; font-style: italic;") 
@@ -80,22 +81,24 @@ html
                         |  #{fact}
                 td #{sup.totalDebt.toLocaleString()}
                 td
-                  if sup.totalDebt > 0
+                  //- If pendingCount > 0, there is still debt to pay
+                  if sup.pendingCount > 0
                     span.status-pending(style="color: orange; font-weight: bold;") Pending
                   else
                     span.status-paid(style="color: green; font-weight: bold;") Paid
                 td.actions
-                  //- ONLY show Pay button if debt is greater than 0
-                  if sup.totalDebt > 0
-                    form(action=`/pay-supplier/${sup._id}`, method="POST" style="display:inline;")
-                      button.btn-action.btn-pay(type="submit" onclick='return confirm("Confirm payment for ' + sup._id + '?")')
+                  //- ONLY show Pay button if there are pending items in this batch
+                  if sup.pendingCount > 0
+                    form(action=`/pay-supplier/${sup.supplierName}`, method="POST" style="display:inline;")
+                      input(type="hidden" name="batchId" value=sup.paymentBatchId)
+                      button.btn-action.btn-pay(type="submit" onclick='return confirm("Confirm payment for ' + sup.supplierName + '?")')
                         i.fas.fa-check-circle
                         |  Pay
                   
-                  //- Evidence button is always visible
-                  a.btn-action.btn-evidence(href=`evidence/${sup._id}`, target="_blank")
+                  //- Evidence link isolates the specific batch
+                  a.btn-action.btn-evidence(href=`/evidence/${sup.supplierName}?batchId=${sup.paymentBatchId}`, target="_blank")
                     i.fas.fa-file-alt
                     |  Evidence
           else
             tr
-              td(colspan='7' style="text-align:center;") No suppliers found.
+              td(colspan='8' style="text-align:center;") No supplier records found.

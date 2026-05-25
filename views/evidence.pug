@@ -13,16 +13,18 @@ html
         div
           p #[strong Supplier:] #{supplierName}
           if items.length > 0
-            p #[strong Contact:] #{items[0].supplierContact}
+            p #[strong Contact:] #{items[0].supplierContact || 'N/A'}
         div
           p #[strong Date Settled:] 
-            if items.length > 0 && items[0].settlementDate
+            //- Accessing the date from the first item in the array
+            if items.length > 0 && items[0].paymentStatus === 'Paid' && items[0].settlementDate
               | #{new Date(items[0].settlementDate).toLocaleDateString('en-GB')}
             else
-              | #{new Date().toLocaleDateString('en-GB')}
+              | #[em Not Recorded]
               
-          if items.length > 0 && items[0].paymentBatchId
-            p #[strong Voucher No:] #{items[0].paymentBatchId}
+          //- Accessing the batch ID from the first item in the array
+          if items.length > 0 && items.paymentBatchId
+            p #[strong Voucher No:] #{items.paymentBatchId}
       
       if items && items.length > 0
         table.voucher-table
@@ -44,12 +46,19 @@ html
                 td #{item.total.toLocaleString()}
                 - grandTotal += item.total
         
+        - var isPaid = items.every(i => i.paymentStatus === 'Paid')
+        
         .total-section
-          h2 Grand Total Paid: #{grandTotal.toLocaleString()} UGX
+          if isPaid
+            h2(style="color: green;") Total Cleared: #{grandTotal.toLocaleString()} UGX
+            p(style="color: green; font-weight: bold;") Status: CLEARED
+          else
+            h2(style="color: red;") Total Pending: #{grandTotal.toLocaleString()} UGX
+            p(style="color: red; font-weight: bold;") Status: PENDING
       
       else
         .no-data(style="text-align: center; padding: 40px; color: #777;")
-          p No settled payment records found for this supplier.
+          p No payment records found for this voucher.
 
       .footer
         div
