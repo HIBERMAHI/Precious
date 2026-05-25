@@ -5,37 +5,24 @@ html
     title Register Stock - Nyondo Hardware
     link(rel='stylesheet' href='/css/addstock.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
+    style.
+      .invalid-border { border: 2px solid #ff4d4d !important; }
+      .hidden { display: none; }
+      .error-message-inline { color: #ff4d4d; font-size: 0.75rem; margin-top: 4px; min-height: 1em; }
 
   body
     .sidebar
-      .logo
-        h2 ⚒ NYONDO HARDWARE
+      .logo: h2 ⚒ NYONDO HARDWARE
       ul
-        li
-          a(href='storedash')
-            i.fas.fa-home.fa-fw
-            span.nav-text Dashboard
-        li
-          a(href='invento')
-            i.fas.fa-boxes.fa-fw
-            span.nav-text Inventory
-        li
-          a(href='storsales')
-            i.fas.fa-cash-register.fa-fw
-            span.nav-text Reports
-        li.active
-          a(href='addstock')
-            i.fas.fa-plus-circle.fa-fw
-            span.nav-text Add Stock
-        li
-          a(href='logout')
-            i.fas.fa-sign-out-alt.fa-fw
-            span.nav-text Logout
+        li: a(href='storedash') #[i.fas.fa-home.fa-fw] #[span.nav-text Dashboard]
+        li: a(href='invento') #[i.fas.fa-boxes.fa-fw] #[span.nav-text Inventory]
+        li: a(href='storsales') #[i.fas.fa-cash-register.fa-fw] #[span.nav-text Reports]
+        li.active: a(href='addstock') #[i.fas.fa-plus-circle.fa-fw] #[span.nav-text Add Stock]
+        li: a(href='logout') #[i.fas.fa-sign-out-alt.fa-fw] #[span.nav-text Logout]
+    
     .main
       .header
-        h1
-          i.fas.fa-plus-circle
-          |  Full Stock Registration
+        h1 #[i.fas.fa-plus-circle] Full Stock Registration
         p Fill in all the details to register new stock items.
 
       if error
@@ -44,12 +31,11 @@ html
           |  #{error}
 
       form.stock-form(method='POST' action='/addstock' enctype='multipart/form-data')
-        
         h2 Product & Stock Details
         .form-grid-3x3
           .field
             label Product Name
-            select(name='productName' required)
+            select(name='productName' required data-custom-error="Please select a product.")
               option(value='') Select Product
               option(value='Cement iiN') Cement iiN
               option(value='Cement iiiN') Cement iiiN
@@ -66,18 +52,21 @@ html
               option(value='Barbed Wire High Tensile') Barbed Wire High Tensile
               option(value='Barbed Wire Low Tensile') Barbed Wire Low Tensile
               option(value='Iron Sheets') Iron Sheets
+            .error-message-inline
           .field
             label Category
-            select(name='category' required)
+            select(name='category' required data-custom-error="Please select a category.")
               option(value='') Select Category
               option(value='Building') Building
               option(value='Hardware') Hardware
               option(value='Electrical') Electrical
               option(value='Roofing') Roofing
               option(value='Timber') Timber
+            .error-message-inline
           .field
             label Quantity
-            input(type='number' name='quantity' min='1' required)
+            input(type='number' name='quantity' min='1' required data-custom-error="Quantity must be at least 1.")
+            .error-message-inline
           .field
             label Unit
             select(name='unit')
@@ -86,51 +75,84 @@ html
               option(value='Boxes') Boxes
               option(value='Litres') Litres
               option(value='Rolls') Rolls
+            .error-message-inline
           .field
             label Buying Price
-            input(type='number' name='buyingPrice' min='1' required)
+            input(type='number' name='buyingPrice' id='buyingPrice' min='1' required data-custom-error="Buying price is required.")
+            .error-message-inline
           .field
             label Selling Price
-            input(type='number' name='sellingPrice' min='1' required)
+            input(type='number' name='sellingPrice' id='sellingPrice' min='1' required data-custom-error="Selling price must be higher than the buying price.")
+            .error-message-inline
           .field
             label Payment Method
             select(name='paymentMethod')
               option(value='Cash') Cash
               option(value='Credit') Credit
+            .error-message-inline
           .field
             label Payment Status
             select(name='paymentStatus')
               option(value='Pending') Not paid
               option(value='Paid') Paid
+            .error-message-inline
           .field
             label Supplier Name
-            input(type='text' name='supplierName' required)
+            input(type='text' name='supplierName' required data-custom-error="Supplier name is required.")
+            .error-message-inline
 
         h2 Additional Details
         .form-grid-3x3
           .field
             label Supplier Contact
-            input(type='text' name='supplierContact' placeholder='07XXXXXXXX' pattern='^(07\\d{8}|\\+256\\d{9})$' required)
+            input(type='text' name='supplierContact' placeholder='07XXXXXXXX' pattern='^(07\\d{8}|\\+256\\d{9})$' required data-custom-error="Format: 07XXXXXXXX or +256XXXXXXXX")
+            .error-message-inline
           .field
             label Factory / Depot
             input(type='text' name='factory')
+            .error-message-inline
           .field
             label Product Image
             input(type='file' name='itemImage')
+            .error-message-inline
 
         .buttons
-          button.btn.save(type='submit') 
-            i.fas.fa-save
-            |  Save All Details
-          button.btn.reset(type='reset') 
-            i.fas.fa-undo
-            |  Reset
+          button.btn.save(type='submit') #[i.fas.fa-save] Save All Details
+          button.btn.reset(type='reset') #[i.fas.fa-undo] Reset
 
     script.
-      const inputs = document.querySelectorAll('input, select');
-      inputs.forEach(input => {
-        input.addEventListener('input', () => {
-          const errorBox = document.getElementById('errorMessage');
-          if(errorBox) errorBox.style.display = 'none';
-        });
+      document.addEventListener('input', (e) => {
+        const input = e.target;
+        if (!input.matches('input, select')) return;
+
+        const errorContainer = input.nextElementSibling;
+        const mainError = document.getElementById('errorMessage');
+        const buyPrice = document.getElementById('buyingPrice');
+        const sellPrice = document.getElementById('sellingPrice');
+        
+        if (mainError) mainError.classList.add('hidden');
+
+        // Initial validation state
+        let isInvalid = !input.checkValidity();
+        let message = input.getAttribute('data-custom-error') || input.validationMessage;
+
+        // Custom Rule: If field is required and left empty
+        if (input.hasAttribute('required') && input.value.trim() === '') {
+          isInvalid = true;
+          message = "This field is required.";
+        } 
+        // Custom Rule: Selling Price must be > Buying Price
+        else if (input.id === 'sellingPrice' && buyPrice.value !== '' && Number(sellPrice.value) <= Number(buyPrice.value)) {
+          isInvalid = true;
+          message = input.getAttribute('data-custom-error');
+        }
+
+        // Apply UI Feedback
+        if (isInvalid) {
+          input.classList.add('invalid-border');
+          if (errorContainer) errorContainer.textContent = message;
+        } else {
+          input.classList.remove('invalid-border');
+          if (errorContainer) errorContainer.textContent = '';
+        }
       });

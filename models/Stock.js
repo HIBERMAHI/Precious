@@ -10,22 +10,26 @@ const StockSchema = new mongoose.Schema(
     category: {
       type: String,
       trim: true,
+      required: true,
     },
     // This value is captured at entry and remains static for history
     initialQuantity: {
       type: Number,
       required: [true, "Initial delivery quantity is required"],
       min: [1, "Initial quantity cannot be less than 1"],
+      required: true,
     },
     // This is the active stock that your sale routes will decrement
     quantity: {
       type: Number,
       required: [true, "Current quantity is required"],
       min: [0, "Quantity cannot be less than 0"],
+      required: true,
     },
     unit: {
       type: String,
       trim: true,
+      required: true,
     },
     buyingPrice: {
       type: Number,
@@ -44,15 +48,18 @@ const StockSchema = new mongoose.Schema(
       type: String,
       enum: ["Cash", "Credit"],
       default: "Cash",
+      required: true,
     },
     paymentStatus: {
       type: String,
       enum: ["Paid", "Pending"],
       default: "Pending",
+      required: true,
     },
     factory: {
       type: String,
       trim: true,
+      required: true,
     },
     settlementDate: { 
       type: Date 
@@ -80,6 +87,7 @@ const StockSchema = new mongoose.Schema(
     },
     itemImage: {
       type: String,
+      required: true,
     },
   },
   {
