@@ -37,13 +37,13 @@ background-color: rgb(1, 1, 21);
 .card h4 {
   margin-top: 10px;
   font-size: 18px;
-  color: #333;
+  color:rgb(17, 17, 125);
 }
 
 .para {
   font-size: 13px;
   color: #777;
-  margin-bottom: 20px;
+  margin: 5px 0 20px 0;
 }
 
 /* FORM FIELDS */
@@ -60,7 +60,7 @@ form {
   display: block;
   margin-bottom: 5px;
   font-size: 13px;
-  color: #444;
+  color:rgb(35, 35, 86);
 }
 
 .field input {
@@ -81,7 +81,7 @@ form {
 button {
   width: 100%;
   padding: 11px;
-  background: #4a90e2;
+  background: #02152b;
   color: white;
   border: none;
   border-radius: 6px;
@@ -92,7 +92,7 @@ button {
 }
 
 button:hover {
-  background: #357bd8;
+  background: #083167;
 }
 
 /* SIGNUP TEXT */

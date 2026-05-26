@@ -24,44 +24,26 @@ router.get("/salesDash", (req, res) => {
 });
 
 // salesdashboard ssales
-// salesdashboard ssales
 router.get("/ssales", issalesattendantOradmin, async (req, res) => {
   try {
-    // =====================================================
-    // 1. FETCH SALES (MULTI-ITEM FIXED POPULATE)
-    // =====================================================
     const dbSales = await Sale.find()
       .populate("items.productName")
       .populate("attendant", "fullname")
       .sort({ date: -1 });
-
-    // =====================================================
-    // STATS OBJECT
-    // =====================================================
     let stats = {
       salesRevenue: 0,
       transactions: 0,
       receipts: 0,
       itemsSold: 0,
     };
-
-    // =====================================================
-    // 2. TOTAL TRANSACTIONS
-    // =====================================================
     const transAgg = await Sale.aggregate([{ $count: "total" }]);
 
     stats.transactions = transAgg.length > 0 ? transAgg[0].total : 0;
 
-    // =====================================================
-    // 3. TOTAL RECEIPTS
-    // =====================================================
     const receiptsAgg = await Sale.aggregate([{ $count: "total" }]);
 
     stats.receipts = receiptsAgg.length > 0 ? receiptsAgg[0].total : 0;
 
-    // =====================================================
-    // 4. ITEMS SOLD (FIXED FOR MULTI-ITEM SCHEMA)
-    // =====================================================
     const itemsSoldAgg = await Sale.aggregate([
       { $unwind: "$items" },
       {
@@ -73,10 +55,6 @@ router.get("/ssales", issalesattendantOradmin, async (req, res) => {
     ]);
 
     stats.itemsSold = itemsSoldAgg.length > 0 ? itemsSoldAgg[0].totalQty : 0;
-
-    // =====================================================
-    // 5. SALES REVENUE (TOTAL AMOUNT)
-    // =====================================================
     const salesAgg = await Sale.aggregate([
       {
         $group: {
@@ -90,9 +68,6 @@ router.get("/ssales", issalesattendantOradmin, async (req, res) => {
 
     stats.salesRevenue = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
 
-    // =====================================================
-    // 6. RENDER VIEW
-    // =====================================================
     res.render("ssales", { stats, dbSales });
   } catch (error) {
     console.error(error.message);
@@ -100,10 +75,6 @@ router.get("/ssales", issalesattendantOradmin, async (req, res) => {
   }
 });
 
-// getting data from data base to table and making sale
-// =====================================================
-// GET NEW SALE FORM
-// =====================================================
 router.get("/newsale", issalesattendantOradmin, async (req, res) => {
   try {
     // Pull active stock and deep populate items array for table log tracking
@@ -225,10 +196,6 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
         total: qty * pr,
       });
     }
-
-    // =====================================================
-    // 3. FIXED TRANSPORT ENGINE (FORCED CHARGE LOGIC)
-    // =====================================================
     const productTotalSum = compiledItems.reduce(
       (sum, item) => sum + item.total,
       0,
@@ -253,10 +220,6 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
 
     // Keep totalAmount strictly for product costs so Pug can add them cleanly
     const totalAmount = productTotalSum;
-
-    // =====================================================
-    // 4. CREATE AND SAVE THE RECORD
-    // =====================================================
     const newsale = new Sale({
       customerName,
       phone,
@@ -299,27 +262,16 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
 // deleting sale
 router.post("/delete/:id", issalesattendantOradmin, async (req, res) => {
   try {
-    // =========================
-    // FIND SALE FIRST
-    // =========================
     const sale = await Sale.findById(req.params.id);
 
     if (!sale) {
       return res.status(404).send("Sale not found");
     }
-
-    // =========================
-    // RESTORE STOCK BEFORE DELETE
-    // =========================
     for (const item of sale.items) {
       await Stock.findByIdAndUpdate(item.productName, {
         $inc: { quantity: item.quantity },
       });
     }
-
-    // =========================
-    // DELETE SALE
-    // =========================
     await Sale.findByIdAndDelete(req.params.id);
 
     return res.redirect("/newsale");
@@ -328,12 +280,7 @@ router.post("/delete/:id", issalesattendantOradmin, async (req, res) => {
     return res.status(500).send("Error deleting sale");
   }
 });
-
-// updating sale (POST)
-// edit sale
-// =====================================================
-// GET EDIT SALE FORM (MISSING ROUTE FIXED)
-// =====================================================
+// updating sale
 router.get("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
   try {
     // 1. Fetch the specific sale and populate its items
@@ -466,10 +413,6 @@ router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
         $inc: { quantity: -newItem.quantity },
       });
     }
-
-    // =====================================================
-    // THE EXACT FIXED TRANSPORT LOGIC ENGINE
-    // =====================================================
     const subTotal = updatedCompiledItems.reduce((sum, i) => sum + i.total, 0);
     const cleanDistance =
       distance === "" || distance === undefined ? 0 : parseInt(distance);
@@ -487,9 +430,6 @@ router.post("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
     } else {
       transportFee = 0; // Baseline zero charge fallback for self-pickups
     }
-
-    // CRITICAL CORRECTION: totalAmount is now kept strictly as Product Costs Only.
-    // It no longer blends subTotal + transportFee together here!
     const totalAmount = subTotal;
 
     // STEP 4: Update the Sale collection record with clean split variables
@@ -532,14 +472,7 @@ router.get("/receipt/:id", issalesattendantOradmin, async (req, res) => {
     res.status(500).send("Receipt generation failed internally");
   }
 });
-// =====================================================
-// GET PRINT INVOICE RECEIPT (MULTI-ITEM POPULATE)
-// =====================================================
 
-// displaying stock in stckview page
-// =====================================================
-// GET INVENTORY VIEWER (STOCKVIEW)
-// =====================================================
 router.get("/stockview", issalesattendantOradmin, async (req, res) => {
   try {
     const dbStock = await Stock.find();
@@ -551,42 +484,36 @@ router.get("/stockview", issalesattendantOradmin, async (req, res) => {
 });
 
 // sales report
-// Add this to your routes file (e.g., routes/sales.js)
+router.get("/weeklyReport", issalesattendantOradmin, async (req, res) => {
+  try {
+    // 1. Calculate the start of the week (last 7 days from May 21, 2026)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-router.get(
-  "/weeklyReport",
-  issalesattendantOradmin,
-  async (req, res) => {
-    try {
-      // 1. Calculate the start of the week (last 7 days from May 21, 2026)
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    // 2. Fetch sales from the last 7 days
+    // - Populate 'items.productName' to get product details
+    // - Populate 'attendant' to get the staff name
+    // - Sort by date descending (newest first)
+    const sales = await Sale.find({ date: { $gte: sevenDaysAgo } })
+      .populate("items.productName", "productName")
+      .populate("attendant", "fullname")
+      .sort({ date: -1 });
 
-      // 2. Fetch sales from the last 7 days
-      // - Populate 'items.productName' to get product details
-      // - Populate 'attendant' to get the staff name
-      // - Sort by date descending (newest first)
-      const sales = await Sale.find({ date: { $gte: sevenDaysAgo } })
-        .populate("items.productName", "productName")
-        .populate("attendant", "fullname")
-        .sort({ date: -1 });
+    // 3. Calculate the total revenue for the entire week
+    // We sum (totalAmount + transportFee) for every sale found
+    const weekTotal = sales.reduce((sum, sale) => {
+      const saleTotal = (sale.totalAmount || 0) + (sale.transportFee || 0);
+      return sum + saleTotal;
+    }, 0);
 
-      // 3. Calculate the total revenue for the entire week
-      // We sum (totalAmount + transportFee) for every sale found
-      const weekTotal = sales.reduce((sum, sale) => {
-        const saleTotal = (sale.totalAmount || 0) + (sale.transportFee || 0);
-        return sum + saleTotal;
-      }, 0);
-
-      // 4. Render the page, passing the full sales list and the grand total
-      res.render("weeklyReport", {
-        sales,
-        weekTotal,
-      });
-    } catch (error) {
-      console.error("Weekly Report Error:", error);
-      res.status(500).send("Unable to generate the weekly sales report.");
-    }
-  },
-);
+    // 4. Render the page, passing the full sales list and the grand total
+    res.render("weeklyReport", {
+      sales,
+      weekTotal,
+    });
+  } catch (error) {
+    console.error("Weekly Report Error:", error);
+    res.status(500).send("Unable to generate the weekly sales report.");
+  }
+});
 module.exports = router;

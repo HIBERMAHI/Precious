@@ -17,7 +17,7 @@ body{
 /* ================= SIDEBAR ================= */
 .sidebar{
   width:250px;
-  background:#020617;
+  background:#02071c;
   position:fixed;
   top:0;
   left:0;
@@ -124,6 +124,29 @@ body{
 option{
   padding-right:20px;
 }
+/* Shared styling for all action buttons */
+.actions-cell a, .actions-cell button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 5px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 10px; /* Smaller font for table cells */
+    color: #333;
+}
+
+/* Specific styling for the Delete button background if needed */
+.action-btn-delete {
+    color: #db1226 !important;
+    font-weight: bolder;
+}
+.action-btn-edit{
+  color: #8e5f0f;
+}
 
 .form-inline-header-group{
   display:grid;
@@ -132,8 +155,13 @@ option{
   margin-bottom:28px;
   align-items:end;
 }
-
-/* ================= SUMMARY ================= */
+.remove-item-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adds space between the icon and the word 'Remove' */
+    padding: 8px 12px;
+    cursor: pointer;
+}
 .live-calculation-box{
   display:flex;
   flex-direction:column;
@@ -363,11 +391,13 @@ option{
 
 /* COLORS */
 .action-btn-print{
-  background:#2563eb;
+  background:#bc7c0e;
+  font-weight: bolder;
 }
 
 .action-btn-edit{
-  background:#f59e0b;
+  background:#c7881c;
+  font-weight: bolder;
 }
 
 .action-btn-delete{

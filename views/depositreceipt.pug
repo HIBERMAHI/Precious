@@ -4,7 +4,7 @@ html
     meta(charset='utf-8')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
     title Nyondo Hardware Receipt
-    link(rel='stylesheet' href='/css/receipt.css')
+    link(rel='stylesheet' href='/css/deporeceipt.css')
 
   body
     .receipt-container
@@ -15,9 +15,6 @@ html
 
         .receipt-body
 
-          //========================
-          // COMPANY HEADER
-          //========================
           .receipt-top-section
 
             h4.company-name NYONDO GENERAL HARDWARE
@@ -40,9 +37,6 @@ html
 
           hr.thick-line
 
-          //========================
-          // CUSTOMER DETAILS
-          //========================
           .customer-section
 
             h3.customer-heading Customer Information
@@ -57,19 +51,12 @@ html
                   | #{deposit.customer.fullName}
 
           hr.thick-line
-
-          //========================
-          // DESCRIPTION TITLE
-          //========================
           .receipt-description-header
 
             span.label-bold Description
 
           hr.thin-line
 
-          //========================
-          // DYNAMIC CART ITEMS DETAILS LOOP
-          //========================
           if deposit.items && deposit.items.length > 0
             each item in deposit.items
               .info-row
@@ -82,10 +69,6 @@ html
               span.label #{deposit.productType} (x#{deposit.quantity}) :
               span.value #{deposit.totalAmount.toLocaleString()} UGX
             hr.thin-line
-
-          //========================
-          // FINANCIAL STANDALONE SUMMARY FIELDS
-          //========================
           .info-row.transport-fee-row
             span.label Transport Charge :
             span.value #{deposit.transportFee.toLocaleString()} UGX
@@ -115,10 +98,6 @@ html
               | #{deposit.balance.toLocaleString()} UGX
 
           hr.thick-line
-
-          //========================
-          // FOOTER
-          //========================
           .receipt-footer
 
             p.served-by
@@ -129,10 +108,6 @@ html
 
             p.disclaimer
               | Goods once sold are not returnable
-
-      //========================
-      // ACTION BUTTONS
-      //========================
       .receipt-actions
 
         button.btn-print(onclick='window.print()')

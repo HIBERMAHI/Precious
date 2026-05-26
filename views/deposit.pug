@@ -80,7 +80,9 @@ html
                 input.quantity-input(type='number' name='quantity' value="1" min="1" required)
               
               button.remove-item-btn(type='button')
-                i.fas.fa-trash-alt
+                span.btn-text Delete
+                  i.fas.fa-trash-alt
+                  
 
           .add-more-container
             button.btn-add-item(type='button' id='addItemBtn')
@@ -151,13 +153,16 @@ html
 
                   td.actions-cell
                     a.action-btn-print(href=`/deposit/receipt/${d._id}` target="_blank" title="Print Receipt")
+                      span.action-label View Receipt
                       i.fas.fa-print
                     
                     a.action-btn-edit(href=`/deposit/edit/${d._id}` title="Edit Ledger / Pay Balance")
+                      span.action-label Edit
                       i.fas.fa-edit
                     
                     form(action=`/deposit/delete/${d._id}` method="POST" onsubmit="return confirm('CORRECTION: Delete this entire transaction record and return all items back to stock inventory?')")
                       button.action-btn-delete(type="submit" title="Delete Record")
+                        span.action-label Delete
                         i.fas.fa-trash-alt
             else
               tr

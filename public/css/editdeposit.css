@@ -1,4 +1,4 @@
-/* ================= RESET ================= */
+
 *{
   margin:0;
   padding:0;
@@ -13,11 +13,9 @@ body{
   min-height:100vh;
   overflow-x:hidden;
 }
-
-/* ================= SIDEBAR ================= */
 .sidebar{
   width:250px;
-  background:#020617;
+  background:#010515;
   position:fixed;
   top:0;
   left:0;
@@ -31,7 +29,7 @@ body{
 .sidebar .logo{
   font-size:22px;
   font-weight:800;
-  color:#f8fafc;
+  color:#facc15;
   margin-bottom:35px;
 }
 
@@ -50,17 +48,12 @@ body{
 }
 
 .sidebar ul li a:hover{
-  background:#1e293b;
-  color:#fff;
   transform:translateX(5px);
+  background:rgba(250,204,21,0.08);
+  color:#facc15;
 }
 
-.sidebar ul li.active a{
-  background:linear-gradient(135deg,#2563eb,#1d4ed8);
-  color:#fff;
-}
 
-/* ================= MAIN ================= */
 .main{
   margin-left:250px;
   width:calc(100% - 250px);
@@ -71,17 +64,14 @@ body{
   font-size:32px;
   font-weight:800;
   margin-bottom:25px;
+  color: rgb(25, 25, 139);
 }
-
-/* ================= CARD ================= */
 .sale-form{
   background:white;
   border-radius:24px;
   padding:30px;
   box-shadow:0 10px 30px rgba(15,23,42,0.06);
 }
-
-/* ================= FORM GROUP ================= */
 .form-group{
   display:flex;
   flex-direction:column;
@@ -92,6 +82,7 @@ body{
   font-weight:700;
   font-size:14px;
   margin-bottom:6px;
+  color: rgb(19, 19, 103);
 }
 
 .form-group input{
@@ -100,9 +91,8 @@ body{
   border:1px solid #cbd5e1;
   padding:0 14px;
   background:#f8fafc;
+  color: lch(48.31% 15.17 268.52);
 }
-
-/* ================= CART ================= */
 .cart-item-row{
   display:grid;
   grid-template-columns:2fr 1fr;
@@ -112,10 +102,6 @@ body{
   border-radius:18px;
   margin-bottom:15px;
 }
-
-/* =========================================================
-   🔥 FIX: LAST 3 INPUTS MUST STAY IN ONE ROW
-   ========================================================= */
 
 .form-inline-footer-group{
   display:grid !important;
@@ -177,8 +163,6 @@ body{
   margin-top:6px;
   color:#64748b;
 }
-
-/* ================= BUTTON ================= */
 .register-btn{
   width:100%;
   margin-top:25px;
@@ -189,8 +173,6 @@ body{
   border-radius:16px;
   font-weight:800;
 }
-
-/* ================= RESPONSIVE ================= */
 @media(max-width:900px){
   .form-inline-footer-group{
     grid-template-columns:1fr;

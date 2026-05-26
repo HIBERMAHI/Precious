@@ -1,4 +1,4 @@
-/* ================= BASE ================= */
+
 body{
   font-family: Arial, sans-serif;
   background:#eef2f7;
@@ -9,7 +9,7 @@ body{
   color:#1e293b;
 }
 
-/* ================= MAIN CONTAINER ================= */
+
 .voucher-container{
   width:100%;
   max-width:900px;
@@ -23,7 +23,6 @@ body{
   min-height:90vh;
 }
 
-/* ================= HEADER ================= */
 .header{
   text-align:center;
   padding-bottom:18px;
@@ -43,8 +42,6 @@ body{
   font-size:14px;
   color:#64748b;
 }
-
-/* ================= META ================= */
 .meta{
   display:flex;
   justify-content:space-between;
@@ -56,7 +53,6 @@ body{
   margin:6px 0;
 }
 
-/* ================= TABLE ================= */
 .voucher-table{
   width:100%;
   border-collapse:collapse;
@@ -79,8 +75,6 @@ body{
 .voucher-table tbody tr:hover{
   background:#f8fafc;
 }
-
-/* ================= TOTAL ================= */
 .total-section{
   margin-top:20px;
   padding:15px;
@@ -92,7 +86,7 @@ body{
 .total-section  h2{
   color: rgb(76, 18, 130);
 }
-/* ================= FOOTER PUSHES BUTTONS DOWN ================= */
+
 .footer{
   margin-top:auto;
   display:flex;
@@ -100,8 +94,6 @@ body{
   font-size:14px;
   padding-top:30px;
 }
-
-/* ================= ACTION AREA (BOTTOM CENTER) ================= */
 .actions-area{
   margin-top:20px;
   display:flex;
@@ -144,7 +136,6 @@ body{
   text-decoration:underline;
 }
 
-/* ================= PRINT ================= */
 @media print{
   .actions-area{
     display:none;

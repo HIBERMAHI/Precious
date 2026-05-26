@@ -13,7 +13,7 @@
 }
 
 body {
-    background-color: #1a2b3c; /* Deep Professional Blue */
+    background-color: #010e1b; /* Deep Professional Blue */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,7 +40,7 @@ body {
 }
 
 h2 {
-    color: #1a2b3c;
+    color: #1e5387;
     font-size: 24px;
     margin-bottom: 5px;
 }
@@ -80,7 +80,7 @@ label {
     margin-bottom: 8px;
     font-size: 13px;
     font-weight: 600;
-    color: #444;
+    color:rgb(80, 80, 153);
 }
 
 /* Input & Icon Styling */
@@ -102,7 +102,7 @@ input, select {
     padding: 12px 12px 12px 40px; /* Space for left icon */
     border: 1px solid #cbd5e1;
     border-radius: 8px;
-    font-size: 15px;
+    font-size:0.7rem;
     transition: all 0.3s ease;
 }
 
@@ -127,7 +127,7 @@ input:focus, select:focus {
 /* Button */
 .submit-btn {
     width: 100%;
-    background-color: #1a2b3c;
+    background-color: #020f1c;
     color: white;
     padding: 14px;
     border: none;

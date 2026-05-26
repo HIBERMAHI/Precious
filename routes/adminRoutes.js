@@ -7,9 +7,6 @@ const Deposit = require("../models/Deposit");
 const Registration = require("../models/Registration");
 const { isadmin } = require("../middleware/auth");
 
-// ==========================================
-// 1. Dashboard Stats Route (CORRECTED)
-// ==========================================
 // 1. Dashboard Stats Route (UPGRADED FOR MULTI-ITEM)
 router.get("/admindash", async (req, res) => {
   try {
@@ -302,19 +299,12 @@ router.post("/deposit", async (req, res) => {
       });
     }
 
-    // =====================================================
-    // 4. AUTOMATED NYONDO TRANSPORT FEE ENGINE
-    // =====================================================
     let transportFee = 30000; // Default standard charge
 
     // Check if cumulative materials value is 500,000+ Shs AND registered distance is within 10km
     if (customerDistance <= 10 && materialsSubtotal >= 500000) {
       transportFee = 0; // Qualifies for the free transport tier
     }
-
-    // =====================================================
-    // 5. INVOICE CALCULATIONS & RECEIPT NUMBER GENERATION
-    // =====================================================
     const amountPaid = Number(initialDeposit) || 0;
     const overallInvoiceGrandTotal = materialsSubtotal + transportFee;
     const remainingBalance = overallInvoiceGrandTotal - amountPaid;
@@ -322,10 +312,6 @@ router.post("/deposit", async (req, res) => {
     // Generate unique tracking code matching your system format
     const generatedReceiptNumber =
       "DPST-" + Math.floor(1000 + Math.random() * 9000);
-
-    // =====================================================
-    // 6. SAVE COMPREHENSIVE RECORD TO MONGODB
-    // =====================================================
     const newDeposit = new Deposit({
       customer: customerId,
       items: compiledCartItems, // Saves the entire cart list array structure
@@ -338,10 +324,6 @@ router.post("/deposit", async (req, res) => {
     });
 
     await newDeposit.save();
-
-    // =====================================================
-    // 7. DEDUCT PHYSICAL WAREHOUSE INVENTORY STOCK LEVEL
-    // =====================================================
     for (const element of compiledCartItems) {
       await Stock.findByIdAndUpdate(element.productName, {
         $inc: { quantity: -element.quantity },
@@ -455,10 +437,6 @@ router.post("/deposit/edit/:id", async (req, res) => {
         total: lineTotalCost,
       });
     }
-
-    // =====================================================
-    // 3. RE-APPLY AUTOMATED NYONDO TRANSPORT ENGINE RULES
-    // =====================================================
     let transportFee = 30000; // Reset to standard default charge
 
     // Re-check if the updated materials value is 500k+ AND distance is within 10km
@@ -468,10 +446,6 @@ router.post("/deposit/edit/:id", async (req, res) => {
     ) {
       transportFee = 0; // Qualifies for free transport tier
     }
-
-    // =====================================================
-    // 4. LEDGER RE-BALANCING & PAYMENT CALCULATIONS
-    // =====================================================
     // Accumulate the original deposit with the newly provided top-up payment amount
     const upgradedTotalPaymentsCollected =
       deposit.initialDeposit + (Number(newPayment) || 0);
@@ -482,10 +456,6 @@ router.post("/deposit/edit/:id", async (req, res) => {
     // Calculate the remaining balance
     const computedOutstandingBalance =
       revisedGrandInvoiceCost - upgradedTotalPaymentsCollected;
-
-    // =====================================================
-    // 5. COMMIT MODIFICATIONS PERMANENTLY TO MONGODB
-    // =====================================================
     await Deposit.findByIdAndUpdate(req.params.id, {
       items: updatedCartItems,
       initialDeposit: upgradedTotalPaymentsCollected,
