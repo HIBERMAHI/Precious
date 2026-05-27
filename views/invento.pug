@@ -69,7 +69,7 @@ html
               th #
               th Product Name
               th Image
-              th Factory / Depot
+              th Factory
               th Date Added
               th Status
               th Amount in Stock
@@ -110,7 +110,9 @@ html
                 td
                   .action-btns
                     a.btn.btn-sm.btn-outline-warning(href=`/stock/edit/${stock._id}`)
+                      span.action-label EDIT
                       i.fas.fa-edit
                     form(action=`/deleted/${stock._id}` method='post' onsubmit='return confirm("Delete this record?")')
                       button.btn.btn-sm.btn-outline-danger(type='submit')
+                        span.action-label DELETE
                         i.fas.fa-trash-alt

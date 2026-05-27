@@ -124,20 +124,71 @@ router.get("/invento", isstoremanagerOradmin, async (req, res) => {
   }
 });
 
-router.get("/stockin", (req, res) => {
-  res.render("stockin");
-});
+router.get("/storereport", isstoremanagerOradmin, async (req, res) => {
+  try {
+    const dbStock = await Stock.find().sort({ createdAt: -1 });
 
-router.get("/stockout", (req, res) => {
-  res.render("stockout");
-});
+    // 1. Initializing stats exactly like your Invento format
+    let stats = {
+      totalInventoryValue: 0,
+      totalSalesValue: 0,
+      totalStockCount: 0,
+      pendingDebt: 0,
+      potentialProfit: 0,
+    };
 
-router.get("/storereports", (req, res) => {
-  res.render("storereports");
-});
+    // 2. Calculate Inventory Value (Buying Price)
+    const inventoryAgg = await Stock.aggregate([
+      {
+        $project: {
+          currentValue: { $multiply: ["$quantity", "$buyingPrice"] },
+        },
+      },
+      { $group: { _id: null, grandExpenditure: { $sum: "$currentValue" } } },
+    ]);
+    stats.totalInventoryValue =
+      inventoryAgg.length > 0 ? inventoryAgg[0].grandExpenditure : 0;
 
-router.get("/orders", (req, res) => {
-  res.render("orders");
+    // 3. Calculate Total Sales Value (Selling Price)
+    const salesAgg = await Stock.aggregate([
+      {
+        $project: { saleValue: { $multiply: ["$quantity", "$sellingPrice"] } },
+      },
+      { $group: { _id: null, grandSales: { $sum: "$saleValue" } } },
+    ]);
+    stats.totalSalesValue = salesAgg.length > 0 ? salesAgg[0].grandSales : 0;
+
+    // 4. Calculate Total Quantity
+    const totalAgg = await Stock.aggregate([
+      { $group: { _id: null, grandProducts: { $sum: "$quantity" } } },
+    ]);
+    stats.totalStockCount = totalAgg.length > 0 ? totalAgg[0].grandProducts : 0;
+
+    // 5. Calculate Pending Debt
+    const debtAgg = await Stock.aggregate([
+      { $match: { paymentStatus: "Pending" } },
+      { $group: { _id: null, totalDebt: { $sum: "$total" } } },
+    ]);
+    stats.pendingDebt = debtAgg.length > 0 ? debtAgg[0].totalDebt : 0;
+
+    // 6. Calculate Potential Profit
+    stats.potentialProfit = stats.totalSalesValue - stats.totalInventoryValue;
+
+    // 7. Low Stock items (for the list in the report)
+    const lowStockItems = await Stock.find({ quantity: { $lte: 10 } }).limit(5);
+
+    // 8. Render the report
+    // Note: Ensure your Pug file is named 'storereports.pug' to match this
+    res.render("storereport", {
+      inventory: dbStock,
+      stats,
+      lowStockItems,
+      reportDate: new Date().toLocaleDateString(),
+    });
+  } catch (error) {
+    console.error("STOREREPORT ERROR:", error.message);
+    res.status(500).send("Unable to load report data");
+  }
 });
 
 //  ADD STOCK
@@ -369,10 +420,10 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
               $cond: [{ $eq: ["$paymentStatus", "Pending"] }, 1, 0],
             },
           },
-          paymentBatchId: { $first: "$paymentBatchId" }
+          paymentBatchId: { $first: "$paymentBatchId" },
         },
       },
-      { $sort: { _id: -1 } }, 
+      { $sort: { _id: -1 } },
     ]);
 
     // 2. Initialize the stats object
@@ -385,21 +436,21 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
     // 3. Calculate Global Pending Debt
     const debtAgg = await Stock.aggregate([
       { $match: { paymentStatus: "Pending" } },
-      { $group: { _id: null, total: { $sum: "$total" } } }
+      { $group: { _id: null, total: { $sum: "$total" } } },
     ]);
     stats.totalPendingDebt = debtAgg.length > 0 ? debtAgg[0].total : 0;
 
     // 4. Calculate Global Pending Quantity
     const qtyAgg = await Stock.aggregate([
       { $match: { paymentStatus: "Pending" } },
-      { $group: { _id: null, total: { $sum: "$quantity" } } }
+      { $group: { _id: null, total: { $sum: "$quantity" } } },
     ]);
     stats.totalPendingQty = qtyAgg.length > 0 ? qtyAgg[0].total : 0;
 
     // 5. Calculate Global Pending Items Count
     const countAgg = await Stock.aggregate([
       { $match: { paymentStatus: "Pending" } },
-      { $count: "total" }
+      { $count: "total" },
     ]);
     stats.totalPendingItems = countAgg.length > 0 ? countAgg[0].total : 0;
 
@@ -432,12 +483,14 @@ router.post(
             paymentStatus: "Paid",
             settlementDate: new Date(), // Captures the exact moment payment is finalized
           },
-        }
+        },
       );
 
       // matchedCount checks if the query found the batch at all
       if (result.matchedCount === 0) {
-        return res.status(400).send("No records found for this batch. Check your Batch ID.");
+        return res
+          .status(400)
+          .send("No records found for this batch. Check your Batch ID.");
       }
 
       // Redirect to evidence showing ONLY this specific batch
@@ -446,33 +499,37 @@ router.post(
       console.error("PAYMENT ERROR:", error.message);
       res.status(500).send("Error updating payment status: " + error.message);
     }
-  }
+  },
 );
 
 // GET: Generate the Evidence/Voucher
-router.get("/evidence/:supplierName", isstoremanagerOradmin, async (req, res) => {
-  try {
-    const { supplierName } = req.params;
-    const { batchId } = req.query;
+router.get(
+  "/evidence/:supplierName",
+  isstoremanagerOradmin,
+  async (req, res) => {
+    try {
+      const { supplierName } = req.params;
+      const { batchId } = req.query;
 
-    // Fetch items belonging to this batch regardless of status
-    const items = await Stock.find({
-      supplierName: supplierName,
-      paymentBatchId: batchId,
-    });
+      // Fetch items belonging to this batch regardless of status
+      const items = await Stock.find({
+        supplierName: supplierName,
+        paymentBatchId: batchId,
+      });
 
-    if (!items || items.length === 0) {
-      return res.send("No records found for this batch.");
+      if (!items || items.length === 0) {
+        return res.send("No records found for this batch.");
+      }
+
+      // Pass the items array to the view
+      res.render("evidence", {
+        items,
+        supplierName,
+      });
+    } catch (error) {
+      console.error("VOUCHER ROUTE ERROR:", error.message);
+      res.status(500).send("Unable to load voucher");
     }
-
-    // Pass the items array to the view
-    res.render("evidence", {
-      items,
-      supplierName,
-    });
-  } catch (error) {
-    console.error("VOUCHER ROUTE ERROR:", error.message);
-    res.status(500).send("Unable to load voucher");
-  }
-});
+  },
+);
 module.exports = router;

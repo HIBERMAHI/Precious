@@ -11,11 +11,20 @@ html
       .logo
         h2 ⚒ NYONDO HARDWARE
       ul
-        li: a(href='/storedash'): i.fas.fa-home: span Dashboard
-        li: a(href='/invento'): i.fas.fa-boxes: span Inventory
-        li: a(href='/storsales'): i.fas.fa-cash-register: span Sales
-        li.active: a(href='/invento'): i.fas.fa-edit: span Edit Stock
-        li: a(href='/logout'): i.fas.fa-sign-out-alt: span Logout
+        li
+          a(href='/storedash')
+            i.fas.fa-home
+            span Dashboard
+
+        li
+          a(href='/invento')
+            i.fas.fa-boxes
+            span Inventory
+
+        li
+          a(href='/logout')
+            i.fas.fa-sign-out-alt
+            span Logout
 
     .main
       .header

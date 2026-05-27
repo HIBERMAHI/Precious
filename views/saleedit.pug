@@ -109,6 +109,7 @@ html
                       )
 
                     button.remove-btn(type='button' onclick='removeItem(this)')
+                      span.btn-text Delete
                       i.fas.fa-trash-alt
 
           hr(style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;")
@@ -136,12 +137,12 @@ html
               i.fas.fa-save
               |   Update Sale
 
-            a.register-btn(
-              href=`/receipt/${sale._id}`
-              style="text-decoration:none; margin-top:12px; display:flex; justify-content:center; align-items:center; gap:10px;"
-            )
-              i.fas.fa-receipt
-              |   Issue Receipt
+            //- a.register-btn(
+            //-   href=`/receipt/${sale._id}`
+            //-   style="text-decoration:none; margin-top:12px; display:flex; justify-content:center; align-items:center; gap:10px;"
+            //- )
+            //-   i.fas.fa-receipt
+            //-   |   Issue Receipt
 
     // ================= CLIENT DYNAMICS ENGINE =================
     script.
