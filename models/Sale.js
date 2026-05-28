@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const SaleSchema = new mongoose.Schema({
-
   customerName: {
     type: String,
     trim: true,
@@ -10,12 +9,11 @@ const SaleSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    match: [/^(?:\+256|07)[0-9]{8,9}$/, "please use the format +256XXXXXXXXX or 07XXXXXXXX"]
+    match: [
+      /^(?:\+256|07)[0-9]{8,9}$/,
+      "please use the format +256XXXXXXXXX or 07XXXXXXXX",
+    ],
   },
-
-  // =========================
-  // MULTI ITEM SUPPORT (NEW)
-  // =========================
   items: [
     {
       productName: {
@@ -37,8 +35,8 @@ const SaleSchema = new mongoose.Schema({
       total: {
         type: Number,
         required: true,
-      }
-    }
+      },
+    },
   ],
 
   deliveryOption: {
@@ -76,8 +74,7 @@ const SaleSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now,
-  }
-
+  },
 });
 
 module.exports = mongoose.model("Sale", SaleSchema);

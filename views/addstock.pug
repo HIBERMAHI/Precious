@@ -86,13 +86,13 @@ html
             .error-message-inline
           .field
             label Payment Method
-            select(name='paymentMethod')
+            select(name='paymentMethod'  id="paymentMethod")
               option(value='Cash') Cash
               option(value='Credit') Credit
             .error-message-inline
           .field
             label Payment Status
-            select(name='paymentStatus')
+            select(name='paymentStatus'  id="paymentStatus")
               option(value='Pending') Not paid
               option(value='Paid') Paid
             .error-message-inline
@@ -156,3 +156,18 @@ html
           if (errorContainer) errorContainer.textContent = '';
         }
       });
+
+     const methodSelect = document.getElementById('paymentMethod');
+      const statusSelect = document.getElementById('paymentStatus');
+
+      methodSelect.addEventListener('change', () => {
+        if (methodSelect.value === 'Cash') {
+          statusSelect.value = 'Paid';
+          statusSelect.disabled = true; // Makes the field unchangeable by user
+        } else {
+          statusSelect.value = 'Pending';
+          statusSelect.disabled = false; // Makes it editable for 'Credit'
+        }
+      });
+      // This line runs once when the page loads, forcing the logic to check the initial state.
+      methodSelect.dispatchEvent(new Event('change'));

@@ -15,8 +15,6 @@ html
     )
 
   body
-
-    // ================= SIDEBAR =================
     .sidebar
 
       .logo
@@ -47,8 +45,6 @@ html
           a(href='logout')
             i.fas.fa-sign-out-alt
             |  LogOut
-
-    // ================= MAIN CONTENT =================
     .main
 
       // TOPBAR
@@ -63,8 +59,6 @@ html
           i.fas.fa-user-circle
 
       h2 Store Manager Dashboard
-
-      // ================= CARDS =================
       .cards
 
         .card
@@ -139,11 +133,12 @@ html
 
                   td #{new Date(stock.createdAt).toLocaleDateString()}
 
+                  //- Replace your existing 'td' for Status with this block:
                   td
-                    // Dynamic Status based on the route mapping
-                    if stock.status === 'Out of Stock'
+                    //- Calculation based on your route's 100-item threshold
+                    if stock.quantity <= 0
                       span.status.out Out of Stock
-                    else if stock.status === 'Low Stock'
+                    else if stock.quantity <= 100
                       span.status.low Low Stock
                     else
                       span.status.good Enough Stock

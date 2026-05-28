@@ -62,7 +62,7 @@ router.get("/storedash", isstoremanagerOradmin, async (req, res) => {
       // Ensure we treat the quantity as a number
       const qty = Number(item.quantity);
 
-      if (qty <= 10) {
+      if (qty <= 100) {
         stats.lowStock++;
       } else {
         stats.enougthStock++;
@@ -110,7 +110,7 @@ router.get("/invento", isstoremanagerOradmin, async (req, res) => {
 
     // 3. Logic: 10 and below = Low Stock, else Enough Stock
     dbStock.forEach((item) => {
-      if (item.quantity <= 10) {
+      if (item.quantity <= 100) {
         stats.lowStock++;
       } else {
         stats.enougthStock++;
@@ -261,7 +261,8 @@ router.post(
 
       const total = qty * buy;
       const finalPaymentMethod = paymentMethod || "Cash";
-      const finalPaymentStatus = paymentStatus === "Paid" ? "Paid" : "Pending";
+      const finalPaymentStatus =
+        finalPaymentMethod === "Cash" ? "Paid" : paymentStatus;
 
       // Generate a unique ID for this specific delivery batch
       const generatedBatchId = Date.now().toString();
