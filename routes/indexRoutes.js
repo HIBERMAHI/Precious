@@ -19,32 +19,54 @@ router.get("/", (req, res) => {
 });
 
 router.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login", { error: null });
 });
 
-router.post(
-  "/login",
-  passport.authenticate("local", { failureRedirect: "/login" }),
-  (req, res) => {
-    if (req.user.role === "admin") {
-      res.redirect("/admindash");
-    } else if (req.user.role === "salesattendant") {
-      res.redirect("/ssales");
-    } else if (req.user.role === "storemanager") {
-      res.redirect("/storedash");
-    } else {
-      res.redirect("/");
-    }
-  },
-);
+router.post("/login", (req, res, next) => {
+  const { fullname, email, password } = req.body;
 
+  // 1. Manually check if fields are empty (Basic Validation)
+  if (!fullname || !email || !password) {
+    return res.render("login", { error: "All fields are required." });
+  }
+
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+
+    // 2. If Passport says no user found, handle that error
+    if (!user) {
+      return res.render("login", {
+        error: info ? info.message : "Invalid credentials.",
+      });
+    }
+
+    // 3. MANUAL VALIDATION: Check if the Name matches the user found
+    if (user.fullname !== fullname) {
+      return res.render("login", {
+        error: "The Full Name provided does not match our records.",
+      });
+    }
+
+    // 4. Manually establish session
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+
+      // 5. Role-based Redirection
+      if (user.role === "admin") return res.redirect("/admindash");
+      if (user.role === "salesattendant") return res.redirect("/ssales");
+      if (user.role === "storemanager") return res.redirect("/storedash");
+
+      return res.redirect("/");
+    });
+  })(req, res, next);
+});
 // logout
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/");
+    res.redirect("login");
   });
 });
 

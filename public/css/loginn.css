@@ -17,7 +17,7 @@ background-color: rgb(1, 1, 21);
 .card {
   width: 100%;
   max-width: 400px;
-  background: #ffffff;
+  background: #f4e6e6;
   padding: 30px 25px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
@@ -42,7 +42,7 @@ background-color: rgb(1, 1, 21);
 
 .para {
   font-size: 13px;
-  color: #777;
+  color: #393737;
   margin: 5px 0 20px 0;
 }
 
@@ -111,4 +111,15 @@ button:hover {
 
 .login a:hover {
   text-decoration: underline;
+}
+
+.error-message {
+  color: #d93025; /* Red color for errors */
+  background-color: #fce8e6;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  border: 1px solid #f5c6cb;
+  text-align: center;
 }

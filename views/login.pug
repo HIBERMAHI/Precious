@@ -5,6 +5,8 @@ head
   title Login - Nyondo
   link(rel='stylesheet' href='/css/loginn.css')
 .card
+  if error
+    p.error-message= error
   h4 Sign In to get started
   p.para Login to access your dashboard
   // FORM

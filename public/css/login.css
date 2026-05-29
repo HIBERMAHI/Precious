@@ -22,7 +22,7 @@ body {
 }
 
 .card {
-    background: #ffffff;
+    background: #f9eeee;
     width: 100%;
     max-width: 550px;
     padding: 40px;
@@ -40,13 +40,13 @@ body {
 }
 
 h2 {
-    color: #1e5387;
+    color: #0a457f;
     font-size: 24px;
     margin-bottom: 5px;
 }
 
 .subtitle {
-    color: #666;
+    color: #545252;
     font-size: 14px;
 }
 
@@ -80,7 +80,7 @@ label {
     margin-bottom: 8px;
     font-size: 13px;
     font-weight: 600;
-    color:rgb(80, 80, 153);
+    color:rgb(6, 6, 99);
 }
 
 /* Input & Icon Styling */
@@ -152,7 +152,7 @@ input:focus, select:focus {
 }
 
 .footer-links a {
-    color: #1a2b3c;
+    color: #031424;
     text-decoration: none;
     font-weight: 600;
 }
