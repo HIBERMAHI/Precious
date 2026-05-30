@@ -5,7 +5,6 @@ html
     link(rel='stylesheet' href='/css/suppliers.css') 
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
   body
-    // ================= SIDEBAR =================
     .sidebar
       .logo
         | ⚒ NYONDO HARDWARE
@@ -30,12 +29,9 @@ html
           a(href='logout')
             i.fas.fa-sign-out-alt
             |  Logout
-
-    // ================= MAIN CONTENT =================
     .main
       h1 Supplier Credit Management
-      
-      // ================= SUMMARY CARDS =================
+    
       .dashboard-stats
         .card.stat-qty
           h3 Pending Quantities
@@ -50,7 +46,6 @@ html
           //- Added (|| 0) safety check to prevent the toLocaleString crash
           p.stat-value #{(stats.totalPendingDebt || 0).toLocaleString()}
 
-      // ================= SUPPLIER TABLE =================
       table.supplier-table
         thead
           tr
@@ -60,6 +55,7 @@ html
             th Products
             th Factories
             th Total Debt (UGX)
+            //- th Date
             th Status
             th Actions
         tbody
@@ -80,6 +76,7 @@ html
                         i.fas.fa-industry 
                         |  #{fact}
                 td #{sup.totalDebt.toLocaleString()}
+                //- td #{new Date(sup.date).toLocaleString()}
                 td
                   //- If pendingCount > 0, there is still debt to pay
                   if sup.pendingCount > 0
@@ -87,14 +84,14 @@ html
                   else
                     span.status-paid(style="color: green; font-weight: bold;") Paid
                 td.actions
-                  //- ONLY show Pay button if there are pending items in this batch
+              
                   if sup.pendingCount > 0
-                    form(action=`/pay-supplier/${sup.supplierName}`, method="POST" style="display:inline;")
-                      input(type="hidden" name="batchId" value=sup.paymentBatchId)
-                      button.btn-action.btn-pay(type="submit" onclick='return confirm("Confirm payment for ' + sup.supplierName + '?")')
-                        i.fas.fa-check-circle
-                        |  Pay
-                  
+                      form(action=`/pay-supplier/${sup.supplierName}`, method="POST" style="display:inline;")
+                        input(type="hidden" name="batchId" value=sup.paymentBatchId)
+                        button.btn-action.btn-pay(type="submit" onclick=`return confirm("Confirm payment for ${sup.supplierName}?")`)
+                          i.fas.fa-check-circle
+                          |  Pay
+                
                   //- Evidence link isolates the specific batch
                   a.btn-action.btn-evidence(href=`/evidence/${sup.supplierName}?batchId=${sup.paymentBatchId}`, target="_blank")
                     i.fas.fa-file-alt

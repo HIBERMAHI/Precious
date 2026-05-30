@@ -263,6 +263,7 @@ router.post(
       const finalPaymentMethod = paymentMethod || "Cash";
       const finalPaymentStatus =
         finalPaymentMethod === "Cash" ? "Paid" : paymentStatus;
+      const settlementDate = finalPaymentStatus === "Paid" ? new Date() : null;
 
       // Generate a unique ID for this specific delivery batch
       const generatedBatchId = Date.now().toString();
@@ -278,6 +279,7 @@ router.post(
         sellingPrice: sell,
         paymentMethod: finalPaymentMethod,
         paymentStatus: finalPaymentStatus,
+        settlementDate: settlementDate,
         // Assign the unique batch ID so this delivery is isolated
         paymentBatchId: generatedBatchId,
         factory,
@@ -403,11 +405,11 @@ router.post("/deleted/:id", isstoremanagerOradmin, async (req, res) => {
 });
 
 // supplier
-// supplier
 router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
   try {
     // 1. Group by Batch ID to keep every delivery as a separate row
     const supplierDebts = await Stock.aggregate([
+      // { $match: { paymentStatus: "Pending" } },
       {
         $group: {
           _id: "$paymentBatchId",
@@ -478,11 +480,12 @@ router.post(
         {
           supplierName: supplierName,
           paymentBatchId: batchId,
+          paymentStatus: "Pending", //
         },
         {
           $set: {
             paymentStatus: "Paid",
-            settlementDate: new Date(), // Captures the exact moment payment is finalized
+            settlementDate: new Date(),
           },
         },
       );

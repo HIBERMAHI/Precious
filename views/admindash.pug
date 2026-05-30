@@ -38,7 +38,7 @@ html
         li
           a(href='regicredit')
             i.fas.fa-piggy-bank
-            |   Deposits
+            |   Customers
 
         li
           a(href='logout')
@@ -113,6 +113,7 @@ html
               th #
               th Name
               th Role
+              th NIN
               th Phone
               th Actions
           tbody
@@ -121,6 +122,7 @@ html
                 tr
                   td #{index + 1}
                   td #{user.fullname}
+                  td #{user.nin}
                   td #{user.role}
                   td #{user.phone}
                   td

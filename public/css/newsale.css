@@ -314,10 +314,46 @@ tbody tr:hover{
   color:#2563eb;
 }
 
-.edit-btn{
-  color:#f59e0b;
+.edit-btn,
+.delete-btn{
+  width:22px;
+  height:22px;
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
+.edit-btn{
+  background:#f59e0b !important;
+  color:white !important;
+}
+
+.delete-btn{
+  background:#ef4444 !important;
+  color:white !important;
+}
+
+.edit-btn i,
+.delete-btn i{
+  color:white !important;
+  font-size:12px;
+}
+
+.edit-btn:hover{
+  background:#d97706 !important;
+}
+
+.delete-btn:hover{
+  background:#dc2626 !important;
+}
+
+.actions-cell{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+}
 
 .action-btn:hover{
   transform:scale(1.05);
@@ -363,24 +399,4 @@ tbody tr:hover{
   .recent-sales-card{
     padding:20px;
   }
-}
-.delete-btn{
-  background:#ef4444 !important;
-  color:white !important;
-  border:none !important;
-  padding:7px 10px;
-  border-radius:6px;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.delete-btn:hover{
-  background:#dc2626 !important;
-}
-
-/* makes the trash icon white */
-.delete-btn i{
-  color:white !important;
 }

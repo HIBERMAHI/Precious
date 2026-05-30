@@ -153,10 +153,10 @@ html
 
                   td.actions-cell
                     a.action-btn-print(href=`/deposit/receipt/${d._id}` target="_blank" title="Print Receipt")
-                      span.action-label View Receipt
+                      span.action-label  Receipt
                       i.fas.fa-print
-                    
-                    a.action-btn-edit(href=`/deposit/edit/${d._id}` title="Edit Ledger / Pay Balance")
+                    if d.balance > 0
+                     a.action-btn-edit(href=`/deposit/edit/${d._id}` title="Edit Ledger / Pay Balance")
                       span.action-label Edit
                       i.fas.fa-edit
                     
