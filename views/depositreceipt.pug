@@ -49,6 +49,13 @@ html
 
                 span.customer-value
                   | #{deposit.customer.fullName}
+              .customer-row
+                span.customer-label Transport Mode :
+                span.customer-value
+                  if deposit.customer.hasOwnTransport
+                    | Customer Own Transport (Exempt)
+                  else
+                    | Delivery Required
 
           hr.thick-line
           .receipt-description-header

@@ -66,9 +66,17 @@ html(lang="en")
                 label NIN (14 Characters)
                 .input-field
                   i.fas.fa-id-card
-                  input#nin(type='text' name='nin' placeholder='Exactly 14 characters' required minlength='14' maxlength='14')
-                span#ninError.inline-error.hidden Must be 14 uppercase letters/numbers.
-
+                  input#nin(
+                    type='text' 
+                    name='nin' 
+                    placeholder='CM0123456789AB' 
+                    required 
+                    minlength='14' 
+                    maxlength='14' 
+                    pattern='^(CM|CF)[0-9]{2}[A-Z0-9]{10}$'
+                    title='Must start with CM or CF, followed by 2 digits and 10 alphanumeric characters.'
+                  )
+                span#ninError.inline-error.hidden Format: CM/CF + 2 digits + 10 chars.
               .input-group
                 label Phone (+256...)
                 .input-field
@@ -89,7 +97,10 @@ html(lang="en")
                   i.fas.fa-truck-fast
                   input#distance(type='number' name='distanceFromStore' placeholder='0' required min='1')
                 span#distanceError.inline-error.hidden Distance must be at least 1 KM.
-
+              .input-group
+                label(style="display: flex; align-items: center; gap: 8px;")
+                  input(type='checkbox' name='hasOwnTransport' id='hasOwnTransport' style="width: auto; height: auto;")
+                  | Customer has own transport
               .input-group
                 label Email (Username)
                 .input-field
@@ -97,7 +108,7 @@ html(lang="en")
                   input#email(type='email' name='email' placeholder='customer@gmail.com' required)
                 span#emailError.inline-error.hidden Enter a valid email.
 
-              .input-group.full-width
+              .input-group
                 label Create Password
                 .input-field
                   i.fas.fa-lock
@@ -162,7 +173,7 @@ html(lang="en")
 
       // REAL-TIME VALIDATION
       const rules = {
-        nin: { regex: /^[A-Z0-9]{14}$/, error: 'ninError' },
+        nin: { regex: /^(CM|CF)[0-9]{2}[A-Z0-9]{10}$/, error: 'ninError' },
         phoneNumber: { regex: /^(07\d{8}|\+256\d{9})$/, error: 'phoneError' },
         email: { regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, error: 'emailError' },
         password: { regex: /^.{6,14}$/, error: 'passwordError' },

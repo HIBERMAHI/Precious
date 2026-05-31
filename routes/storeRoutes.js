@@ -515,7 +515,6 @@ router.get(
       const { supplierName } = req.params;
       const { batchId } = req.query;
 
-      // Fetch items belonging to this batch regardless of status
       const items = await Stock.find({
         supplierName: supplierName,
         paymentBatchId: batchId,
@@ -525,10 +524,15 @@ router.get(
         return res.send("No records found for this batch.");
       }
 
-      // Pass the items array to the view
+      // NEW: Calculate the date.
+      // Uses settlementDate if it exists (Paid/Credit), otherwise falls back to createdAt (Cash).
+      const paymentDate = items.settlementDate || items.createdAt;
+
+      // Pass the items, supplierName, AND the new paymentDate to the view
       res.render("evidence", {
         items,
         supplierName,
+        paymentDate,
       });
     } catch (error) {
       console.error("VOUCHER ROUTE ERROR:", error.message);

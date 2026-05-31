@@ -27,9 +27,12 @@ html(lang="en")
     .sidebar
       .logo: span ⚒ NYONDO HARDWARE
       ul
-        li: a(href='/dashboard'): i.fas.fa-home | Dashboard
-        li: a(href='/regicredit').active: i.fas.fa-user-edit | Edit Customer
-
+        li: a(href='/admindash') 
+          i.fas.fa-home 
+          span Dashboard
+        li: a(href='/regicredit').active 
+          i.fas.fa-user-edit 
+          span Edit Customer
     .main-content
       .container
         .register-box
@@ -71,6 +74,12 @@ html(lang="en")
                 .input-field
                   i.fas.fa-truck-fast
                   input(type='number' name='distanceFromStore' value=customer.distanceFromStore required min='1')
+                  
+              .input-group
+                label Transport Preference
+                .input-field(style="display: flex; align-items: center; gap: 10px; border: none; padding: 0;")
+                  input(type='checkbox' name='hasOwnTransport' id='hasOwnTransport' checked=customer.hasOwnTransport style="width: 18px; height: 18px; cursor: pointer; margin: 0;")
+                  label(for='hasOwnTransport' style="margin: 0; font-weight: normal;") Customer uses their own transport
 
               .input-group
                 label Email (Locked)

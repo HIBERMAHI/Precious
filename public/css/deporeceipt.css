@@ -24,7 +24,7 @@ body {
 
 .receipt-card {
   width: 100%;
-  max-width: 720px;
+  max-width: 580px;
   background: #ffffff;
   border-radius: 16px;
   overflow: hidden;

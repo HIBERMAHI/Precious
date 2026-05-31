@@ -29,8 +29,8 @@ const registrationSchema = new mongoose.Schema({
     trim: true,
     unique: true,
     match: [
-      /^[A-Z0-9]{14}$/,
-      "NIN must be exactly 14 characters (Numbers and Uppercase letters)",
+      /^(CM|CF)[0-9]{2}[A-Z0-9]{10}$/,
+      "NIN must start with CM or CF, followed by 2 digits (birth year) and 10 alphanumeric characters (14 total).",
     ],
   },
   role: {

@@ -42,9 +42,18 @@ html(lang="en")
             
             .form-field
               label NIN
-              .input-group
-                i.fas.fa-id-card.field-icon
-                input(type='text' name='nin' placeholder='14 Characters' required minlength='14' maxlength='14')
+                .input-group
+                  i.fas.fa-id-card.field-icon
+                  input(
+                    type='text' 
+                    name='nin' 
+                    placeholder='CM0123456789AB' 
+                    required 
+                    minlength='14' 
+                    maxlength='14' 
+                    pattern='^(CM|CF)[0-9]{2}[A-Z0-9]{10}$' 
+                    title='NIN must start with CM or CF, followed by 2 digits and 10 alphanumeric characters.'
+                  )
             
             .form-field.full-width
               label System Role

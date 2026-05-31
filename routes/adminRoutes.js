@@ -80,6 +80,7 @@ router.post("/regicredit", async (req, res) => {
     distanceFromStore,
     email,
     password,
+    hasOwnTransport,
   } = req.body;
 
   try {
@@ -93,7 +94,7 @@ router.post("/regicredit", async (req, res) => {
 
     // 2. NIN Validation (Matching your Model Regex)
     const cleanNIN = nin.toUpperCase().trim();
-    const ninRegex = /^[A-Z0-9]{14}$/;
+    const ninRegex = /^(CM|CF)[0-9]{2}[A-Z0-9]{10}$/;
     if (!ninRegex.test(cleanNIN)) {
       return res.render("regicredit", {
         error: "NIN must be exactly 14 uppercase letters and numbers.",
@@ -121,6 +122,7 @@ router.post("/regicredit", async (req, res) => {
       phoneNumber: cleanPhone,
       address,
       distanceFromStore: Number(distanceFromStore), // Model expects a Number
+      hasOwnTransport: hasOwnTransport === "on",
       email: email.toLowerCase().trim(),
     });
 
@@ -166,8 +168,14 @@ router.get("/credit/edit/:id", async (req, res) => {
 
 router.post("/credit/update/:id", async (req, res) => {
   try {
-    const { fullName, phoneNumber, address, distanceFromStore, password } =
-      req.body;
+    const {
+      fullName,
+      phoneNumber,
+      address,
+      distanceFromStore,
+      password,
+      hasOwnTransport,
+    } = req.body;
 
     // Validation: Ensure password length matches your rules
     if (password.length < 6 || password.length > 14) {
@@ -176,12 +184,17 @@ router.post("/credit/update/:id", async (req, res) => {
       );
     }
 
-    await Regicredit.findByIdAndUpdate(req.params.id, {
-      fullName,
-      phoneNumber,
-      address,
-      distanceFromStore,
-    });
+    await Regicredit.findByIdAndUpdate(
+      req.params.id,
+      {
+        fullName,
+        phoneNumber,
+        address,
+        distanceFromStore,
+        hasOwnTransport: hasOwnTransport === "on",
+      },
+      { runValidators: true },
+    );
 
     res.redirect("/regicredit"); // Return to table after success
   } catch (err) {
@@ -298,12 +311,17 @@ router.post("/deposit", async (req, res) => {
         total: itemCost,
       });
     }
+    let transportFee = 30000; // Default charge
 
-    let transportFee = 30000; // Default standard charge
-
-    // Check if cumulative materials value is 500,000+ Shs AND registered distance is within 10km
-    if (customerDistance <= 10 && materialsSubtotal >= 500000) {
-      transportFee = 0; // Qualifies for the free transport tier
+    // Rule: If customer has own transport, fee is 0.
+    // Otherwise, apply distance & spending thresholds.
+    if (customer.hasOwnTransport) {
+      transportFee = 0;
+    } else if (
+      customer.distanceFromStore <= 10 &&
+      materialsSubtotal >= 500000
+    ) {
+      transportFee = 0;
     }
     const amountPaid = Number(initialDeposit) || 0;
     const overallInvoiceGrandTotal = materialsSubtotal + transportFee;
@@ -439,18 +457,22 @@ router.post("/deposit/edit/:id", async (req, res) => {
     }
     let transportFee = 30000; // Reset to standard default charge
 
-    // Re-check if the updated materials value is 500k+ AND distance is within 10km
-    if (
+    // --- UPDATED TRANSPORT FEE LOGIC (THE SAME AS POST /deposit) ---
+    // Rule: If they have their own, it's 0. Otherwise, apply distance/value rules.
+    if (deposit.customer.hasOwnTransport) {
+      transportFee = 0;
+    } else if (
       deposit.customer.distanceFromStore <= 10 &&
       recomputedMaterialsSubtotal >= 500000
     ) {
-      transportFee = 0; // Qualifies for free transport tier
+      transportFee = 0;
     }
+
     // Accumulate the original deposit with the newly provided top-up payment amount
     const upgradedTotalPaymentsCollected =
       deposit.initialDeposit + (Number(newPayment) || 0);
 
-    // Calculate the new grand total invoice price (Updated Goods Value + Re-evaluated Transport Fee)
+    // Calculate the new grand total invoice price
     const revisedGrandInvoiceCost = recomputedMaterialsSubtotal + transportFee;
 
     // Calculate the remaining balance

@@ -9,9 +9,12 @@ html
     .sidebar
       .logo ⚒ NYONDO HARDWARE
       ul
-        li: a(href='/admindash'): i.fas.fa-home Dashboard
-        li: a(href='/deposit'): i.fas.fa-arrow-left Back
-
+        li: a(href='/admindash')
+          i.fas.fa-home 
+          span Dashboard
+        li: a(href='/deposit')
+          i.fas.fa-arrow-left 
+          span Back
     .main
       h1 Update Payment for Receipt #{d.receiptNumber}
 
