@@ -70,11 +70,10 @@ html
           .field
             label Unit
             select(name='unit')
+              option(value=''  disabled selected)
               option(value='Bags') Bags
               option(value='Pieces') Pieces
               option(value='Boxes') Boxes
-              option(value='Litres') Litres
-              option(value='Rolls') Rolls
             .error-message-inline
           .field
             label Buying Price
@@ -87,12 +86,14 @@ html
           .field
             label Payment Method
             select(name='paymentMethod'  id="paymentMethod")
+              option(value=''  disabled selected)
               option(value='Cash') Cash
               option(value='Credit') Credit
             .error-message-inline
           .field
             label Payment Status
             select(name='paymentStatus'  id="paymentStatus")
+              option(value='' disabled selected)
               option(value='Pending') Not paid
               option(value='Paid') Paid
             .error-message-inline
@@ -169,5 +170,161 @@ html
           statusSelect.disabled = false; // Makes it editable for 'Credit'
         }
       });
+      
       // This line runs once when the page loads, forcing the logic to check the initial state.
       methodSelect.dispatchEvent(new Event('change'));
+            // ========== SUBMIT VALIDATION FOR RED BORDERS ==========
+      
+      // Force disable browser native validation
+      const stockForm = document.querySelector('.stock-form');
+      if (stockForm) {
+        stockForm.setAttribute('novalidate', true);
+        stockForm.noValidate = true;
+      }
+      
+      function addRedBorder(field) {
+          field.style.border = "2px solid #ff4d4d";
+          field.style.backgroundColor = "#fff8f8";
+          field.classList.add('invalid-border');
+      }
+      
+      function removeRedBorder(field) {
+          field.style.border = "1px solid #ddd";
+          field.style.backgroundColor = "";
+          field.classList.remove('invalid-border');
+      }
+      
+      function isEmpty(field) {
+          if (field.tagName === 'SELECT') {
+              return !field.value || field.value === '';
+          }
+          return field.value.trim() === '';
+      }
+      
+      function showErrorMessage(field, message) {
+          let errorContainer = field.nextElementSibling;
+          if (errorContainer && errorContainer.classList.contains('error-message-inline')) {
+              errorContainer.textContent = message;
+          }
+      }
+      
+      function clearErrorMessage(field) {
+          let errorContainer = field.nextElementSibling;
+          if (errorContainer && errorContainer.classList.contains('error-message-inline')) {
+              errorContainer.textContent = '';
+          }
+      }
+      
+      // Validate on submit
+      if (stockForm) {
+          stockForm.addEventListener('submit', function(e) {
+              let isValid = true;
+              const allFields = stockForm.querySelectorAll('input:not([type="file"]), select');
+              
+              allFields.forEach(field => {
+                  if (field.disabled) return;
+                  
+                  if (isEmpty(field)) {
+                      isValid = false;
+                      addRedBorder(field);
+                      
+                      let message = '';
+                      switch(field.name) {
+                          case 'productName': message = 'Please select a product'; break;
+                          case 'category': message = 'Please select a category'; break;
+                          case 'quantity': message = 'Please enter quantity'; break;
+                          case 'buyingPrice': message = 'Please enter buying price'; break;
+                          case 'sellingPrice': message = 'Please enter selling price'; break;
+                          case 'supplierName': message = 'Please enter supplier name'; break;
+                          case 'supplierContact': message = 'Please enter supplier contact'; break;
+                          default: message = 'This field is required';
+                      }
+                      showErrorMessage(field, message);
+                  } 
+                  else if (field.id === 'sellingPrice') {
+                      const buyPrice = document.getElementById('buyingPrice');
+                      if (buyPrice && buyPrice.value && parseFloat(field.value) <= parseFloat(buyPrice.value)) {
+                          isValid = false;
+                          addRedBorder(field);
+                          showErrorMessage(field, 'Selling price must be higher than buying price');
+                      } else {
+                          removeRedBorder(field);
+                          clearErrorMessage(field);
+                      }
+                  }
+                  else if (field.pattern && field.pattern.length > 0) {
+                      const regex = new RegExp('^' + field.pattern + '$');
+                      if (!regex.test(field.value)) {
+                          isValid = false;
+                          addRedBorder(field);
+                          showErrorMessage(field, field.getAttribute('data-custom-error') || 'Invalid format');
+                      } else {
+                          removeRedBorder(field);
+                          clearErrorMessage(field);
+                      }
+                  }
+                  else {
+                      removeRedBorder(field);
+                      clearErrorMessage(field);
+                  }
+              });
+              
+              if (!isValid) {
+                  e.preventDefault();
+                  const firstError = stockForm.querySelector('.invalid-border');
+                  if (firstError) {
+                      firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+              }
+          });
+      }
+      
+      // Remove red border when user starts typing
+      const allFields = document.querySelectorAll('.stock-form input:not([type="file"]), .stock-form select');
+      allFields.forEach(field => {
+          field.addEventListener('input', function() {
+              if (this.value.trim() !== '') {
+                  removeRedBorder(this);
+                  clearErrorMessage(this);
+              }
+          });
+          field.addEventListener('change', function() {
+              if (this.value.trim() !== '') {
+                  removeRedBorder(this);
+                  clearErrorMessage(this);
+              }
+          });
+          field.addEventListener('focus', function() {
+              removeRedBorder(this);
+              clearErrorMessage(this);
+          });
+      });
+      
+      // Special validation for selling price when buying price changes
+      const buyingPrice = document.getElementById('buyingPrice');
+      const sellingPrice = document.getElementById('sellingPrice');
+      
+      if (buyingPrice && sellingPrice) {
+          buyingPrice.addEventListener('input', function() {
+              if (sellingPrice.value && parseFloat(sellingPrice.value) <= parseFloat(this.value)) {
+                  addRedBorder(sellingPrice);
+                  showErrorMessage(sellingPrice, 'Selling price must be higher than buying price');
+              } else if (sellingPrice.value) {
+                  removeRedBorder(sellingPrice);
+                  clearErrorMessage(sellingPrice);
+              }
+          });
+          
+          sellingPrice.addEventListener('input', function() {
+              const buyPrice = document.getElementById('buyingPrice');
+              if (buyPrice.value && parseFloat(this.value) <= parseFloat(buyPrice.value)) {
+                  addRedBorder(this);
+                  showErrorMessage(this, 'Selling price must be higher than buying price');
+              } else {
+                  removeRedBorder(this);
+                  clearErrorMessage(this);
+              }
+          });
+      }
+      
+      // ========== END OF SUBMIT VALIDATION ==========

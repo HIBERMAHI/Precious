@@ -219,7 +219,21 @@ background: rgba(250, 204, 21, 0.12);
     opacity: 0.7;
     transform: translateX(4px);
 }
+/* Red border for invalid fields */
+.invalid-border,
+input.invalid-border,
+select.invalid-border {
+    border: 2px solid #ff4d4d !important;
+    background-color: #fff8f8 !important;
+}
 
+/* Error message styling */
+.error-message-inline {
+    color: #ff4d4d;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    min-height: 1em;
+}
 /* ================= RESPONSIVE ================= */
 
 @media(max-width: 1100px){
