@@ -117,10 +117,6 @@ body {
     font-weight: bold;
 }
 
-/* ==========================
-   FORM LAYOUT
-========================== */
-
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -208,10 +204,6 @@ body {
     margin-top: 5px;
 }
 
-/* ==========================
-   CHECKBOX SECTION
-========================== */
-
 .checkbox-group {
     grid-column: span 3;
 
@@ -250,12 +242,16 @@ input[type="checkbox"] {
     transform: scale(1.5);
 
     cursor: pointer;
+}.field-error {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
 }
 
-/* ==========================
-   RESPONSIVE
-========================== */
-
+.field-error i {
+    margin-right: 5px;
+}
 @media (max-width: 1200px) {
 
     .grid-container {
@@ -432,6 +428,17 @@ tbody tr:hover {
 .delete-btn:hover {
     background: #dc2626;
     color: white;
+}
+.input-group {
+    margin-bottom: 15px;
+}
+
+.field-error {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+    width: 100%;
 }
 
 @media (max-width: 900px) {

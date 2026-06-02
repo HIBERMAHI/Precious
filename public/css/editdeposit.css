@@ -173,6 +173,12 @@ body{
   border-radius:16px;
   font-weight:800;
 }
+.field-error {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
 @media(max-width:900px){
   .form-inline-footer-group{
     grid-template-columns:1fr;

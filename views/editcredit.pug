@@ -103,7 +103,6 @@ html(lang="en")
             button.btn(type='submit')
               i.fas.fa-save
               span Update Information
-
     script.
       document.addEventListener('DOMContentLoaded', () => {
         const errorBox = document.getElementById('errorBox');
@@ -113,52 +112,159 @@ html(lang="en")
         const phoneInput = document.getElementById('phoneNumber');
         const passwordField = document.getElementById('password');
         const togglePassword = document.getElementById('togglePassword');
+        const fullNameInput = document.querySelector('input[name="fullName"]');
+        const addressInput = document.querySelector('input[name="address"]');
+        const distanceInput = document.querySelector('input[name="distanceFromStore"]');
 
-        function updateUI(msg, isValid) {
-          errorBox.classList.remove('hidden');
-          errorMessage.textContent = msg;
-          if (isValid) {
-            errorBox.classList.add('success-color');
-            errorIcon.className = 'fas fa-check-circle';
-          } else {
-            errorBox.classList.remove('success-color');
-            errorIcon.className = 'fas fa-circle-exclamation';
-          }
+        // Force disable browser native validation
+        editForm.setAttribute('novalidate', true);
+        editForm.noValidate = true;
+
+        function addRedBorder(field) {
+            field.style.border = "1px solid #dc2626";
+            field.style.backgroundColor = "#fff8f8";
         }
 
-        function validate() {
-          const phoneRegex = /^(?:07\d{8}|\+256\d{9})$/;
-          const isPhoneValid = phoneRegex.test(phoneInput.value);
-          const isPassValid = passwordField.value.length >= 6 && passwordField.value.length <= 14;
-
-          if (!isPhoneValid) {
-            updateUI("Phone must start with 07 or +256.", false);
-            return false;
-          } else if (!isPassValid) {
-            updateUI("Password must be 6-14 characters.", false);
-            return false;
-          } else {
-            updateUI("Everything looks good!", true);
-            return true;
-          }
+        function removeRedBorder(field) {
+            field.style.border = "1px solid #ccc";
+            field.style.backgroundColor = "";
         }
 
-        // Toggle Password
-        togglePassword.addEventListener('click', () => {
-          const type = passwordField.type === 'password' ? 'text' : 'password';
-          passwordField.type = type;
-          togglePassword.classList.toggle('fa-eye-slash');
-        });
+               function showFieldError(field, message) {
+            // Remove existing error
+            let errorSpan = field.closest('.input-group').querySelector('.field-error');
+            if (errorSpan) errorSpan.remove();
+            
+            // Create new error message
+            errorSpan = document.createElement('span');
+            errorSpan.className = 'field-error';
+            errorSpan.style.cssText = 'color: #dc2626; font-size: 12px; margin-top: 5px; display: block;';
+            errorSpan.innerHTML = `<i class="fas fa-exclamation-circle" style="margin-right: 5px;"></i>${message}`;
+            
+            // Add error message to the input-group (outside the input-field)
+            const inputGroup = field.closest('.input-group');
+            inputGroup.appendChild(errorSpan);
+        }
 
-        // Validation on typing
-        [phoneInput, passwordField].forEach(input => {
-          input.addEventListener('input', validate);
-        });
+        function removeFieldError(field) {
+            const errorSpan = field.closest('.input-group').querySelector('.field-error');
+            if (errorSpan) errorSpan.remove();
+        }
+
+        function isEmpty(field) {
+            return field.value.trim() === '';
+        }
+
+        function validateField(field, fieldName) {
+            if (isEmpty(field)) {
+                addRedBorder(field);
+                showFieldError(field, `${fieldName} is required`);
+                return false;
+            } else {
+                removeRedBorder(field);
+                removeFieldError(field);
+                return true;
+            }
+        }
+
+        function validatePhone() {
+            const phoneRegex = /^(?:07\d{8}|\+256\d{9})$/;
+            if (isEmpty(phoneInput)) {
+                addRedBorder(phoneInput);
+                showFieldError(phoneInput, 'Phone number is required');
+                return false;
+            } else if (!phoneRegex.test(phoneInput.value)) {
+                addRedBorder(phoneInput);
+                showFieldError(phoneInput, 'Phone must start with 07 or +256 (e.g., 07XXXXXXXX or +256XXXXXXXXX)');
+                return false;
+            } else {
+                removeRedBorder(phoneInput);
+                removeFieldError(phoneInput);
+                return true;
+            }
+        }
+
+        function validatePassword() {
+            if (isEmpty(passwordField)) {
+                addRedBorder(passwordField);
+                showFieldError(passwordField, 'Password is required');
+                return false;
+            } else if (passwordField.value.length < 6 || passwordField.value.length > 14) {
+                addRedBorder(passwordField);
+                showFieldError(passwordField, 'Password must be 6-14 characters');
+                return false;
+            } else {
+                removeRedBorder(passwordField);
+                removeFieldError(passwordField);
+                return true;
+            }
+        }
+
+        function validateDistance() {
+            if (isEmpty(distanceInput)) {
+                addRedBorder(distanceInput);
+                showFieldError(distanceInput, 'Distance is required');
+                return false;
+            } else if (parseInt(distanceInput.value) < 1) {
+                addRedBorder(distanceInput);
+                showFieldError(distanceInput, 'Distance must be at least 1 KM');
+                return false;
+            } else {
+                removeRedBorder(distanceInput);
+                removeFieldError(distanceInput);
+                return true;
+            }
+        }
+
+        function validateAll() {
+            const isFullNameValid = validateField(fullNameInput, 'Full name');
+            const isAddressValid = validateField(addressInput, 'Address');
+            const isDistanceValid = validateDistance();
+            const isPhoneValid = validatePhone();
+            const isPasswordValid = validatePassword();
+
+            const isValid = isFullNameValid && isAddressValid && isDistanceValid && isPhoneValid && isPasswordValid;
+
+            if (isValid) {
+                errorBox.classList.remove('hidden');
+                errorBox.classList.add('success-color');
+                errorMessage.textContent = 'Everything looks good!';
+                errorIcon.className = 'fas fa-check-circle';
+            } else {
+                errorBox.classList.remove('hidden');
+                errorBox.classList.remove('success-color');
+                errorMessage.textContent = 'Please fix the errors below';
+                errorIcon.className = 'fas fa-circle-exclamation';
+            }
+            
+            return isValid;
+        }
+
+        // Toggle Password visibility
+        if (togglePassword) {
+            togglePassword.addEventListener('click', () => {
+                const type = passwordField.type === 'password' ? 'text' : 'password';
+                passwordField.type = type;
+                togglePassword.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Real-time validation on input
+        fullNameInput.addEventListener('input', () => validateField(fullNameInput, 'Full name'));
+        addressInput.addEventListener('input', () => validateField(addressInput, 'Address'));
+        distanceInput.addEventListener('input', validateDistance);
+        phoneInput.addEventListener('input', validatePhone);
+        passwordField.addEventListener('input', validatePassword);
 
         // Final Submit Check
         editForm.addEventListener('submit', (e) => {
-          if (!validate()) {
-            e.preventDefault();
-          }
+            if (!validateAll()) {
+                e.preventDefault();
+                // Scroll to first error
+                const firstError = document.querySelector('input[style*="border: 1px solid #dc2626"]');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
         });
       });

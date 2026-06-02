@@ -12,6 +12,41 @@ body{
   color:#1e293b;
   min-height:100vh;
 }
+/* Make sidebar fixed and body scrollable */
+body {
+  display: flex;
+  background: #eef2f7;
+  color: #1e293b;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevents double scrollbars */
+}
+
+.sidebar {
+  width: 240px;
+  background: #010819;
+  height: 100vh; /* Full viewport height */
+  padding: 25px 18px;
+  color: #facc15;
+  position: fixed; /* Fixes sidebar in place */
+  top: 0;
+  left: 0;
+  overflow-y: auto; /* Allows sidebar to scroll if content is too long */
+  z-index: 100;
+}
+
+/* Main content area that scrolls */
+.main {
+  flex: 1;
+  padding: 30px;
+  margin-left: 240px; /* Same as sidebar width */
+  height: 100vh;
+  overflow-y: auto; /* Makes main content scrollable */
+  scroll-behavior: smooth;
+}
+
+
 
 .sidebar{
   width:240px;
@@ -381,6 +416,17 @@ select:invalid.input-error {
     background-color: #fff8f8 !important;
 }
 
+/* Add this to your existing CSS file */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+}
+
+.main {
+  margin-left: 240px;
+}
 @media(max-width:1100px){
 
   .form-grid{

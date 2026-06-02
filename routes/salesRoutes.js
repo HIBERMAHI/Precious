@@ -486,7 +486,7 @@ router.get("/stockview", issalesattendantOradmin, async (req, res) => {
 // sales report
 router.get("/weeklyReport", issalesattendantOradmin, async (req, res) => {
   try {
-    // 1. Calculate the start of the week (last 7 days from May 21, 2026)
+    // 1. Calculate the start of the week 
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 

@@ -53,7 +53,7 @@ html
                   input.readonly-input(type="text" value=d.productType readonly)
                 .form-group.quantity-selection-group
                   label Quantity Wanted
-                  input.quantity-input(type='number' name='quantity' value=d.quantity min="1" required)
+                  input.quantity-input(type='number' name='quantity' min="1" )
 
           //- NEW INLINE CONTAINER FOR THE LAST THREE ELEMENTS
           .form-inline-footer-group
@@ -99,4 +99,73 @@ html
             }, { once: true });
           });
         }
+              // ========== QUANTITY FIELD VALIDATION ==========
+      
+      // Force disable browser native validation
+      const depositForm = document.getElementById('editDepositForm');
+      if (depositForm) {
+        depositForm.setAttribute('novalidate', true);
+        depositForm.noValidate = true;
+      }
+      
+      function addRedBorder(field) {
+          field.style.border = "1px solid #dc2626";
+          field.style.backgroundColor = "#fff8f8";
+      }
+      
+      function removeRedBorder(field) {
+          field.style.border = "1px solid #ddd";
+          field.style.backgroundColor = "";
+      }
+      
+      function showFieldError(field, message) {
+          const existingError = field.parentElement.querySelector('.field-error');
+          if (existingError) existingError.remove();
+          
+          const errorSpan = document.createElement('span');
+          errorSpan.className = 'field-error';
+          errorSpan.style.cssText = 'color: #dc2626; font-size: 12px; margin-top: 5px; display: block;';
+          errorSpan.innerHTML = `<i class="fas fa-exclamation-circle" style="margin-right: 5px;"></i>${message}`;
+          field.parentElement.appendChild(errorSpan);
+      }
+      
+      function removeFieldError(field) {
+          const error = field.parentElement.querySelector('.field-error');
+          if (error) error.remove();
+      }
+      
+      // Validate on submit - only quantity
+      if (depositForm) {
+          depositForm.addEventListener('submit', function(e) {
+              let isValid = true;
+              const quantityInputs = document.querySelectorAll('.quantity-input');
+              
+              quantityInputs.forEach(input => {
+                  if (!input.value || input.value.trim() === '' || parseInt(input.value) < 1) {
+                      isValid = false;
+                      addRedBorder(input);
+                      showFieldError(input, 'Please enter a valid quantity');
+                  } else {
+                      removeRedBorder(input);
+                      removeFieldError(input);
+                  }
+              });
+              
+              if (!isValid) {
+                  e.preventDefault();
+              }
+          });
+      }
+      
+      // Remove red border when user starts typing
+      const quantityInputs = document.querySelectorAll('.quantity-input');
+      quantityInputs.forEach(input => {
+          input.addEventListener('input', function() {
+              if (this.value && this.value.trim() !== '' && parseInt(this.value) >= 1) {
+                  removeRedBorder(this);
+                  removeFieldError(this);
+              }
+          });
+      });
+      
       });

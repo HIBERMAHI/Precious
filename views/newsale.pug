@@ -268,7 +268,7 @@ html
           document.addEventListener('change', clearError, { once: true });
         }
 
-                // ========== SUBMIT VALIDATION FOR ALL FIELDS ==========
+                // SUBMIT VALIDATION FOR ALL FIELDS
         
         // Force disable browser native validation
         const saleForm = document.querySelector('form');
@@ -347,20 +347,34 @@ html
                     removeFieldError(deliveryOption);
                 }
                 
-                // Check distance (required if delivery is selected)
+                                // Check distance (required ONLY for delivery)
                 const distance = document.querySelector('input[name="distance"]');
                 if (deliveryOption && deliveryOption.value === 'delivery') {
-                    if (isEmpty(distance) || parseFloat(distance.value) <= 0) {
+                    // Delivery selected - distance is REQUIRED
+                    if (isEmpty(distance)) {
                         isValid = false;
                         addRedBorder(distance);
-                        showFieldError(distance, 'Please enter valid distance (must be greater than 0 for delivery)');
+                        showFieldError(distance, 'Please enter distance for delivery');
+                    } else if (parseFloat(distance.value) <= 0) {
+                        isValid = false;
+                        addRedBorder(distance);
+                        showFieldError(distance, 'Distance must be greater than 0 for delivery');
                     } else {
                         removeRedBorder(distance);
                         removeFieldError(distance);
                     }
                 } else {
-                    removeRedBorder(distance);
-                    removeFieldError(distance);
+                    // Pickup selected - distance is OPTIONAL
+                    // Only validate if user entered something invalid (negative)
+                    if (!isEmpty(distance) && parseFloat(distance.value) < 0) {
+                        isValid = false;
+                        addRedBorder(distance);
+                        showFieldError(distance, 'Distance cannot be negative');
+                    } else {
+                        // No red border for empty distance when pickup is selected
+                        removeRedBorder(distance);
+                        removeFieldError(distance);
+                    }
                 }
                 
                 // Check payment method
@@ -475,5 +489,5 @@ html
             observer.observe(itemsContainer, { childList: true, subtree: true });
         }
         
-        // ========== END OF SUBMIT VALIDATION ==========
+        // END OF SUBMIT VALIDATION 
       });

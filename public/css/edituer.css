@@ -7,7 +7,7 @@
 }
 
 body {
-    background-color: #041119; /* Soft grey-blue background */
+    background-color: #061e2d; /* Soft grey-blue background */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,7 +17,7 @@ body {
 
 /* Card Container */
 .card {
-    background: #ffffff;
+    background: #f4ebeb;
     width: 100%;
     max-width: 450px;
     padding: 2.5rem;

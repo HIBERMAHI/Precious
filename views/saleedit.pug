@@ -7,8 +7,6 @@ html
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css')
 
   body
-
-    // ================= SIDEBAR =================
     .sidebar
       .logo
         | ⚒ NYONDO HARDWARE
@@ -30,7 +28,6 @@ html
             i.fas.fa-sign-out-alt
             |   Logout
 
-    // ================= MAIN =================
     .main
       h1 Sales Edit
 
@@ -43,7 +40,6 @@ html
 
         form(action=`/sale/edit/${sale._id}` method='POST')
 
-          // ================= CUSTOMER DETAILS =================
           .form-grid
             .form-group
               label Customer Name
@@ -65,7 +61,6 @@ html
 
           hr(style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;")
 
-          // ================= ITEMS MULTI-SYSTEM SECTION =================
           .items-section
             .items-header
               h3 Sale Items
@@ -114,7 +109,6 @@ html
 
           hr(style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;")
 
-          // ================= LOGISTICS & CONDITIONS =================
           .form-grid
             .form-group
               label Delivery Option
@@ -131,7 +125,6 @@ html
                 min='0'
               )
 
-          // ================= ACTION BUTTONS =================
           .button-group
             button.register-btn(type='submit')
               i.fas.fa-save
@@ -144,7 +137,6 @@ html
             //-   i.fas.fa-receipt
             //-   |   Issue Receipt
 
-    // ================= CLIENT DYNAMICS ENGINE =================
     script.
       // Safely pack stock rows into client scope memory
       const availableStocks = !{JSON.stringify(items || [])};
@@ -200,7 +192,7 @@ html
           <div class="form-group">
             <label>Product Name</label>
             <select class="form-input" name="productName" required>
-              \${optionsHTML}
+              ${optionsHTML}
             </select>
           </div>
 

@@ -334,11 +334,16 @@ router.post(
         factory,
         supplierName,
         supplierContact,
+        paymentStatus,
       } = req.body;
 
       const qty = Number(quantity);
       const buy = Number(buyingPrice);
       const sell = Number(sellingPrice);
+      const finalPaymentMethod = paymentMethod || "Cash";
+      const finalPaymentStatus =
+        finalPaymentMethod === "Cash" ? "Paid" : paymentStatus;
+      const settlementDate = finalPaymentStatus === "Paid" ? new Date() : null;
 
       const stock = await Stock.findById(req.params.id);
       if (!stock) return res.status(404).send("Stock record not found");
@@ -369,15 +374,14 @@ router.post(
         unit,
         buyingPrice: buy,
         sellingPrice: sell,
-        paymentMethod,
+        paymentMethod: finalPaymentMethod,
         factory,
         supplierName,
         supplierContact,
+        settlementDate:settlementDate,
         total: (stock.quantity + qty) * buy,
-        // CRITICAL: If the stock was already "Paid",
-        // a refill usually starts as "Pending" debt again.
-        paymentStatus: qty > 0 ? "Pending" : stock.paymentStatus,
-        paymentBatchId: qty > 0 ? null : stock.paymentBatchId,
+        paymentStatus:finalPaymentStatus,
+        paymentBatchId: qty > 0 ? Date.now().toString() : stock.paymentBatchId,
       };
 
       if (req.file) {
@@ -420,7 +424,11 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
           totalDebt: { $sum: "$total" },
           pendingCount: {
             $sum: {
-              $cond: [{ $eq: ["$paymentStatus", "Pending"] }, 1, 0],
+              $cond: [
+                { $in: ["$paymentStatus", ["Pending", "Not paid"]] },
+                1,
+                0,
+              ],
             },
           },
           paymentBatchId: { $first: "$paymentBatchId" },
@@ -438,21 +446,21 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
 
     // 3. Calculate Global Pending Debt
     const debtAgg = await Stock.aggregate([
-      { $match: { paymentStatus: "Pending" } },
+      { $match: { paymentStatus: { $in: ["Pending", "Not paid"] } } },
       { $group: { _id: null, total: { $sum: "$total" } } },
     ]);
     stats.totalPendingDebt = debtAgg.length > 0 ? debtAgg[0].total : 0;
 
     // 4. Calculate Global Pending Quantity
     const qtyAgg = await Stock.aggregate([
-      { $match: { paymentStatus: "Pending" } },
+      { $match: { paymentStatus: { $in: ["Pending", "Not paid"] } } },
       { $group: { _id: null, total: { $sum: "$quantity" } } },
     ]);
     stats.totalPendingQty = qtyAgg.length > 0 ? qtyAgg[0].total : 0;
 
     // 5. Calculate Global Pending Items Count
     const countAgg = await Stock.aggregate([
-      { $match: { paymentStatus: "Pending" } },
+      { $match: { paymentStatus: { $in: ["Pending", "Not paid"] } } },
       { $count: "total" },
     ]);
     stats.totalPendingItems = countAgg.length > 0 ? countAgg[0].total : 0;
@@ -480,7 +488,7 @@ router.post(
         {
           supplierName: supplierName,
           paymentBatchId: batchId,
-          paymentStatus: "Pending", //
+          paymentStatus: { $in: ["Pending", "Not paid"] },
         },
         {
           $set: {
@@ -526,7 +534,7 @@ router.get(
 
       // NEW: Calculate the date.
       // Uses settlementDate if it exists (Paid/Credit), otherwise falls back to createdAt (Cash).
-      const paymentDate = items.settlementDate || items.createdAt;
+      const paymentDate = items[0].settlementDate || items[0].createdAt;
 
       // Pass the items, supplierName, AND the new paymentDate to the view
       res.render("evidence", {

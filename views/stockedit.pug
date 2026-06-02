@@ -119,3 +119,30 @@ html
           if (e) e.style.display = 'none';
         });
       });
+      // --- PAYMENT LOGIC ONLY ---
+      const methodSelect = document.querySelector('select[name="paymentMethod"]');
+      const statusSelect = document.querySelector('select[name="paymentStatus"]');
+
+      function applyPaymentLogic() {
+        if (methodSelect.value === 'Cash') {
+          statusSelect.value = 'paid';
+          statusSelect.disabled = true;
+        } else {
+          statusSelect.disabled = false;
+        }
+      }
+
+      // 1. Only trigger logic when you manually change the dropdown
+      methodSelect.addEventListener('change', applyPaymentLogic);
+
+      // 2. Initial state: Just disable if currently 'Cash', 
+      // but do not force a change if it is already 'Credit'
+      if (methodSelect.value === 'Cash') {
+        statusSelect.disabled = true;
+      }
+
+      // 3. Make sure the value is sent to the server on save
+      document.querySelector('form').addEventListener('submit', () => {
+        statusSelect.disabled = false;
+      });
+      
