@@ -1,29 +1,122 @@
 doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title Login - Nyondo
-  link(rel='stylesheet' href='/css/loginn.css')
-.card
-  if error
-    p.error-message= error
-  h4 Sign In to get started
-  p.para Login to access your dashboard
-  // FORM
-  form(action='/login' method='POST')
-    // FULL NAME
-    .field
-      label(for='fullname') Full Name
-      input#fullname(type='text' name='fullname' placeholder='Enter Your Full Name' required='')
-    // EMAIL
-    .field
-      label(for='email') Email
-      input#email(type='email' name='email' placeholder='Enter Your Email' required='')
-    // PASSWORD
-    .field
-      label(for='password') Password
-      input#password(type='password' name='password' placeholder='Enter Password' required='')
-    button(type='submit') Login
-    .login
-      | Don&apos;t have an account? 
-      a(href='/register') Sign Up
+html(lang="en")
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Login - Nyondo
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
+    link(rel='stylesheet' href='/css/loginn.css')
+  body
+    .card
+      if error
+        p.error-message= error
+      h4 Sign In to get started
+      p.para Login to access your dashboard
+      
+      // FORM
+      form(action='/login' method='POST' novalidate)
+        // FULL NAME
+        .field
+          label(for='fullname') Full Name
+          input#fullname(type='text' name='fullname' placeholder='Enter Your Full Name' required)
+          .error-message#fullnameError(style="display: none; color: #dc2626; font-size: 12px; margin-top: 5px;")
+            i.fas.fa-exclamation-circle
+            span Please fill in the full name you registered with
+        
+        // EMAIL
+        .field
+          label(for='email') Email
+          input#email(type='email' name='email' placeholder='Enter Your Email' required)
+          .error-message#emailError(style="display: none; color: #dc2626; font-size: 12px; margin-top: 5px;")
+            i.fas.fa-exclamation-circle
+            span Please fill in the email you registered with
+        
+        // PASSWORD
+        .field
+          label(for='password') Password
+          input#password(type='password' name='password' placeholder='Enter Password' required)
+          .error-message#passwordError(style="display: none; color: #dc2626; font-size: 12px; margin-top: 5px;")
+            i.fas.fa-exclamation-circle
+            span Please fill in the password you registered
+        
+        button(type='submit') Login
+        
+        .login
+          | Don&apos;t have an account? 
+          a(href='/register') Sign Up
+
+    script.
+      document.addEventListener('DOMContentLoaded', () => {
+        
+        // Force disable browser native validation
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+          form.setAttribute('novalidate', true);
+          form.noValidate = true;
+        });
+        
+        const form = document.querySelector('form');
+        
+        // Function to add red border
+        function addErrorStyle(field) {
+          field.classList.add('input-error');
+        }
+        
+        // Function to remove red border
+        function removeErrorStyle(field) {
+          field.classList.remove('input-error');
+        }
+        
+        // Function to hide all error messages
+        function hideAllErrors() {
+          document.querySelectorAll('.error-message').forEach(msg => {
+            msg.style.display = 'none';
+          });
+          document.querySelectorAll('input').forEach(input => {
+            removeErrorStyle(input);
+          });
+        }
+        
+        // Function to show specific error message
+        function showError(inputId, errorId) {
+          const input = document.getElementById(inputId);
+          const errorMsg = document.getElementById(errorId);
+          
+          if (input && (!input.value || input.value.trim() === '')) {
+            addErrorStyle(input);
+            if (errorMsg) errorMsg.style.display = 'block';
+            return false;
+          }
+          return true;
+        }
+        
+        // Validate all fields on submit
+        if (form) {
+          form.addEventListener('submit', function(e) {
+            // Hide all previous errors first
+            hideAllErrors();
+            
+            // Check each field
+            const isFullnameValid = showError('fullname', 'fullnameError');
+            const isEmailValid = showError('email', 'emailError');
+            const isPasswordValid = showError('password', 'passwordError');
+            
+            // If any field is invalid, prevent submission
+            if (!isFullnameValid || !isEmailValid || !isPasswordValid) {
+              e.preventDefault();
+            }
+          });
+        }
+        
+        // Remove red border and hide error message when user starts typing
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+          input.addEventListener('input', function() {
+            removeErrorStyle(this);
+            const errorId = this.id + 'Error';
+            const errorMsg = document.getElementById(errorId);
+            if (errorMsg) errorMsg.style.display = 'none';
+          });
+        });
+        
+      });

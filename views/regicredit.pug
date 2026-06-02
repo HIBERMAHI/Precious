@@ -198,4 +198,164 @@ html(lang="en")
             input.style.border = "1px solid #ccc";
           }
         });
+
+        
       });
+      // ========== NEW: SUBMIT VALIDATION FOR EMPTY FIELDS ==========
+      
+      // Force disable browser native validation
+      const form = document.querySelector('form');
+      if (form) {
+        form.setAttribute('novalidate', true);
+        form.noValidate = true;
+      }
+      
+      // Function to add red border
+      function addErrorStyle(field) {
+          field.style.border = "1px solid #dc2626";
+          field.style.backgroundColor = "#fff8f8";
+      }
+      
+      // Function to remove red border
+      function removeErrorStyle(field) {
+          field.style.border = "1px solid #ccc";
+          field.style.backgroundColor = "";
+      }
+      
+      // Function to check if a field is empty
+      function isFieldEmpty(field) {
+          if (field.type === 'checkbox') {
+              return false;
+          }
+          const value = field.value.trim();
+          return value === '';
+      }
+      
+      // Function to show error message for empty field
+      function showEmptyError(field) {
+          const fieldId = field.id;
+          let errorSpanId = null;
+          
+          if (fieldId === 'fullName') errorSpanId = 'fullNameError';
+          else if (fieldId === 'nin') errorSpanId = 'ninError';
+          else if (fieldId === 'phoneNumber') errorSpanId = 'phoneError';
+          else if (fieldId === 'address') errorSpanId = 'addressError';
+          else if (fieldId === 'distance') errorSpanId = 'distanceError';
+          else if (fieldId === 'email') errorSpanId = 'emailError';
+          else if (fieldId === 'password') errorSpanId = 'passwordError';
+          
+          if (errorSpanId) {
+              const errorSpan = document.getElementById(errorSpanId);
+              if (errorSpan) {
+                  if (fieldId === 'fullName') errorSpan.textContent = 'Full name is required';
+                  else if (fieldId === 'nin') errorSpan.textContent = 'NIN is required';
+                  else if (fieldId === 'phoneNumber') errorSpan.textContent = 'Phone number is required';
+                  else if (fieldId === 'address') errorSpan.textContent = 'Address is required';
+                  else if (fieldId === 'distance') errorSpan.textContent = 'Distance is required';
+                  else if (fieldId === 'email') errorSpan.textContent = 'Email is required';
+                  else if (fieldId === 'password') errorSpan.textContent = 'Password is required';
+                  
+                  errorSpan.classList.remove('hidden');
+              }
+          }
+      }
+      
+      // Function to restore original error message
+      function restoreOriginalErrorMessage(field) {
+          const fieldId = field.id;
+          let errorSpanId = null;
+          let originalMessage = '';
+          
+          if (fieldId === 'fullName') {
+              errorSpanId = 'fullNameError';
+              originalMessage = 'Name is too short.';
+          }
+          else if (fieldId === 'nin') {
+              errorSpanId = 'ninError';
+              originalMessage = 'Format: CM/CF + 2 digits + 10 chars.';
+          }
+          else if (fieldId === 'phoneNumber') {
+              errorSpanId = 'phoneError';
+              originalMessage = 'Format: +256... or 07...';
+          }
+          else if (fieldId === 'address') {
+              errorSpanId = 'addressError';
+              originalMessage = 'Address is required.';
+          }
+          else if (fieldId === 'distance') {
+              errorSpanId = 'distanceError';
+              originalMessage = 'Distance must be at least 1 KM.';
+          }
+          else if (fieldId === 'email') {
+              errorSpanId = 'emailError';
+              originalMessage = 'Enter a valid email.';
+          }
+          else if (fieldId === 'password') {
+              errorSpanId = 'passwordError';
+              originalMessage = 'Password must be 6-14 characters.';
+          }
+          
+          if (errorSpanId) {
+              const errorSpan = document.getElementById(errorSpanId);
+              if (errorSpan && errorSpan.textContent !== originalMessage) {
+                  errorSpan.textContent = originalMessage;
+              }
+          }
+      }
+      
+      // Validate all fields on submit
+      if (form) {
+          form.addEventListener('submit', function(e) {
+              let isValid = true;
+              const allFields = document.querySelectorAll('input:not([type="checkbox"])');
+              
+              allFields.forEach(field => {
+                  if (isFieldEmpty(field)) {
+                      isValid = false;
+                      addErrorStyle(field);
+                      showEmptyError(field);
+                  } else {
+                      const fieldId = field.id;
+                      const rule = rules[fieldId];
+                      if (rule && !rule.regex.test(field.value)) {
+                          isValid = false;
+                          addErrorStyle(field);
+                      } else {
+                          removeErrorStyle(field);
+                          restoreOriginalErrorMessage(field);
+                      }
+                  }
+              });
+              
+              if (!isValid) {
+                  e.preventDefault();
+                  const firstError = document.querySelector('input[style*="border: 1px solid rgb(220, 38, 38)"]');
+                  if (firstError) {
+                      firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+              }
+          });
+      }
+      
+      // Remove red border when user starts typing
+      const allInputs = document.querySelectorAll('input:not([type="checkbox"])');
+      allInputs.forEach(input => {
+          input.addEventListener('input', function() {
+              this.style.border = "1px solid #ccc";
+              this.style.backgroundColor = "";
+              restoreOriginalErrorMessage(this);
+              
+              const fieldId = this.id;
+              const rule = rules[fieldId];
+              if (rule && this.value.length > 0 && !rule.regex.test(this.value)) {
+                  const errorSpan = document.getElementById(rule.error);
+                  if (errorSpan) errorSpan.classList.remove('hidden');
+                  this.style.border = "1px solid red";
+              } else if (rule && this.value.length > 0 && rule.regex.test(this.value)) {
+                  const errorSpan = document.getElementById(rule.error);
+                  if (errorSpan) errorSpan.classList.add('hidden');
+              }
+          });
+      });
+      
+      // ========== END OF SUBMIT VALIDATION ==========

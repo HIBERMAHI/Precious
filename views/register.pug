@@ -18,8 +18,12 @@ html(lang="en")
           .error-banner
             i.fas.fa-exclamation-circle
             span #{error}
+            //- #form-validation-message(style="display:none; color: #dc2626; background: #fee2e2; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-weight: bold;")
 
-        form(action='/register' method='post' class='registration-form')
+        form(action='/register' method='post' class='registration-form' novalidate)
+          .validation-banner#validationBanner(style="display: none;")
+             i.fas.fa-exclamation-triangle
+             span#validationMessage Please fill in all required fields correctly
           .form-grid
             .form-field
               label Full Name
@@ -49,8 +53,6 @@ html(lang="en")
                     name='nin' 
                     placeholder='CM0123456789AB' 
                     required 
-                    minlength='14' 
-                    maxlength='14' 
                     pattern='^(CM|CF)[0-9]{2}[A-Z0-9]{10}$' 
                     title='NIN must start with CM or CF, followed by 2 digits and 10 alphanumeric characters.'
                   )
@@ -69,7 +71,7 @@ html(lang="en")
               label Password
               .input-group
                 i.fas.fa-lock.field-icon
-                input#password(type='password' name='password' placeholder='6-14 characters' required minlength='6' maxlength='14')
+                input#password(type='password' name='password' placeholder='6-14 characters' required )
                 i#togglePassword.fas.fa-eye.toggle-icon
           
           button(type='submit' class='submit-btn') Create Account
@@ -78,35 +80,154 @@ html(lang="en")
             p Already have an account? 
               a(href='/login') Login here
 
-    script.
-      document.addEventListener('DOMContentLoaded', () => {
-        // 1. Password Toggle Logic
-        const toggleBtn = document.querySelector('#togglePassword');
-        const passwordInput = document.querySelector('#password');
-
-        if (toggleBtn) {
-          toggleBtn.addEventListener('click', () => {
-            const isPassword = passwordInput.type === 'password';
-            passwordInput.type = isPassword ? 'text' : 'password';
-            toggleBtn.classList.toggle('fa-eye');
-            toggleBtn.classList.toggle('fa-eye-slash');
-          });
+script.
+  document.addEventListener('DOMContentLoaded', () => {
+  
+    // Force disable browser native validation
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+      form.setAttribute('novalidate', true);
+      form.noValidate = true;
+    });
+  
+    // ---------- NEW: Red border validation on submit ----------
+    const form = document.querySelector('.registration-form');
+    
+    // Function to add red border to a field
+    function addErrorStyle(field) {
+        field.classList.add('input-error');
+    }
+    
+    // Function to remove red border from a field
+    function removeErrorStyle(field) {
+        field.classList.remove('input-error');
+    }
+    
+    // Function to check if a field is empty or invalid
+    function isFieldInvalid(field) {
+        if (!field) return false;
+        
+        // For select dropdown
+        if (field.tagName === 'SELECT') {
+            return !field.value || field.value === '';
         }
-
-        // 2. Hide Error Logic
-        const errorBanner = document.querySelector('.error-banner');
-        // Select all inputs and the select dropdown
-        const inputs = document.querySelectorAll('input, select');
-
-        if (errorBanner) {
-          inputs.forEach(element => {
-            // Listen for typing (input) or dropdown selection (change)
-            element.addEventListener('input', () => {
-              errorBanner.style.display = 'none';
-            });
-            element.addEventListener('change', () => {
-              errorBanner.style.display = 'none';
-            });
-          });
+        
+        // For text inputs
+        const value = field.value.trim();
+        if (value === '') return true;
+        
+        // Check pattern if exists (for phone and NIN)
+        if (field.pattern && field.pattern.length > 0) {
+            const regex = new RegExp('^' + field.pattern + '$');
+            if (!regex.test(value)) return true;
         }
+        
+        // Check email format
+        if (field.type === 'email' && value !== '') {
+            const emailPattern = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+            if (!emailPattern.test(value)) return true;
+        }
+        
+        // ✅ ADD THIS BACK - Check NIN length (must be exactly 14 characters)
+        if (field.name === 'nin' && value.length !== 14) {
+            return true;
+        }
+        
+        // ✅ ADD THIS BACK - Check password length (must be between 6 and 14 characters)
+        if (field.id === 'password' && (value.length < 6 || value.length > 14)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    // Validate all fields and show red borders
+    function validateAndShowRedBorders() {
+        let isValid = true;
+        const allFields = document.querySelectorAll('input, select');
+        
+        allFields.forEach(field => {
+            if (isFieldInvalid(field)) {
+                isValid = false;
+                addErrorStyle(field);
+            } else {
+                removeErrorStyle(field);
+            }
+        });
+        
+        return isValid;
+    }
+    
+    // Remove red border when user starts typing
+    const allInputs = document.querySelectorAll('input, select');
+    allInputs.forEach(field => {
+        field.addEventListener('input', function() {
+            removeErrorStyle(this);
+        });
+        field.addEventListener('change', function() {
+            removeErrorStyle(this);
+        });
+    });
+    
+    // Intercept form submission
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const isValid = validateAndShowRedBorders();
+            
+            if (!isValid) {
+                e.preventDefault(); // Stop form submission
+                
+                // Simple error message
+                let errorMessage = 'Please fill all fields before submission basing on the formats suggested';
+                
+                // Show the validation banner
+                const validationBanner = document.getElementById('validationBanner');
+                const validationMessage = document.getElementById('validationMessage');
+                if (validationBanner && validationMessage) {
+                    validationMessage.innerText = errorMessage;
+                    validationBanner.style.display = 'flex';
+                }
+                
+                // Also show existing error banner if it exists
+                const existingError = document.querySelector('.error-banner');
+                if (existingError && existingError !== validationBanner) {
+                    existingError.style.display = 'flex';
+                }
+            }
+        });
+    }
+
+    // 1. Password Toggle Logic
+    const toggleBtn = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('#password');
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        toggleBtn.classList.toggle('fa-eye');
+        toggleBtn.classList.toggle('fa-eye-slash');
       });
+    }
+    
+    // 2. Hide Error Logic (hides both banners when user starts typing)
+    const errorBanner = document.querySelector('.error-banner');
+    const inputs = document.querySelectorAll('input, select');
+
+    function hideAllErrorBanners() {
+        if (errorBanner) errorBanner.style.display = 'none';
+        const banner = document.getElementById('validationBanner');
+        if (banner) banner.style.display = 'none';
+    }
+
+    inputs.forEach(element => {
+        element.addEventListener('input', hideAllErrorBanners);
+        element.addEventListener('change', hideAllErrorBanners);
+    });
+    
+    // Also hide when user focuses on any field
+    inputs.forEach(element => {
+        element.addEventListener('focus', hideAllErrorBanners);
+    });
+    
+  });

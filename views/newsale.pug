@@ -63,7 +63,8 @@ html
             .form-group
               label Delivery Option
               select.form-input(name='deliveryOption' required)
-                option(value='pickup' selected) Pickup
+                option(value='' disabled selected)
+                option(value='pickup') Pickup
                 option(value='delivery') Delivery
 
             .form-group
@@ -74,6 +75,7 @@ html
                 placeholder='0'
                 min='0'
                 value='0'
+                required=""
               )
 
           hr(style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;")
@@ -113,14 +115,16 @@ html
             .form-group
               label Payment Method
               select.form-input(name='paymentMethod' required)
-                option(value='cash' selected) Cash
+                option(value='' disabled selected ) select Payment method
+                option(value='cash') Cash
                 option(value='mobile') Mobile Money
                 option(value='bank') Bank
 
             .form-group
               label Status
               select.form-input(name='status' required)
-                option(value='completed' selected) Completed
+                option(value='' disabled selected) 
+                option(value='completed') Completed
                 option(value='pending') Pending
 
           .button-group
@@ -264,4 +268,213 @@ html
           document.addEventListener('input', clearError, { once: true });
           document.addEventListener('change', clearError, { once: true });
         }
+
+                // ========== SUBMIT VALIDATION FOR ALL FIELDS ==========
+        
+        // Force disable browser native validation
+        const saleForm = document.querySelector('form');
+        if (saleForm) {
+          saleForm.setAttribute('novalidate', true);
+          saleForm.noValidate = true;
+        }
+        
+        function addRedBorder(field) {
+            field.style.border = "1px solid #dc2626";
+            field.style.backgroundColor = "#fff8f8";
+        }
+        
+        function removeRedBorder(field) {
+            field.style.border = "1px solid #ddd";
+            field.style.backgroundColor = "";
+        }
+        
+        function isEmpty(field) {
+            if (field.tagName === 'SELECT') {
+                return !field.value || field.value === '';
+            }
+            return field.value.trim() === '';
+        }
+        
+        function showFieldError(field, message) {
+            const existingError = field.parentElement.querySelector('.field-error');
+            if (existingError) existingError.remove();
+            
+            const errorSpan = document.createElement('span');
+            errorSpan.className = 'field-error';
+            errorSpan.style.cssText = 'color: #dc2626; font-size: 12px; margin-top: 5px; display: block;';
+            errorSpan.innerHTML = `<i class="fas fa-exclamation-circle" style="margin-right: 5px;"></i>${message}`;
+            field.parentElement.appendChild(errorSpan);
+        }
+        
+        function removeFieldError(field) {
+            const error = field.parentElement.querySelector('.field-error');
+            if (error) error.remove();
+        }
+        
+        if (saleForm) {
+            saleForm.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                // Check customer name
+                const customerName = document.querySelector('input[name="customerName"]');
+                if (isEmpty(customerName)) {
+                    isValid = false;
+                    addRedBorder(customerName);
+                    showFieldError(customerName, 'Please enter customer name');
+                } else {
+                    removeRedBorder(customerName);
+                    removeFieldError(customerName);
+                }
+                
+                // Check phone number
+                const phone = document.querySelector('input[name="phone"]');
+                if (isEmpty(phone)) {
+                    isValid = false;
+                    addRedBorder(phone);
+                    showFieldError(phone, 'Please enter phone number');
+                } else {
+                    removeRedBorder(phone);
+                    removeFieldError(phone);
+                }
+                
+                // Check delivery option
+                const deliveryOption = document.querySelector('select[name="deliveryOption"]');
+                if (isEmpty(deliveryOption)) {
+                    isValid = false;
+                    addRedBorder(deliveryOption);
+                    showFieldError(deliveryOption, 'Please select delivery option');
+                } else {
+                    removeRedBorder(deliveryOption);
+                    removeFieldError(deliveryOption);
+                }
+                
+                // Check distance (required if delivery is selected)
+                const distance = document.querySelector('input[name="distance"]');
+                if (deliveryOption && deliveryOption.value === 'delivery') {
+                    if (isEmpty(distance) || parseFloat(distance.value) <= 0) {
+                        isValid = false;
+                        addRedBorder(distance);
+                        showFieldError(distance, 'Please enter valid distance (must be greater than 0 for delivery)');
+                    } else {
+                        removeRedBorder(distance);
+                        removeFieldError(distance);
+                    }
+                } else {
+                    removeRedBorder(distance);
+                    removeFieldError(distance);
+                }
+                
+                // Check payment method
+                const paymentMethod = document.querySelector('select[name="paymentMethod"]');
+                if (isEmpty(paymentMethod)) {
+                    isValid = false;
+                    addRedBorder(paymentMethod);
+                    showFieldError(paymentMethod, 'Please select payment method');
+                } else {
+                    removeRedBorder(paymentMethod);
+                    removeFieldError(paymentMethod);
+                }
+                
+                // Check status
+                const status = document.querySelector('select[name="status"]');
+                if (isEmpty(status)) {
+                    isValid = false;
+                    addRedBorder(status);
+                    showFieldError(status, 'Please select status');
+                } else {
+                    removeRedBorder(status);
+                    removeFieldError(status);
+                }
+                
+                // Check all cart items (products and quantities)
+                const cartRows = document.querySelectorAll('.item-row');
+                let hasValidItem = false;
+                
+                cartRows.forEach((row, index) => {
+                    const productSelect = row.querySelector('select[name="productName"]');
+                    const quantityInput = row.querySelector('input[name="quantity"]');
+                    let rowValid = true;
+                    
+                    if (isEmpty(productSelect)) {
+                        isValid = false;
+                        rowValid = false;
+                        addRedBorder(productSelect);
+                        showFieldError(productSelect, 'Please select a product');
+                    } else {
+                        removeRedBorder(productSelect);
+                        removeFieldError(productSelect);
+                        hasValidItem = true;
+                    }
+                    
+                    if (isEmpty(quantityInput)) {
+                        isValid = false;
+                        rowValid = false;
+                        addRedBorder(quantityInput);
+                        showFieldError(quantityInput, 'Please enter quantity');
+                    } else if (parseInt(quantityInput.value) < 1) {
+                        isValid = false;
+                        rowValid = false;
+                        addRedBorder(quantityInput);
+                        showFieldError(quantityInput, 'Quantity must be at least 1');
+                    } else {
+                        removeRedBorder(quantityInput);
+                        removeFieldError(quantityInput);
+                    }
+                });
+                
+                if (!hasValidItem) {
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    const firstError = document.querySelector('input, select');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        }
+        
+        // Remove red border and error when user starts typing
+        const allFormFields = document.querySelectorAll('input, select');
+        allFormFields.forEach(field => {
+            field.addEventListener('input', function() {
+                removeRedBorder(this);
+                removeFieldError(this);
+            });
+            field.addEventListener('change', function() {
+                removeRedBorder(this);
+                removeFieldError(this);
+            });
+            field.addEventListener('focus', function() {
+                removeRedBorder(this);
+                removeFieldError(this);
+            });
+        });
+        
+        // Also add to dynamically added items
+        const observer = new MutationObserver(function() {
+            const newFields = document.querySelectorAll('.item-row input, .item-row select');
+            newFields.forEach(field => {
+                if (!field.hasListener) {
+                    field.hasListener = true;
+                    field.addEventListener('input', function() {
+                        removeRedBorder(this);
+                        removeFieldError(this);
+                    });
+                    field.addEventListener('change', function() {
+                        removeRedBorder(this);
+                        removeFieldError(this);
+                    });
+                }
+            });
+        });
+        
+        const itemsContainer = document.getElementById('items-container');
+        if (itemsContainer) {
+            observer.observe(itemsContainer, { childList: true, subtree: true });
+        }
+        
+        // ========== END OF SUBMIT VALIDATION ==========
       });

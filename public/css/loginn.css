@@ -12,7 +12,11 @@ background-color: rgb(1, 1, 21);
   min-height: 100vh;
   padding: 60px 20px; /* top & bottom margin effect */
 }
-
+/* Add this to your existing login.css file */
+.input-error {
+    border-color: #dc2626 !important;
+    background-color: #fff8f8 !important;
+}
 /* LOGIN CARD */
 .card {
   width: 100%;
@@ -122,4 +126,20 @@ button:hover {
   margin-bottom: 15px;
   border: 1px solid #f5c6cb;
   text-align: center;
+}
+.input-error {
+    border-color: #dc2626 !important;
+    background-color: #fff8f8 !important;
+}
+
+.error-message {
+    display: none;
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.error-message i {
+    margin-right: 5px;
+    font-size: 11px;
 }
