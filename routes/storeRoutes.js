@@ -307,9 +307,11 @@ router.post(
 
       if (existingProduct) {
         if (finalPaymentStatus === "Pending") {
-          // ON CREDIT: Add to pendingQuantity, NOT main quantity
-          existingProduct.pendingQuantity =
-            (existingProduct.pendingQuantity || 0) + qty;
+          existingProduct.quantity = existingProduct.quantity + qty;
+          existingProduct.initialQuantity =
+            existingProduct.initialQuantity + qty;
+          existingProduct.total =
+            existingProduct.quantity * existingProduct.buyingPrice;
           await existingProduct.save();
         } else {
           // PAID: Add directly to main quantity
@@ -353,8 +355,8 @@ router.post(
           productName,
           category,
           initialQuantity: qty,
-          quantity: 0,
-          pendingQuantity: qty,
+          quantity: qty,
+          pendingQuantity: 0,
           unit,
           buyingPrice: buy,
           sellingPrice: sell,
@@ -660,29 +662,14 @@ router.post(
         return res.status(400).send("No pending records found for this batch.");
       }
 
-      // For each pending item, move from pendingQuantity to main quantity
       for (const item of pendingItems) {
         const mainProduct = await Stock.findById(item.parentStockId);
         if (mainProduct) {
-          mainProduct.quantity = mainProduct.quantity + item.quantity;
-          mainProduct.initialQuantity =
-            mainProduct.initialQuantity + item.quantity;
-          mainProduct.total = mainProduct.quantity * mainProduct.buyingPrice;
-          mainProduct.pendingQuantity = Math.max(
-            0,
-            (mainProduct.pendingQuantity || 0) - item.quantity,
-          );
-
-          // ========== FIX: Update payment status on main product ==========
-          // This ensures the Inventory table, Store Dashboard, and Reports
-          // all show "Paid" instead of "Pending" after payment
+          // Just mark as paid - stock already in quantity
           mainProduct.paymentStatus = "Paid";
           mainProduct.settlementDate = new Date();
-          // ========== END OF FIX ==========
-
           await mainProduct.save();
         }
-
         item.paymentStatus = "Paid";
         item.settlementDate = new Date();
         await item.save();
@@ -709,8 +696,8 @@ router.get(
       const items = await Stock.find({
         supplierName: supplierName,
         paymentBatchId: batchId,
+        isRestockRecord: true, // ← ADD THIS LINE
       });
-
       if (!items || items.length === 0) {
         return res.send("No records found for this batch.");
       }
@@ -732,37 +719,5 @@ router.get(
   },
 );
 // GET: Generate the Evidence/Voucher
-router.get(
-  "/evidence/:supplierName",
-  isstoremanagerOradmin,
-  async (req, res) => {
-    try {
-      const { supplierName } = req.params;
-      const { batchId } = req.query;
 
-      const items = await Stock.find({
-        supplierName: supplierName,
-        paymentBatchId: batchId,
-      });
-
-      if (!items || items.length === 0) {
-        return res.send("No records found for this batch.");
-      }
-
-      // NEW: Calculate the date.
-      // Uses settlementDate if it exists (Paid/Credit), otherwise falls back to createdAt (Cash).
-      const paymentDate = items[0].settlementDate || items[0].createdAt;
-
-      // Pass the items, supplierName, AND the new paymentDate to the view
-      res.render("evidence", {
-        items,
-        supplierName,
-        paymentDate,
-      });
-    } catch (error) {
-      console.error("VOUCHER ROUTE ERROR:", error.message);
-      res.status(500).send("Unable to load voucher");
-    }
-  },
-);
 module.exports = router;
