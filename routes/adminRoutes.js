@@ -228,6 +228,7 @@ router.get("/deposit", async (req, res) => {
         $regex:
           /cement iiN|cement iiiN|Iron Bars 10mm|Iron Bars 12mm|Iron Bars 16mm|Iron sheets/i,
       },
+      isRestockRecord: { $ne: true } 
     });
 
     // 2. Fetch all registered credit customers for the dropdown menu

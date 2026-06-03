@@ -78,7 +78,10 @@ router.get("/ssales", issalesattendantOradmin, async (req, res) => {
 router.get("/newsale", issalesattendantOradmin, async (req, res) => {
   try {
     // Pull active stock and deep populate items array for table log tracking
-    const items = await Stock.find({ quantity: { $gt: 0 } });
+    const items = await Stock.find({
+      quantity: { $gt: 0 },
+      isRestockRecord: { $ne: true },
+    });
     const dbSales = await Sale.find()
       .populate("items.productName")
       .populate("attendant", "fullname")
@@ -115,7 +118,10 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
     // Phone Format Validation Check
     const phoneRegex = /^(07[0-9]{8}|\+256[0-9]{9})$/;
     if (!phoneRegex.test(phone)) {
-      const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
+      const activeStocks = await Stock.find({
+        quantity: { $gt: 0 },
+        isRestockRecord: { $ne: true },
+      });
       const dbSales = await Sale.find()
         .populate("items.productName")
         .populate("attendant", "fullname")
@@ -135,7 +141,10 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
       const stockItem = await Stock.findById(products[i]);
 
       if (!stockItem) {
-        const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
+        const activeStocks = await Stock.find({
+          quantity: { $gt: 0 },
+          isRestockRecord: { $ne: true },
+        });
         const dbSales = await Sale.find()
           .populate("items.productName")
           .populate("attendant", "fullname")
@@ -151,7 +160,10 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
       const pr = parseFloat(prices[i]);
 
       if (!qty || qty <= 0) {
-        const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
+        const activeStocks = await Stock.find({
+          quantity: { $gt: 0 },
+          isRestockRecord: { $ne: true },
+        });
         const dbSales = await Sale.find()
           .populate("items.productName")
           .populate("attendant", "fullname")
@@ -164,7 +176,10 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
       }
 
       if (stockItem.quantity < qty) {
-        const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
+        const activeStocks = await Stock.find({
+          quantity: { $gt: 0 },
+          isRestockRecord: { $ne: true },
+        });
         const dbSales = await Sale.find()
           .populate("items.productName")
           .populate("attendant", "fullname")
@@ -177,7 +192,10 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
       }
 
       if (pr <= stockItem.buyingPrice) {
-        const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
+        const activeStocks = await Stock.find({
+          quantity: { $gt: 0 },
+          isRestockRecord: { $ne: true },
+        });
         const dbSales = await Sale.find()
           .populate("items.productName")
           .populate("attendant", "fullname")
@@ -246,7 +264,10 @@ router.post("/newsale", issalesattendantOradmin, async (req, res) => {
     return res.redirect(`/receipt/${newsale._id}`);
   } catch (error) {
     console.error("Sale Processing Error:", error);
-    const activeStocks = await Stock.find({ quantity: { $gt: 0 } });
+    const activeStocks = await Stock.find({
+      quantity: { $gt: 0 },
+      isRestockRecord: { $ne: true },
+    });
     const dbSales = await Sale.find()
       .populate("items.productName")
       .populate("attendant", "fullname")
@@ -293,7 +314,7 @@ router.get("/sale/edit/:id", issalesattendantOradmin, async (req, res) => {
     }
 
     // 2. Fetch all active stock items so the dropdowns have choices
-    const items = await Stock.find();
+    const items = await Stock.find({ isRestockRecord: { $ne: true } });
 
     // 3. Render the edit page with both datasets
     res.render("saleedit", { sale, items });
@@ -475,7 +496,7 @@ router.get("/receipt/:id", issalesattendantOradmin, async (req, res) => {
 
 router.get("/stockview", issalesattendantOradmin, async (req, res) => {
   try {
-    const dbStock = await Stock.find();
+    const dbStock = await Stock.find({ isRestockRecord: { $ne: true } });
     res.render("stockview", { dbStock });
   } catch (error) {
     console.error(error.message);
@@ -486,7 +507,7 @@ router.get("/stockview", issalesattendantOradmin, async (req, res) => {
 // sales report
 router.get("/weeklyReport", issalesattendantOradmin, async (req, res) => {
   try {
-    // 1. Calculate the start of the week 
+    // 1. Calculate the start of the week
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
