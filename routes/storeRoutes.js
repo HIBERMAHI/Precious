@@ -40,40 +40,42 @@ router.get("/storedash", isstoremanagerOradmin, async (req, res) => {
       enougthStock: 0,
       inventoryValue: 0,
     };
+    // Calculate available stock and stats using CURRENT stock (quantity + pendingQuantity)
+    let totalCurrentQty = 0;
+    let totalCurrentValue = 0;
+    let lowStockCount = 0;
+    let enoughStockCount = 0;
 
-    // Calculate metrics
-    const inventoryAgg = await Stock.aggregate([
-      { $match: { isRestockRecord: { $ne: true } } },
-      {
-        $project: {
-          currentValue: { $multiply: ["$quantity", "$buyingPrice"] },
-        },
-      },
-      { $group: { _id: null, grandExpenditure: { $sum: "$currentValue" } } },
-    ]);
-    stats.inventoryValue =
-      inventoryAgg.length > 0 ? inventoryAgg[0].grandExpenditure : 0;
+    const dbStockWithAvailable = dbStock.map((item) => {
+      // Current available stock (what's in store now)
+      const currentQty = Number(item.quantity);
+      const currentValue = currentQty * Number(item.buyingPrice);
 
-    const totalAgg = await Stock.aggregate([
-      { $match: { isRestockRecord: { $ne: true } } },
-      { $group: { _id: null, grandProducts: { $sum: "$quantity" } } },
-    ]);
-    stats.totalProducts = totalAgg.length > 0 ? totalAgg[0].grandProducts : 0;
+      // Add to totals for cards
+      totalCurrentQty += currentQty;
+      totalCurrentValue += currentValue;
 
-    // THE LOGIC:
-    dbStock.forEach((item) => {
-      // Ensure we treat the quantity as a number
-      const qty = Number(item.quantity);
-
-      if (qty <= 100) {
-        stats.lowStock++;
-      } else {
-        stats.enougthStock++;
+      // Count low stock (1-100) vs enough stock (100+)
+      if (currentQty > 0 && currentQty <= 100) {
+        lowStockCount++;
+      } else if (currentQty > 100) {
+        enoughStockCount++;
       }
+
+      return {
+        ...item.toObject(),
+        currentStock: currentQty,
+      };
     });
 
+    // Update stats cards with CURRENT values
+    stats.totalProducts = totalCurrentQty;
+    stats.inventoryValue = totalCurrentValue;
+    stats.lowStock = lowStockCount;
+    stats.enougthStock = enoughStockCount;
+
     // Send data to the view
-    res.render("storedash", { dbStock, stats });
+    res.render("storedash", { dbStock: dbStockWithAvailable, stats });
   } catch (error) {
     console.error("STOREDASH ERROR:", error.message);
     res.status(500).send("Unable to load data");
@@ -94,20 +96,17 @@ router.get("/invento", isstoremanagerOradmin, async (req, res) => {
       enougthStock: 0,
       inventoryValue: 0,
     };
-
+    let lifetimeTotalQty = 0;
+    let lowStockCount = 0;
+    let enoughStockCount = 0;
     // 1. Calculate Inventory Value
+    // INVENTO: Total money SPENT on all stock ever purchased (NEVER decreases)
     const inventoryAgg = await Stock.aggregate([
       { $match: { isRestockRecord: { $ne: true } } },
-      {
-        $project: {
-          currentValue: { $multiply: ["$quantity", "$buyingPrice"] },
-        },
-      },
-      { $group: { _id: null, grandExpenditure: { $sum: "$currentValue" } } },
+      { $group: { _id: null, grandExpenditure: { $sum: "$total" } } },
     ]);
     stats.inventoryValue =
       inventoryAgg.length > 0 ? inventoryAgg[0].grandExpenditure : 0;
-
     // 2. Calculate Total Quantity
     const totalAgg = await Stock.aggregate([
       { $match: { isRestockRecord: { $ne: true } } },
@@ -123,7 +122,25 @@ router.get("/invento", isstoremanagerOradmin, async (req, res) => {
         stats.enougthStock++;
       }
     });
+    // Calculate lifetime totals and current values
+    dbStock.forEach((item) => {
+      const lifetimeQty = Number(item.initialQuantity) || Number(item.quantity);
+      const currentQty =
+        Number(item.quantity) + Number(item.pendingQuantity || 0);
+      const currentValue = currentQty * Number(item.buyingPrice);
 
+      lifetimeTotalQty += lifetimeQty;
+
+      if (currentQty > 0 && currentQty <= 100) {
+        lowStockCount++;
+      } else if (currentQty > 100) {
+        enoughStockCount++;
+      }
+    });
+
+    stats.totalProducts = lifetimeTotalQty;
+    stats.lowStock = lowStockCount;
+    stats.enougthStock = enoughStockCount;
     res.render("invento", { dbStock, stats });
   } catch (error) {
     console.error("INVENTO ROUTE ERROR:", error.message);
@@ -511,14 +528,37 @@ router.post(
 // 5. DELETE ROUTE: Safely removes an item from stock records
 router.post("/deleted/:id", isstoremanagerOradmin, async (req, res) => {
   try {
-    await Stock.findByIdAndDelete(req.params.id);
+    const productId = req.params.id;
+
+    // Find the main product first
+    const mainProduct = await Stock.findById(productId);
+
+    if (!mainProduct) {
+      return res.status(404).send("Stock record not found");
+    }
+
+    // 1. Delete ALL supplier records linked to this product
+    //    (records where parentStockId matches this product's ID)
+    const supplierDeleteResult = await Stock.deleteMany({
+      parentStockId: productId,
+      isRestockRecord: true,
+    });
+
+    // 2. Delete the main product itself
+    await Stock.findByIdAndDelete(productId);
+
+    console.log(`Deleted main product: ${mainProduct.productName}`);
+    console.log(
+      `Deleted ${supplierDeleteResult.deletedCount} linked supplier records`,
+    );
+
+    // 3. Redirect back to inventory page
     res.redirect("/invento");
   } catch (error) {
     console.error("DELETE ROUTE ERROR:", error.message);
-    res.status(400).send("Error deleting stock item");
+    res.status(400).send("Error deleting stock item: " + error.message);
   }
 });
-
 // supplier
 router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
   try {
@@ -600,7 +640,6 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
   }
 });
 // supplier
-// supplier
 router.post(
   "/pay-supplier/:supplierName",
   isstoremanagerOradmin,
@@ -633,6 +672,14 @@ router.post(
             0,
             (mainProduct.pendingQuantity || 0) - item.quantity,
           );
+
+          // ========== FIX: Update payment status on main product ==========
+          // This ensures the Inventory table, Store Dashboard, and Reports
+          // all show "Paid" instead of "Pending" after payment
+          mainProduct.paymentStatus = "Paid";
+          mainProduct.settlementDate = new Date();
+          // ========== END OF FIX ==========
+
           await mainProduct.save();
         }
 
@@ -646,6 +693,41 @@ router.post(
     } catch (error) {
       console.error("PAYMENT ERROR:", error.message);
       res.status(500).send("Error updating payment status: " + error.message);
+    }
+  },
+);
+
+// GET: Generate the Evidence/Voucher
+router.get(
+  "/evidence/:supplierName",
+  isstoremanagerOradmin,
+  async (req, res) => {
+    try {
+      const { supplierName } = req.params;
+      const { batchId } = req.query;
+
+      const items = await Stock.find({
+        supplierName: supplierName,
+        paymentBatchId: batchId,
+      });
+
+      if (!items || items.length === 0) {
+        return res.send("No records found for this batch.");
+      }
+
+      // NEW: Calculate the date.
+      // Uses settlementDate if it exists (Paid/Credit), otherwise falls back to createdAt (Cash).
+      const paymentDate = items[0].settlementDate || items[0].createdAt;
+
+      // Pass the items, supplierName, AND the new paymentDate to the view
+      res.render("evidence", {
+        items,
+        supplierName,
+        paymentDate,
+      });
+    } catch (error) {
+      console.error("VOUCHER ROUTE ERROR:", error.message);
+      res.status(500).send("Unable to load voucher");
     }
   },
 );

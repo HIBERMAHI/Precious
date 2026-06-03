@@ -129,16 +129,15 @@ html
                   td #{stock.sellingPrice.toLocaleString()}
 
                   // This Quantity will reduce automatically as sales are made
-                  td #{stock.quantity}
+                  td #{stock.currentStock}
 
                   td #{new Date(stock.createdAt).toLocaleDateString()}
 
                   //- Replace your existing 'td' for Status with this block:
                   td
-                    //- Calculation based on your route's 100-item threshold
-                    if stock.quantity <= 0
-                      span.status.out Out of Stock
-                    else if stock.quantity <= 100
-                      span.status.low Low Stock
-                    else
-                      span.status.good Enough Stock
+                      if stock.currentStock <= 0
+                        span.status.out Out of Stock
+                      else if stock.currentStock <= 100
+                        span.status.low Low Stock
+                      else
+                        span.status.good Enough Stock

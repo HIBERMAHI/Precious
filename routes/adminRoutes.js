@@ -29,9 +29,14 @@ router.get("/admindash", async (req, res) => {
     ]);
     stats.salesRevenue = salesAgg.length > 0 ? salesAgg[0].grandTotal : 0;
 
-    // 2. Calculate inventory value (Sum of total item investment cost)
     const inventoryAgg = await Stock.aggregate([
-      { $group: { _id: null, grandExpenditure: { $sum: "$total" } } },
+      { $match: { isRestockRecord: { $ne: true } } },
+      {
+        $project: {
+          currentValue: { $multiply: ["$quantity", "$buyingPrice"] },
+        },
+      },
+      { $group: { _id: null, grandExpenditure: { $sum: "$currentValue" } } },
     ]);
     stats.inventoryValue =
       inventoryAgg.length > 0 ? inventoryAgg[0].grandExpenditure : 0;
