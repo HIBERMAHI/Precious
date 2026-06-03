@@ -29,8 +29,9 @@ let upload = multer({ storage: storage });
 
 router.get("/storedash", isstoremanagerOradmin, async (req, res) => {
   try {
-    const dbStock = await Stock.find().sort({ createdAt: -1 });
-
+    const dbStock = await Stock.find({
+      isRestockRecord: { $ne: true },
+    }).sort({ createdAt: -1 });
     // Use these exact keys.
     // Check your Pug file to ensure it matches: #{stats.lowStock} and #{stats.enougthStock}
     let stats = {
@@ -42,6 +43,7 @@ router.get("/storedash", isstoremanagerOradmin, async (req, res) => {
 
     // Calculate metrics
     const inventoryAgg = await Stock.aggregate([
+      { $match: { isRestockRecord: { $ne: true } } },
       {
         $project: {
           currentValue: { $multiply: ["$quantity", "$buyingPrice"] },
@@ -53,6 +55,7 @@ router.get("/storedash", isstoremanagerOradmin, async (req, res) => {
       inventoryAgg.length > 0 ? inventoryAgg[0].grandExpenditure : 0;
 
     const totalAgg = await Stock.aggregate([
+      { $match: { isRestockRecord: { $ne: true } } },
       { $group: { _id: null, grandProducts: { $sum: "$quantity" } } },
     ]);
     stats.totalProducts = totalAgg.length > 0 ? totalAgg[0].grandProducts : 0;
@@ -80,7 +83,9 @@ router.get("/storedash", isstoremanagerOradmin, async (req, res) => {
 // Updated INVENTO Route
 router.get("/invento", isstoremanagerOradmin, async (req, res) => {
   try {
-    const dbStock = await Stock.find().sort({ createdAt: -1 });
+    const dbStock = await Stock.find({
+      isRestockRecord: { $ne: true },
+    }).sort({ createdAt: -1 });
 
     // Initializing stats without the 'outOfStock' variable
     let stats = {
@@ -92,6 +97,7 @@ router.get("/invento", isstoremanagerOradmin, async (req, res) => {
 
     // 1. Calculate Inventory Value
     const inventoryAgg = await Stock.aggregate([
+      { $match: { isRestockRecord: { $ne: true } } },
       {
         $project: {
           currentValue: { $multiply: ["$quantity", "$buyingPrice"] },
@@ -104,6 +110,7 @@ router.get("/invento", isstoremanagerOradmin, async (req, res) => {
 
     // 2. Calculate Total Quantity
     const totalAgg = await Stock.aggregate([
+      { $match: { isRestockRecord: { $ne: true } } },
       { $group: { _id: null, grandProducts: { $sum: "$quantity" } } },
     ]);
     stats.totalProducts = totalAgg.length > 0 ? totalAgg[0].grandProducts : 0;
@@ -126,7 +133,9 @@ router.get("/invento", isstoremanagerOradmin, async (req, res) => {
 
 router.get("/storereport", isstoremanagerOradmin, async (req, res) => {
   try {
-    const dbStock = await Stock.find().sort({ createdAt: -1 });
+    const dbStock = await Stock.find({
+      isRestockRecord: { $ne: true },
+    }).sort({ createdAt: -1 });
 
     // 1. Initializing stats exactly like your Invento format
     let stats = {
@@ -139,6 +148,7 @@ router.get("/storereport", isstoremanagerOradmin, async (req, res) => {
 
     // 2. Calculate Inventory Value (Buying Price)
     const inventoryAgg = await Stock.aggregate([
+      { $match: { isRestockRecord: { $ne: true } } },
       {
         $project: {
           currentValue: { $multiply: ["$quantity", "$buyingPrice"] },
@@ -151,6 +161,7 @@ router.get("/storereport", isstoremanagerOradmin, async (req, res) => {
 
     // 3. Calculate Total Sales Value (Selling Price)
     const salesAgg = await Stock.aggregate([
+      { $match: { isRestockRecord: { $ne: true } } },
       {
         $project: { saleValue: { $multiply: ["$quantity", "$sellingPrice"] } },
       },
@@ -160,6 +171,7 @@ router.get("/storereport", isstoremanagerOradmin, async (req, res) => {
 
     // 4. Calculate Total Quantity
     const totalAgg = await Stock.aggregate([
+      { $match: { isRestockRecord: { $ne: true } } },
       { $group: { _id: null, grandProducts: { $sum: "$quantity" } } },
     ]);
     stats.totalStockCount = totalAgg.length > 0 ? totalAgg[0].grandProducts : 0;
@@ -175,8 +187,10 @@ router.get("/storereport", isstoremanagerOradmin, async (req, res) => {
     stats.potentialProfit = stats.totalSalesValue - stats.totalInventoryValue;
 
     // 7. Low Stock items (for the list in the report)
-    const lowStockItems = await Stock.find({ quantity: { $lte: 10 } }).limit(5);
-
+    const lowStockItems = await Stock.find({
+      quantity: { $lte: 10 },
+      isRestockRecord: { $ne: true },
+    }).limit(5);
     // 8. Render the report
     // Note: Ensure your Pug file is named 'storereports.pug' to match this
     res.render("storereport", {
@@ -267,29 +281,126 @@ router.post(
 
       // Generate a unique ID for this specific delivery batch
       const generatedBatchId = Date.now().toString();
-
-      // 5. SAVE TO DATABASE
-      const newStock = new Stock({
-        productName,
-        category,
-        initialQuantity: qty,
-        quantity: qty,
-        unit,
-        buyingPrice: buy,
-        sellingPrice: sell,
-        paymentMethod: finalPaymentMethod,
-        paymentStatus: finalPaymentStatus,
-        settlementDate: settlementDate,
-        // Assign the unique batch ID so this delivery is isolated
-        paymentBatchId: generatedBatchId,
-        factory,
-        supplierName,
-        supplierContact,
-        total,
-        itemImage: req.file ? req.file.path : null,
+      // 5. CHECK IF PRODUCT EXISTS FIRST
+      const existingProduct = await Stock.findOne({
+        productName: productName,
+        unit: unit,
+        isRestockRecord: { $ne: true }, // Only check main products
       });
 
-      await newStock.save();
+      if (existingProduct) {
+        if (finalPaymentStatus === "Pending") {
+          // ON CREDIT: Add to pendingQuantity, NOT main quantity
+          existingProduct.pendingQuantity =
+            (existingProduct.pendingQuantity || 0) + qty;
+          await existingProduct.save();
+        } else {
+          // PAID: Add directly to main quantity
+          existingProduct.quantity = existingProduct.quantity + qty;
+          existingProduct.initialQuantity =
+            existingProduct.initialQuantity + qty;
+          existingProduct.total =
+            existingProduct.quantity * existingProduct.buyingPrice;
+          await existingProduct.save();
+        }
+
+        // Create supplier record for payment tracking
+        const supplierRecord = new Stock({
+          productName,
+          category,
+          initialQuantity: qty,
+          quantity: qty,
+          unit,
+          buyingPrice: buy,
+          sellingPrice: sell,
+          paymentMethod: finalPaymentMethod,
+          paymentStatus: finalPaymentStatus,
+          settlementDate: settlementDate,
+          paymentBatchId: generatedBatchId,
+          factory,
+          supplierName,
+          supplierContact,
+          total: qty * buy,
+          itemImage: req.file ? req.file.path : null,
+          isRestockRecord: true,
+          parentStockId: existingProduct._id,
+        });
+        await supplierRecord.save();
+
+        return res.redirect("/invento");
+      }
+      // 5. SAVE TO DATABASE for NEW product
+      if (finalPaymentStatus === "Pending") {
+        // CREDIT product
+        const newStock = new Stock({
+          productName,
+          category,
+          initialQuantity: qty,
+          quantity: 0,
+          pendingQuantity: qty,
+          unit,
+          buyingPrice: buy,
+          sellingPrice: sell,
+          paymentMethod: finalPaymentMethod,
+          paymentStatus: finalPaymentStatus,
+          settlementDate: settlementDate,
+          paymentBatchId: generatedBatchId,
+          factory,
+          supplierName,
+          supplierContact,
+          total: qty * buy,
+          itemImage: req.file ? req.file.path : null,
+          isRestockRecord: false,
+        });
+        await newStock.save();
+
+        // Create supplier record for payment tracking
+        const supplierRecord = new Stock({
+          productName,
+          category,
+          initialQuantity: qty,
+          quantity: qty,
+          unit,
+          buyingPrice: buy,
+          sellingPrice: sell,
+          paymentMethod: finalPaymentMethod,
+          paymentStatus: finalPaymentStatus,
+          settlementDate: settlementDate,
+          paymentBatchId: generatedBatchId,
+          factory,
+          supplierName,
+          supplierContact,
+          total: qty * buy,
+          itemImage: req.file ? req.file.path : null,
+          isRestockRecord: true,
+          parentStockId: newStock._id,
+        });
+        await supplierRecord.save();
+      } else {
+        // PAID product
+        const newStock = new Stock({
+          productName,
+          category,
+          initialQuantity: qty,
+          quantity: qty,
+          pendingQuantity: 0,
+          unit,
+          buyingPrice: buy,
+          sellingPrice: sell,
+          paymentMethod: finalPaymentMethod,
+          paymentStatus: finalPaymentStatus,
+          settlementDate: settlementDate,
+          paymentBatchId: generatedBatchId,
+          factory,
+          supplierName,
+          supplierContact,
+          total,
+          itemImage: req.file ? req.file.path : null,
+          isRestockRecord: false,
+        });
+        await newStock.save();
+      }
+
       return res.redirect("/invento");
     } catch (error) {
       console.error("ADDSTOCK ROUTE ERROR:", error.message);
@@ -378,9 +489,9 @@ router.post(
         factory,
         supplierName,
         supplierContact,
-        settlementDate:settlementDate,
+        settlementDate: settlementDate,
         total: (stock.quantity + qty) * buy,
-        paymentStatus:finalPaymentStatus,
+        paymentStatus: finalPaymentStatus,
         paymentBatchId: qty > 0 ? Date.now().toString() : stock.paymentBatchId,
       };
 
@@ -413,7 +524,7 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
   try {
     // 1. Group by Batch ID to keep every delivery as a separate row
     const supplierDebts = await Stock.aggregate([
-      // { $match: { paymentStatus: "Pending" } },
+      { $match: { isRestockRecord: true } },
       {
         $group: {
           _id: "$paymentBatchId",
@@ -422,6 +533,7 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
           productsSupplied: { $addToSet: "$productName" },
           factoriesSupplied: { $addToSet: "$factory" },
           totalDebt: { $sum: "$total" },
+          quantity: { $sum: "$quantity" },
           pendingCount: {
             $sum: {
               $cond: [
@@ -446,21 +558,37 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
 
     // 3. Calculate Global Pending Debt
     const debtAgg = await Stock.aggregate([
-      { $match: { paymentStatus: { $in: ["Pending", "Not paid"] } } },
+      {
+        $match: {
+          paymentStatus: { $in: ["Pending", "Not paid"] },
+          isRestockRecord: true,
+        },
+      },
+
       { $group: { _id: null, total: { $sum: "$total" } } },
     ]);
     stats.totalPendingDebt = debtAgg.length > 0 ? debtAgg[0].total : 0;
 
     // 4. Calculate Global Pending Quantity
     const qtyAgg = await Stock.aggregate([
-      { $match: { paymentStatus: { $in: ["Pending", "Not paid"] } } },
+      {
+        $match: {
+          paymentStatus: { $in: ["Pending", "Not paid"] },
+          isRestockRecord: true,
+        },
+      },
       { $group: { _id: null, total: { $sum: "$quantity" } } },
     ]);
     stats.totalPendingQty = qtyAgg.length > 0 ? qtyAgg[0].total : 0;
 
     // 5. Calculate Global Pending Items Count
     const countAgg = await Stock.aggregate([
-      { $match: { paymentStatus: { $in: ["Pending", "Not paid"] } } },
+      {
+        $match: {
+          paymentStatus: { $in: ["Pending", "Not paid"] },
+          isRestockRecord: true,
+        },
+      },
       { $count: "total" },
     ]);
     stats.totalPendingItems = countAgg.length > 0 ? countAgg[0].total : 0;
@@ -472,6 +600,7 @@ router.get("/suppliers", isstoremanagerOradmin, async (req, res) => {
   }
 });
 // supplier
+// supplier
 router.post(
   "/pay-supplier/:supplierName",
   isstoremanagerOradmin,
@@ -481,28 +610,35 @@ router.post(
       // Convert to string explicitly to ensure it matches the database schema
       const batchId = String(req.body.batchId);
 
-      // We removed the 'paymentStatus: "Pending"' filter.
-      // Now, this route will find ALL items in the batch.
-      // It sets them to 'Paid' and updates the 'settlementDate' to the exact moment of this action.
-      const result = await Stock.updateMany(
-        {
-          supplierName: supplierName,
-          paymentBatchId: batchId,
-          paymentStatus: { $in: ["Pending", "Not paid"] },
-        },
-        {
-          $set: {
-            paymentStatus: "Paid",
-            settlementDate: new Date(),
-          },
-        },
-      );
+      // Get all pending items in this batch
+      const pendingItems = await Stock.find({
+        supplierName: supplierName,
+        paymentBatchId: batchId,
+        paymentStatus: { $in: ["Pending", "Not paid"] },
+      });
 
-      // matchedCount checks if the query found the batch at all
-      if (result.matchedCount === 0) {
-        return res
-          .status(400)
-          .send("No records found for this batch. Check your Batch ID.");
+      if (pendingItems.length === 0) {
+        return res.status(400).send("No pending records found for this batch.");
+      }
+
+      // For each pending item, move from pendingQuantity to main quantity
+      for (const item of pendingItems) {
+        const mainProduct = await Stock.findById(item.parentStockId);
+        if (mainProduct) {
+          mainProduct.quantity = mainProduct.quantity + item.quantity;
+          mainProduct.initialQuantity =
+            mainProduct.initialQuantity + item.quantity;
+          mainProduct.total = mainProduct.quantity * mainProduct.buyingPrice;
+          mainProduct.pendingQuantity = Math.max(
+            0,
+            (mainProduct.pendingQuantity || 0) - item.quantity,
+          );
+          await mainProduct.save();
+        }
+
+        item.paymentStatus = "Paid";
+        item.settlementDate = new Date();
+        await item.save();
       }
 
       // Redirect to evidence showing ONLY this specific batch
@@ -513,7 +649,6 @@ router.post(
     }
   },
 );
-
 // GET: Generate the Evidence/Voucher
 router.get(
   "/evidence/:supplierName",

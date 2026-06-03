@@ -53,6 +53,7 @@ html
             th Supplier Name
             th Contact
             th Products
+            th Qty
             th Factories
             th Total Debt (UGX)
             //- th Date
@@ -69,6 +70,7 @@ html
                   ul(style="list-style: none; padding: 0; margin: 0;")
                     each prod in sup.productsSupplied
                       li(style="font-size: 0.85em; color: #444;") • #{prod}
+                td #{sup.quantity  || 0}     
                 td 
                   ul(style="list-style: none; padding: 0; margin: 0;")
                     each fact in sup.factoriesSupplied

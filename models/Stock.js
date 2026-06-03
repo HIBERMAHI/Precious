@@ -61,8 +61,8 @@ const StockSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    settlementDate: { 
-      type: Date 
+    settlementDate: {
+      type: Date,
     },
     supplierName: {
       type: String,
@@ -89,6 +89,15 @@ const StockSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // Add these 3 lines right here ↓
+    isRestockRecord: { type: Boolean, default: false },
+    parentStockId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Stock",
+      default: null,
+    },
+    restockHistory: { type: Array, default: [] },
+        pendingQuantity: { type: Number, default: 0 },
   },
   {
     timestamps: true,
