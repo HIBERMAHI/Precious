@@ -8,8 +8,6 @@ html
     link(rel='stylesheet' href='/css/ssales.css')
 
   body
-
-    // ================= SIDEBAR =================
     .sidebar
       h2.sidebar-title ⚒ NYONDO HARDWARE
       p.sidebar-subtitle Sales Attendant Panel
@@ -34,11 +32,7 @@ html
           a.menu-link.logout-link(href='logout')
             i.fas.fa-sign-out-alt
             span Logout
-
-    // ================= MAIN =================
     .main
-
-      // ================= TOP SECTION =================
       .top-section
         .topbar
           h1.dashboard-heading Sales Dashboard
@@ -52,7 +46,6 @@ html
             p.profile-name John Doe
             span.profile-status Active
 
-      // ================= SUMMARY CARDS =================
       section.cards-container
         .stat-card.revenue-card
           i.fas.fa-money-bill-wave.card-icon
@@ -74,7 +67,6 @@ html
           h3.card-title Receipts
           p.card-value #{stats.receipts.toLocaleString()} Receipts
 
-      // ================= QUICK LINKS =================
       section.quick-actions-section
         h2.section-heading Quick Actions
 
@@ -87,7 +79,6 @@ html
             i.fas.fa-boxes
             span Check Stock
 
-      // ================= RECENT SALES =================
       section.recent-sales-section
         h2.section-heading
           i.fas.fa-clock.heading-icon
@@ -114,7 +105,6 @@ html
                     td #{index + 1}
                     td.customer-cell #{sale.customerName}
 
-                    // ================= DEDICATED ITEM NAME COLUMN (No Quantities / No Prices) =================
                     td.summary-cell
                       if sale.items && sale.items.length > 0
                         .item-summary-card
@@ -125,7 +115,6 @@ html
                       else
                         span.no-items-fallback No items listed
 
-                    // ================= INDEPENDENT QUANTITY COLUMN =================
                     td.quantity-cell(style="text-align: center;")
                       if sale.items && sale.items.length > 0
                         .item-qty-card

@@ -82,7 +82,6 @@ router.get("/storedash", isstoremanagerOradmin, async (req, res) => {
   }
 });
 // invento
-// Updated INVENTO Route
 router.get("/invento", isstoremanagerOradmin, async (req, res) => {
   try {
     const dbStock = await Stock.find({
@@ -718,6 +717,5 @@ router.get(
     }
   },
 );
-// GET: Generate the Evidence/Voucher
 
 module.exports = router;

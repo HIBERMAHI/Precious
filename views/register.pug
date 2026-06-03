@@ -128,12 +128,10 @@ script.
             if (!emailPattern.test(value)) return true;
         }
         
-        // ✅ ADD THIS BACK - Check NIN length (must be exactly 14 characters)
         if (field.name === 'nin' && value.length !== 14) {
             return true;
         }
         
-        // ✅ ADD THIS BACK - Check password length (must be between 6 and 14 characters)
         if (field.id === 'password' && (value.length < 6 || value.length > 14)) {
             return true;
         }

@@ -10,11 +10,7 @@ html
 
   body
     .receipt-container
-
-      // ================= RECEIPT CARD =================
       .receipt-card
-
-        // ================= HEADER (Styled to Align Content Left) =================
         .receipt-header
           h2 NYONDO GENERAL HARDWARE
           p.address Nansana, Wakiso District - Katooke Road
@@ -30,8 +26,6 @@ html
               |   Receipt #: #{sale._id.toString().slice(-6).toUpperCase()}
 
         hr.divider
-
-        // ================= ITEMS =================
         .items-section
           table.items-table
             thead
@@ -59,8 +53,6 @@ html
                     | No items listed on this transaction.
 
         hr.divider
-
-        // ================= LOGISTICS =================
         .logistics
 
           .row
@@ -78,8 +70,6 @@ html
               | #{sale.transportFee !== undefined && sale.transportFee !== null ? sale.transportFee.toLocaleString() : '0'} UGX
 
         hr.divider
-
-        // ================= TOTALS =================
         .totals
 
           .row
@@ -95,8 +85,6 @@ html
               | #{sale.totalAmount ? (sale.totalAmount + (sale.transportFee || 0)).toLocaleString() : '0'} UGX
 
         hr.divider.bold
-
-        // ================= FOOTER =================
         .footer
           p
             i.fas.fa-user
@@ -107,12 +95,9 @@ html
             |   Thanks For Shopping With Us
 
           p.disclaimer Goods once sold are not returnable
-
-          // ================= TRANSPORT NOTE =================
           p.transport-note
             | Transport charges are calculated based on delivery distance and are added to the total product cost to form the final payable amount.
 
-    // ================= ACTION BUTTONS =================
     .actions.d-print-none
       button.print-btn(onclick='window.print()')
         i.fas.fa-print
