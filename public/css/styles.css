@@ -11,8 +11,6 @@ body {
   display: flex;
   background: #f4f6f9;
 }
-
-/* ================= SIDEBAR ================= */
 .sidebar {
   width: 250px;
   height: 100vh;
@@ -77,8 +75,6 @@ body {
   background-color: rgb(26, 162, 26);
   color:white;
 }
-
-/* ================= MAIN ================= */
 .main {
   margin-left: 250px;
   padding: 25px;
@@ -92,7 +88,6 @@ body {
   font-size: 1.4rem;
 }
 
-/* ================= SECTION CARDS ================= */
 .section {
   background: #fff;
   padding: 25px;
@@ -108,7 +103,6 @@ body {
   font-size: 1.1rem;
 }
 
-/* ================= TABLE ================= */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -130,8 +124,6 @@ th {
 tr:hover {
   background: #f9f9f9;
 }
-
-/* ================= FORM ================= */
 .form-box h2 {
   margin-bottom: 20px;
   font-size: 1.1rem;
@@ -173,7 +165,6 @@ input:focus, select:focus {
   box-shadow: 0 0 6px rgba(11,45,92,0.2);
 }
 
-/* ================= BUTTONS ================= */
 
 /* COMPLETE SALE BUTTON */
 .btn-primary {
@@ -210,7 +201,6 @@ input:focus, select:focus {
   background: #e6be3f;
 }
 
-/* ================= SMALL IMPROVEMENTS ================= */
 
 /* spacing between sections */
 .section {

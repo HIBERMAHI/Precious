@@ -1,20 +1,16 @@
 
-/* ================= RESET ================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
-
-/* ================= BODY ================= */
 body {
   display: flex;
   background: #f4f6f9;
   color: #1f2937;
 }
 
-/* ================= SIDEBAR ================= */
 .sidebar {
   width: 260px;
   height: 100vh;
@@ -68,16 +64,11 @@ body {
   color: #facc15;
   transform: translateX(4px);
 }
-
-
-/* ================= MAIN ================= */
 .main {
   margin-left: 260px;
   padding: 20px;
   width: 100%;
 }
-
-/* ================= TOPBAR ================= */
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -99,7 +90,6 @@ body {
   margin-top: 5px;
 }
 
-/* ================= SEARCH BOX ================= */
 .search-box {
   display: flex;
   gap: 10px;
@@ -128,7 +118,6 @@ body {
   background: #1d4ed8;
 }
 
-/* ================= STOCK CARDS (ATTENDANT STYLE) ================= */
 .cards {
   display: flex;
   gap: 15px;
@@ -172,8 +161,6 @@ body {
 .ok p { color: green; }
 .low p { color: orange; }
 .out p { color: red; }
-
-/* ================= TABLE ================= */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -201,7 +188,6 @@ tr:hover {
   background: #f1f5f9;
 }
 
-/* ================= STATUS LABELS ================= */
 .ok {
   color: green;
   font-weight: bold;
@@ -216,8 +202,6 @@ tr:hover {
   color: red;
   font-weight: bold;
 }
-
-/* ================= ACTION BUTTON ================= */
 .request-btn {
   background: #16a34a;
   color: white;
@@ -232,8 +216,6 @@ tr:hover {
 .request-btn:hover {
   background: #15803d;
 }
-
-/* ================= RESPONSIVE (LIGHT SUPPORT) ================= */
 @media (max-width: 900px) {
   .cards {
     flex-direction: column;

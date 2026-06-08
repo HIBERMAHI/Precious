@@ -1,4 +1,4 @@
-/* ================= RESET ================= */
+
 *{
   margin:0;
   padding:0;
@@ -11,8 +11,6 @@ body{
   background:#f1f5f9;
   color:#1e293b;
 }
-
-/* ================= SIDEBAR ================= */
 .sidebar{
   width:240px;
   background:#02060f;
@@ -34,8 +32,6 @@ body{
   letter-spacing:1px;
   margin-left:10px;
 }
-
-/* ================= SIDEBAR MENU ================= */
 .sidebar ul{
   list-style:none;
 }
@@ -66,17 +62,12 @@ body{
   color:#facc15;
   transform:translateX(4px);
 }
-
-
-/* ================= MAIN ================= */
 .main{
   margin-left:240px;
   width:calc(100% - 240px);
   padding:25px;
   min-height:100vh;
 }
-
-/* ================= TOPBAR ================= */
 .topbar{
   display:flex;
   justify-content:space-between;
@@ -127,14 +118,11 @@ body{
   transform:scale(1.08);
 }
 
-/* ================= PAGE TITLE ================= */
 .main h2{
   margin-bottom:28px;
   color:#123076;
   font-size:1.2rem;
 }
-
-/* ================= CARDS ================= */
 .cards{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
@@ -165,7 +153,6 @@ body{
   box-shadow:0 10px 22px rgba(0,0,0,0.12);
 }
 
-/* ================= CARD ICON ================= */
 .icon{
   width:30px;
   height:30px;
@@ -211,8 +198,6 @@ body{
 .purple{
   background:#7c3aed;
 }
-
-/* ================= CARD TEXT ================= */
 .card-info{
   width:100%;
 }
@@ -231,14 +216,12 @@ body{
   word-break:break-word;
 }
 
-/* ================= TABLE TITLE ================= */
 .table-title{
   margin:20px 0;
   font-size:1.1rem;
   color:#133071;
 }
 
-/* ================= TABLE CONTAINER ================= */
 .grid{
   /* background:rgb(4, 4, 54); */
   /* border-top: 8px solid rgb(3, 3, 30); */
@@ -248,8 +231,6 @@ body{
   overflow-x:auto;
   overflow: hidden;
 }
-
-/* ================= TABLE ================= */
 .styled-table{
   width:100%;
   border-collapse:collapse;
@@ -312,7 +293,6 @@ body{
   color:#16a34a;
 }
 
-/* ================= SCROLLBAR ================= */
 ::-webkit-scrollbar{
   width:8px;
   height:8px;
@@ -322,8 +302,6 @@ body{
   background:#cbd5e1;
   border-radius:10px;
 }
-
-/* ================= RESPONSIVE ================= */
 @media(max-width:1200px){
 
   .cards{

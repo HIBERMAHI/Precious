@@ -19,7 +19,6 @@ const StockSchema = new mongoose.Schema(
       min: [1, "Initial quantity cannot be less than 1"],
       required: true,
     },
-    // This is the active stock that your sale routes will decrement
     quantity: {
       type: Number,
       required: [true, "Current quantity is required"],

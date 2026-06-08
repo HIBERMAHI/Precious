@@ -11,8 +11,6 @@ body{
     min-height: 100vh;
 }
 
-/* ================= SIDEBAR ================= */
-
 .sidebar{
     width: 260px;
     background: #010915;
@@ -71,15 +69,12 @@ background: rgba(250, 204, 21, 0.12);
     text-align: center;
 }
 
-/* ================= MAIN CONTENT ================= */
 
 .main{
     margin-left: 260px;
     width: calc(100% - 260px);
     padding: 35px;
 }
-
-/* ================= HEADER ================= */
 
 .header{
     background: white;
@@ -103,7 +98,6 @@ background: rgba(250, 204, 21, 0.12);
     font-size: 16px;
 }
 
-/* ================= ERROR MESSAGE ================= */
 
 .error-message{
     background: #fee2e2;
@@ -117,7 +111,6 @@ background: rgba(250, 204, 21, 0.12);
     gap: 10px;
 }
 
-/* ================= FORM ================= */
 
 .stock-form{
     background: white;
@@ -134,8 +127,6 @@ background: rgba(250, 204, 21, 0.12);
     padding-left: 12px;
 }
 
-/* ================= 3 COLUMN GRID ================= */
-
 .form-grid-3x3{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -143,7 +134,6 @@ background: rgba(250, 204, 21, 0.12);
     margin-bottom: 35px;
 }
 
-/* ================= FORM FIELDS ================= */
 
 .field{
     display: flex;
@@ -175,8 +165,6 @@ background: rgba(250, 204, 21, 0.12);
     background: white;
     box-shadow: 0 0 0 4px rgba(245,158,11,0.15);
 }
-
-/* ================= BUTTONS ================= */
 
 .buttons{
     display: flex;

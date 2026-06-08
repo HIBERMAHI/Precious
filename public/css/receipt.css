@@ -1,4 +1,4 @@
-/* ================= GLOBAL ================= */
+
 body {
   font-family: "Segoe UI", Arial, sans-serif;
   background: #f3f6fb;
@@ -6,15 +6,11 @@ body {
   padding: 20px;
   color: #1f2937;
 }
-
-/* ================= CONTAINER ================= */
 .receipt-container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
 }
-
-/* ================= RECEIPT CARD ================= */
 .receipt-card {
   width: 420px;
   background: #ffffff;
@@ -23,8 +19,6 @@ body {
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
   padding: 22px;
 }
-
-/* ================= HEADER (LEFT ALIGNED + COLORED) ================= */
 .receipt-header {
   text-align: left;
   padding-bottom: 10px;
@@ -46,7 +40,6 @@ body {
   color: #4b5563;
 }
 
-/* ================= META INFO ================= */
 .meta-info {
   margin-top: 10px;
   font-size: 12px;
@@ -66,8 +59,6 @@ body {
   margin-right: 6px;
   color: #2563eb;
 }
-
-/* ================= DIVIDER ================= */
 .divider {
   border: none;
   border-top: 1px solid #e5e7eb;
@@ -78,7 +69,6 @@ body {
   border-top: 2px solid #2563eb;
 }
 
-/* ================= TABLE ================= */
 .items-table {
   width: 100%;
   border-collapse: collapse;
@@ -98,7 +88,6 @@ body {
   border-collapse: collapse;
   table-layout: fixed; /* 🔥 THIS is the key */
 }
-/* ================= ALIGNMENT HELPERS ================= */
 .center {
   text-align: center;
 }
@@ -107,7 +96,6 @@ body {
   text-align: right;
 }
 
-/* ================= ITEM STYLE ================= */
 .item-name {
   display: flex;
   align-items: center;
@@ -119,8 +107,6 @@ body {
 .item-name i {
   color: #2563eb;
 }
-
-/* ================= LOGISTICS ================= */
 .logistics {
   font-size: 13px;
 }
@@ -145,8 +131,6 @@ body {
   font-weight: 800;
   text-transform: uppercase;
 }
-
-/* ================= TOTALS ================= */
 .totals .row {
   display: flex;
   justify-content: space-between;
@@ -163,7 +147,6 @@ body {
   color: #111827;
 }
 
-/* ================= FOOTER ================= */
 .footer {
   text-align: center;
   font-size: 12px;
@@ -189,8 +172,6 @@ body {
   font-size: 11px;
   color: #6b7280;
 }
-
-/* ================= TRANSPORT NOTE ================= */
 .transport-note {
   margin-top: 10px;
   font-size: 11px;
@@ -201,7 +182,6 @@ body {
   border-radius: 5px;
 }
 
-/* ================= ACTION BUTTONS ================= */
 .actions {
   text-align: center;
   margin-top: 20px;
@@ -241,7 +221,6 @@ body {
   background: #d1d5db;
 }
 
-/* ================= PRINT MODE ================= */
 @media print {
   body {
     background: white;

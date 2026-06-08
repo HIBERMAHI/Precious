@@ -1,26 +1,16 @@
-/* ======================================
-   RESET
-====================================== */
+
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
   font-family:Arial, Helvetica, sans-serif;
 }
-
-/* ======================================
-   BODY
-====================================== */
 body{
   background:#f4f6f9;
   color:#1e293b;
   padding:20px;
   font-size:12px;
 }
-
-/* ======================================
-   MAIN CONTAINER
-====================================== */
 .report-header,
 .grid,
 table,
@@ -30,9 +20,6 @@ table,
   margin-right:auto;
 }
 
-/* ======================================
-   TOP BUTTONS
-====================================== */
 .no-print{
   display:flex;
   justify-content:space-between;
@@ -59,10 +46,6 @@ table,
 .no-print button:hover{
   opacity:0.9;
 }
-
-/* ======================================
-   HEADER
-====================================== */
 .report-header{
   background:white;
   padding:18px 22px;
@@ -84,20 +67,12 @@ table,
   color:#64748b;
   font-size:11px;
 }
-
-/* ======================================
-   KPI GRID
-====================================== */
 .grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:12px;
   margin-bottom:22px;
 }
-
-/* ======================================
-   KPI CARDS
-====================================== */
 .card{
   background:white;
   border:1px solid #dbe2ea;
@@ -119,10 +94,6 @@ table,
   font-weight:700;
   color:#0f172a;
 }
-
-/* ======================================
-   SECTION TITLES
-====================================== */
 h2{
   width:85%;
   margin:18px auto 10px auto;
@@ -132,10 +103,6 @@ h2{
   align-items:center;
   gap:7px;
 }
-
-/* ======================================
-   TABLES
-====================================== */
 table{
   border-collapse:collapse;
   background:white;
@@ -165,18 +132,10 @@ tbody td{
 tbody tr:hover{
   background:#f8fafc;
 }
-
-/* ======================================
-   LOW STOCK
-====================================== */
 .status-low{
   color:#dc2626;
   font-weight:700;
 }
-
-/* ======================================
-   PRINT
-====================================== */
 @media print{
 
   body{
@@ -200,10 +159,6 @@ tbody tr:hover{
     box-shadow:none;
   }
 }
-
-/* ======================================
-   RESPONSIVE
-====================================== */
 @media(max-width:900px){
 
   .grid{

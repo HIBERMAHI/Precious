@@ -1,4 +1,4 @@
-/* ================= RESET ================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -13,7 +13,6 @@ body {
   min-height: 100vh;
 }
 
-/* ================= SIDEBAR ================= */
 .sidebar {
   width: 250px;
   background: linear-gradient(to bottom, #01091b, #010917);
@@ -65,7 +64,6 @@ body {
   font-size: 16px;
 }
 
-/* ================= MAIN CONTENT ================= */
 .main {
   margin-left: 250px;
   padding: 35px;
@@ -78,8 +76,6 @@ body {
   color: #0d2662;
   font-weight: 700;
 }
-
-/* ================= DASHBOARD CARDS ================= */
 .dashboard-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -124,7 +120,6 @@ body {
   border-left: 6px solid #ef4444;
 }
 
-/* ================= TABLE ================= */
 .supplier-table {
   width: 100%;
   border-collapse: collapse;
@@ -160,7 +155,6 @@ body {
   border-bottom: none;
 }
 
-/* ================= ACTION BUTTONS ================= */
 .actions {
   display: flex;
   gap: 12px;
@@ -194,7 +188,7 @@ body {
 
 /* EVIDENCE BUTTON */
 .btn-evidence {
-  background: #2563eb;
+  background: #06173b;
   color: white;
 }
 
@@ -203,7 +197,6 @@ body {
   transform: scale(1.03);
 }
 
-/* ================= EMPTY STATE ================= */
 .supplier-table td[colspan] {
   text-align: center;
   padding: 30px;
@@ -212,7 +205,6 @@ body {
   font-weight: 500;
 }
 
-/* ================= RESPONSIVE ================= */
 @media (max-width: 900px) {
   .sidebar {
     width: 220px;

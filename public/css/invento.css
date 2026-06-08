@@ -1,4 +1,4 @@
-/* ================= RESET ================= */
+
 *{
   margin:0;
   padding:0;
@@ -11,8 +11,6 @@ body{
   background:#eef2f7;
   color:#1e293b;
 }
-
-/* ================= SIDEBAR (UNCHANGED) ================= */
 .sidebar{
   width:270px;
   background:#02060f;
@@ -63,15 +61,12 @@ body{
   transform:translateX(4px);
 }
 
-/* ================= MAIN ================= */
 .main{
   margin-left:270px;
   width:calc(100% - 270px);
   min-height:100vh;
   padding:28px;
 }
-
-/* ================= HEADER ================= */
 .header{
   display:flex;
   justify-content:space-between;
@@ -94,7 +89,6 @@ body{
   font-size:13px;
 }
 
-/* ================= ACTION BUTTONS ================= */
 .actions{
   display:flex;
   gap:12px;
@@ -128,9 +122,6 @@ body{
   color:white;
 }
 
-/* ================= CARDS ================= */
-
-/* ================= CARDS ================= */
 .cards{
   display:flex;
   width:100%;
@@ -207,11 +198,6 @@ body{
 .card:nth-child(4) i{
   background:#16a34a;
 }
-
-
-
-
-/* ================= SEARCH SECTION ================= */
 .search-bar{
   display:flex;
   gap:12px;
@@ -237,7 +223,6 @@ body{
   box-shadow:0 0 0 3px rgba(37,99,235,0.10);
 }
 
-/* ================= TABLE SECTION ================= */
 .table-section{
   background:white;
   border-radius:20px;
@@ -245,8 +230,6 @@ body{
   box-shadow:0 6px 20px rgba(15,23,42,0.05);
   overflow-x:auto;
 }
-
-/* ================= TABLE ================= */
 table{
   width:100%;
   border-collapse:collapse;
@@ -279,8 +262,6 @@ tbody tr{
 tbody tr:hover{
   background:#f8fafc;
 }
-
-/* ================= PRODUCT IMAGE ================= */
 td img{
   width:55px;
   height:55px;
@@ -288,8 +269,6 @@ td img{
   object-fit:cover;
   border:2px solid #f1f5f9;
 }
-
-/* ================= STATUS ================= */
 .status{
   display:inline-flex;
   align-items:center;
@@ -314,9 +293,6 @@ td img{
   background:#fee2e2;
   color:#991b1b;
 }
-
-/* ================= ACTION BUTTONS ================= */
-/* ================= SMALL ACTION BUTTONS ================= */
 
 .action-btns{
   display:flex;
@@ -362,7 +338,6 @@ td img{
   opacity:0.8;
 }
 
-/* ================= RESPONSIVE ================= */
 @media(max-width:1200px){
 
   .cards{

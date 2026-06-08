@@ -1,4 +1,4 @@
-/* ================= RESET ================= */
+
 
 *{
   margin:0;
@@ -13,8 +13,6 @@ body{
   min-height:100vh;
   color:#1e293b;
 }
-
-/* ================= SIDEBAR ================= */
 
 .sidebar{
   width:240px;
@@ -109,7 +107,6 @@ background: rgba(250, 204, 21, 0.12);
   color:#2563eb;
 }
 
-/* ================= CARDS ================= */
 
 .cards{
   display:grid;
@@ -152,8 +149,6 @@ background: rgba(250, 204, 21, 0.12);
   border-left:4px solid #f59e0b;
 }
 
-/* ================= SECTION ================= */
-
 .section{
   background:white;
   padding:25px;
@@ -167,8 +162,6 @@ background: rgba(250, 204, 21, 0.12);
   color:#0f172a;
   font-size:20px;
 }
-
-/* ================= BUTTONS ================= */
 
 .actions{
   display:flex;
@@ -201,8 +194,6 @@ background: rgba(250, 204, 21, 0.12);
   background-color: rgb(7, 7, 70);
   color: white;
 }
-
-/* ================= TABLE ================= */
 
 table{
   width:100%;
@@ -253,14 +244,12 @@ table td:last-child{
   border-bottom-right-radius:10px;
 }
 
-/* ================= STATUS ================= */
 
 .success{
   color:#16a34a;
   font-weight:600;
 }
 
-/* ================= RESPONSIVE ================= */
 
 @media(max-width:1100px){
 
