@@ -1,4 +1,7 @@
 // 1 dependencies
+
+const dns = require("dns");
+dns.setServers(["8.8.8.8", "8.8.4.4"])
 const express = require("express");
 const expressSession = require("express-session");
 const path = require("path");
@@ -7,7 +10,7 @@ const MongoStore = require("connect-mongo").default;
 
 require("dotenv").config();
 const mongoose = require("mongoose");
-const { connect } = require("http2");
+// const { connect } = require("http2");
 const connectDb = require("./config/db");
 // import user model
 const Registration = require("./models/Registration");
@@ -19,7 +22,10 @@ const Regicredit = require("./models/Regicredit");
 
 //2 instanciations
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5004;
+
+// prefer DATABASE or DATABASE_URL from .env
+const mongoUri = process.env.DATABASE || process.env.DATABASE_URL;
 
 // 3configuratioons
 // static files
@@ -37,13 +43,13 @@ app.use(
     secret: "My secret",
     resave: false,
     saveUninitialized: false,
-    store:MongoStore.create({
-      mongoUrl:process.env.DATABASE,
-      collectionName:'sessionStorage'
+    store: MongoStore.create({
+      mongoUrl: mongoUri,
+      collectionName: "sessionStorage",
     }),
-    cookie:{
-      maxAge:1000 * 60 * 60 * 2 // two hours lfe for a login session
-    }
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 2, // two hours lfe for a login session
+    },
   }),
 );
 
@@ -73,4 +79,12 @@ app.use((req, res) => {
 });
 
 // bootstrapping server
-app.listen(port, () => console.log(`listening on port ${5000}`));
+// Start server locally
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`listening on port ${port}`);
+  });
+}
+
+// Export app for Vercel
+module.exports = app;
